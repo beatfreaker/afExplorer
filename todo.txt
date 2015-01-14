@@ -1,0 +1,41 @@
+
+http://codingground.tutorialspoint.com:40372/index.htm?SESSIONID=fqbnhe5s5uk1fi4krn5vd5htp4#
+
+
+Folder command
+ - add to zip
+
+Open in New Tab
+ - Have means to define when new tab happens
+ - How do we auto-create views + panels?
+ 
+HtmlView -> Fandoc vs Internet vs Files
+ - have a RefluxBroswerWidget
+ - different views for each resource?
+  - HtmlView for files AND internet
+  - FandocView
+ 
+View fandoc files
+
+View fandoc from pods
+ 
+Fandoc Viewer
+ - Sidebar viewer
+ - search bar
+
+How to open extensions -> associate laucnch prog and icon
+ - parse icon files?
+ - assoc edit
+ 
+Can views manipulate the menu / toolbar?
+	-> NO! Menus are defined at app startup.
+	-> GlobalCommands, however, maybe enabled / disabled  
+
+
+
+http://demo.wizzardsoftware.com/attprocess.php
+http://www.wizzardsoftware.com/wizzard_wavefile_factory.php
+
+
+http://h20564.www2.hp.com/hpsc/swd/public/readIndex?sp4ts.oid=5271147&swLangOid=8&swEnvOid=4059
+
