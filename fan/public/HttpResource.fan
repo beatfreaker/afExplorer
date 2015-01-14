@@ -13,6 +13,6 @@ class HttpResource : Resource {
 	new make(|This|in) : super.make(in) { }
 	
 	override Type[] viewTypes() {
-		[HtmlView#]
+		[HtmlViewer#]
 	}
 }

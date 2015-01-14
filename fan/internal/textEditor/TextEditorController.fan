@@ -5,12 +5,12 @@ using fwt
 **
 internal class TextEditorController : TextEditorSupport {
 	
-	override TextEditorView editor { private set }
+	override TextEditor editor { private set }
 	Int		caretLine
 	Int		caretCol
 	Bool	inUndo := false
 
-	new make(TextEditorView editor) { this.editor = editor }
+	new make(TextEditor editor) { this.editor = editor }
 
 //////////////////////////////////////////////////////////////////////////
 // Eventing

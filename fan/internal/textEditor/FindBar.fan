@@ -6,7 +6,7 @@ using fwt
 **
 internal class FindBar : ContentPane, TextEditorSupport {
 
-	override TextEditorView editor { private set }
+	override TextEditor editor { private set }
 	private Int caretPos
 
 	private Widget findPane
@@ -27,7 +27,7 @@ internal class FindBar : ContentPane, TextEditorSupport {
 	private Command cmdReplace		:= Command("Replace", 	  null)										{ replace }
 	private Command cmdReplaceAll	:= Command("Replace All", null)										{ replaceAll }
 
-	new make(TextEditorView editor) {
+	new make(TextEditor editor) {
 	
 		this.editor = editor
 		history := FindHistory.load

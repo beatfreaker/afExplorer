@@ -4,7 +4,7 @@ using gfx
 using fwt
 
 ** (View) - A simple HTML viewer for http and file resources. 
-class HtmlView : View {
+class HtmlViewer : View {
 	@Inject private Reflux	 	reflux
 			private WebBrowser?	browser
 

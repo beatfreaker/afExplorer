@@ -9,7 +9,7 @@ class ExplorerModule {
 	static Void defineServices(ServiceDefinitions defs) {		
 		defs.add(Explorer#)
 		defs.add(ExplorerCmds#)
-		defs.add(DefaultFileViews#)
+		defs.add(FileViewers#)
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
@@ -45,20 +45,19 @@ class ExplorerModule {
 		config["afExplorer.cmdShowHiddenFiles"]	= config.autobuild(ShowHiddenFilesCommand#)
 	}
 
-	@Contribute { serviceType=DefaultFileViews# }
-	static Void contributeDefaultFileViews(Configuration config) {
-		config["bmp"]	= ImageView#
-		config["gif"]	= ImageView#
-		config["jpg"]	= ImageView#
-		config["png"]	= ImageView#
+	@Contribute { serviceType=FileViewers# }
+	static Void contributeFileViewers(Configuration config) {
+		"bmp gif jpg png".split.each {
+			config["imageViewer-${it}"] = FileViewer(it, ImageViewer#)
+		}
 
-		config["htm"]	= HtmlView#
-		config["html"]	= HtmlView#
+		"htm html xml".split.each {
+			config["htmlViewer-${it}"] = FileViewer(it, HtmlViewer#)
+		}
 
-		// TODO: Have file actions and DEFAULT file actions
-//		config["htm"]		= TextEditorView#
-//		config["html"]		= TextEditorView#
-		"css fan fog fdoc fandoc java js less md slim txt xml".split.each { config[it] = TextEditorView# }
+		"css fan fog fdoc fandoc htm html java js less md slim txt xml".split.each {
+			config["textEditor-${it}"] = FileViewer(it, TextEditor#)
+		}
 	}
 
 	

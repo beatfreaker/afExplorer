@@ -8,10 +8,10 @@ using fwt
 ** Represents a file on the file system.
 class FileResource : Resource {
 
-	@Inject private	Explorer			_explorer
-	@Inject private	Errors				_errors
-	@Inject private	ExplorerCmds		_fileCmds
-	@Inject private DefaultFileViews	_defaultViews
+	@Inject private	Explorer		_explorer
+	@Inject private	Errors			_errors
+	@Inject private	ExplorerCmds	_fileCmds
+	@Inject private FileViewers		_fileViewers
 
 	override Uri 	uri
 	override Str 	name
@@ -24,7 +24,7 @@ class FileResource : Resource {
 	}
 
 	override Type[] viewTypes() {
-		[_defaultViews[file.ext]]
+		_fileViewers.getTypes(file.ext)
 	}
 	
 	override Menu populatePopup(Menu m) {
@@ -35,6 +35,10 @@ class FileResource : Resource {
 		}
 
 		if (!file.isDir) {
+			_fileViewers.getViewers(file.ext).each {
+				addCmd(menu, _fileCmds.openFileWithViewCmd(this, it))
+			}
+
 			addCmd(menu, _fileCmds.openFileInSystemCmd(file))
 			
 			fileExt := file.ext.lower
@@ -82,7 +86,7 @@ class FileResource : Resource {
 	
 	override Void doAction() {
 		// show view if there is one 
-		if (_defaultViews[file.ext] != null) {
+		if (!viewTypes.isEmpty) {
 			super.doAction
 			return
 		}

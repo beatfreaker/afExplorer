@@ -6,7 +6,7 @@ using fwt
 
 ** (View) - 
 ** A text editor with syntax highlighting. Borrowed from [fluxtext]`pod:fluxtext`.
-class TextEditorView : View {
+class TextEditor : View {
 	
 	File? 				file
 	TextEditorOptions	options := TextEditorOptions.load

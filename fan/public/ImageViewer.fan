@@ -5,7 +5,7 @@ using fwt
 using concurrent
 
 ** (View) - A simple image viewer for file resources. 
-class ImageView : View {
+class ImageViewer : View {
 
 	@Inject private RefluxIcons 		icons
 	@Inject private Registry			registry
@@ -129,10 +129,10 @@ internal class ImageViewWidget : Canvas {
 }
 
 internal class ImageFitToWindowCommand : RefluxCommand {
-			private ImageView	imageView
+			private ImageViewer	imageView
 	@Inject private RefluxIcons	icons
 
-	new make(ImageView imageView, |This|in) : super.make(in) {
+	new make(ImageViewer imageView, |This|in) : super.make(in) {
 		this.imageView = imageView
 		this.name = "Fit to Window"
 		this.icon = icons["cmdImageFitToWindow"]
@@ -144,10 +144,10 @@ internal class ImageFitToWindowCommand : RefluxCommand {
 }
 
 internal class ImageFullSizeCommand : RefluxCommand {
-			private ImageView	imageView
+			private ImageViewer	imageView
 	@Inject private RefluxIcons	icons
 
-	new make(ImageView imageView, |This|in) : super.make(in) {
+	new make(ImageViewer imageView, |This|in) : super.make(in) {
 		this.imageView = imageView
 		this.name = "Zoom to 100%"
 		this.icon = icons["cmdImageFullSize"]

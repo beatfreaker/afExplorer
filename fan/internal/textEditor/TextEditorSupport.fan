@@ -6,7 +6,7 @@ using syntax
 **
 internal mixin TextEditorSupport {
 
-	abstract TextEditorView editor()
+	abstract TextEditor editor()
 
 //	Frame frame() { return editor.frame }
 

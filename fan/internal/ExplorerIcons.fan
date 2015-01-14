@@ -10,15 +10,15 @@ internal class ExplorerIcons {
 		"cmdReplace"			: ``,
 		"cmdGoto"				: ``,
 		"cmdShowHiddenFiles"	: ``,
-		
+
+
 		// ---- File Explorer -------------------
 		"icoFoldersPanel"		: `filenav_nav.gif`,
 		"icoFolderView"			: `fldr_obj.gif`,
-		"icoImageView"			: `image_obj.gif`,
-		"icoTextEditorView"		: `file_obj.gif`,
 		
 		"cmdOpenInNewTab"		: ``,
 		
+		"cmdOpenInSystem"		: ``,
 		"cmdOpenFile"			: ``,
 		"cmdActionFile"			: ``,
 		"cmdRenameFile"			: ``,
@@ -37,13 +37,16 @@ internal class ExplorerIcons {
 		"icoFolder"				: `fldr_obj.gif`,
 		"icoFolderRoot"			: `prj_obj.gif`,
 		
-		// ---- Image View ----------------------
+		// ---- Image Viewer --------------------
+		"icoImageViewer"		: `image_obj.gif`,
 		"icoImageNotFound"		: `delete_obj.gif`,
 		"cmdImageFitToWindow"	: `collapseall.gif`,
 		"cmdImageFullSize"		: `image_obj.gif`,
-
 		
-		// ---- Html View -----------------------
-		"icoHtmlView"			: `fan://afReflux/res/icons-file/fileTextHtml.png`
+		// ---- Html Viewer ---------------------
+		"icoHtmlViewer"			: `fan://afExplorer/res/icons-file/fileTextHtml.png`,
+
+		// ---- Text Editor ---------------------
+		"icoTextEditor"			: `file_obj.gif`,
 	]
 }

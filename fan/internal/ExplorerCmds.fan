@@ -27,6 +27,14 @@ internal class ExplorerCmds {
 		}
 	}
 
+	Command openFileWithViewCmd(Resource resource, FileViewer viewer) {
+		command("OpenIn${viewer.viewType.name}", "") {
+			it.onInvoke.add {
+				reflux.loadResource(resource, LoadCtx() { it.viewType = viewer.viewType })
+			}
+		}
+	}
+
 	Command renameFileCmd(File file) {
 		command("RenameFile") {
 			it.name = "Rename"
@@ -115,7 +123,7 @@ internal class ExplorerCmds {
 	}
 
 	Command actionFileCmd(File file, FileAction action, FileLauncher laucher) {
-		command("actionFile") {
+		command("ActionFile", "") {
 			it.name = "${action.verb} with ${laucher.name}"
 			it.icon = refluxIcons.fromUri(laucher.iconUri)
 			it.onInvoke.add {
@@ -124,10 +132,11 @@ internal class ExplorerCmds {
 		}
 	}
 
-	private RefluxCommand command(Str baseName) {
+	private RefluxCommand command(Str baseName, Str? iconName := null) {
 		((RefluxCommand) registry.autobuild(RefluxCommand#, [null, null, null])) {
-			it.name = baseName.toDisplayName
-			it.icon = refluxIcons["cmd${baseName}"]
+			it.name = baseName.toDisplayName.replace(" In ", " in ")
+			if (iconName != null && !iconName.isEmpty)
+				it.icon = refluxIcons[iconName ?: "cmd${baseName}"]
 		}
 	}
 }
