@@ -4,7 +4,7 @@ using gfx
 using fwt
 using concurrent
 
-** (View) - A 'View' that displays images. 
+** (View) - A simple image viewer for file resources. 
 class ImageView : View {
 
 	@Inject private RefluxIcons 		icons

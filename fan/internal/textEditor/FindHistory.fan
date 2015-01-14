@@ -2,7 +2,7 @@
 ** FindHistory maintains the most recent find text
 ** queries for the entire application.
 **
-@Serializable
+@Serializable @NoDoc
 class FindHistory {
 
 	**

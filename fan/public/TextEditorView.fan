@@ -4,7 +4,8 @@ using syntax
 using gfx
 using fwt
 
-** TextEditor provides a syntax color coded editor for working with text files.
+** (View) - 
+** A text editor with syntax highlighting. Borrowed from [fluxtext]`pod:fluxtext`.
 class TextEditorView : View {
 	
 	File? 				file

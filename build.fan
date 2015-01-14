@@ -32,7 +32,7 @@ class Build : BuildPod {
 			"afReflux     0+"
 		]
 
-		srcDirs = [`fan/`, `fan/textEditor/`, `fan/public/`, `fan/other/`, `fan/internal/`]
+		srcDirs = [`fan/`, `fan/public/`, `fan/internal/`, `fan/internal/textEditor/`]
 		resDirs = [`res/icons-file/`]
 	}
 }

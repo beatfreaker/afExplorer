@@ -3,7 +3,7 @@ using afReflux
 using gfx
 using fwt
 
-** (View) - A 'View' that displays HTML. 
+** (View) - A simple HTML viewer for http and file resources. 
 class HtmlView : View {
 	@Inject private Reflux	 	reflux
 			private WebBrowser?	browser

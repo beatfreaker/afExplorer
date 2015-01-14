@@ -3,18 +3,18 @@ using afReflux
 using gfx
 using fwt
 
-class FileExplorerCmds {
+internal class ExplorerCmds {
 	@Inject private Registry		registry
 	@Inject private Reflux			reflux
 	@Inject private RefluxIcons		refluxIcons
-	@Inject	private FileExplorer	fileExplorer
+	@Inject	private Explorer		explorer
 
 	new make(|This|in) { in(this) }
 
 	Command openFileCmd(File file) {
 		command("OpenFile") {
 			it.onInvoke.add {
-				fileExplorer.openFile(file)
+				explorer.openFile(file)
 			}
 		}
 	}
@@ -24,7 +24,7 @@ class FileExplorerCmds {
 			it.name = "Rename"
 			it.accelerator = Key("F2")
 			it.onInvoke.add {
-				fileExplorer.rename(file)
+				explorer.rename(file)
 			}
 		}
 	}
@@ -33,7 +33,7 @@ class FileExplorerCmds {
 		command("DeleteFile") {
 			it.name = "Delete"
 			it.onInvoke.add {
-				fileExplorer.delete(file)
+				explorer.delete(file)
 			}
 		}
 	}
@@ -41,7 +41,7 @@ class FileExplorerCmds {
 	Command newFileCmd(File file) {
 		command("NewFile") {
 			it.onInvoke.add {
-				fileExplorer.newFile(file)
+				explorer.newFile(file)
 			}
 		}
 	}
@@ -49,7 +49,7 @@ class FileExplorerCmds {
 	Command newFolderCmd(File file) {
 		command("NewFolder") {
 			it.onInvoke.add {
-				fileExplorer.newFolder(file)
+				explorer.newFolder(file)
 			}
 		}
 	}
@@ -58,7 +58,7 @@ class FileExplorerCmds {
 		command("CutFile") {
 			it.name = "Cut"
 			it.onInvoke.add {
-				fileExplorer.cut(file)
+				explorer.cut(file)
 			}
 		}
 	}
@@ -67,7 +67,7 @@ class FileExplorerCmds {
 		command("CopyFile") {
 			it.name = "Copy"
 			it.onInvoke.add {
-				fileExplorer.copy(file)
+				explorer.copy(file)
 			}
 		}
 	}
@@ -77,7 +77,7 @@ class FileExplorerCmds {
 			it.name = "Paste"
 			it.enabled = file.isDir
 			it.onInvoke.add {
-				fileExplorer.paste(file)
+				explorer.paste(file)
 			}
 		}
 	}

@@ -7,8 +7,8 @@ using fwt
 class ExplorerModule {
 
 	static Void defineServices(ServiceDefinitions defs) {		
-		defs.add(FileExplorer#)
-		defs.add(FileExplorerCmds#)
+		defs.add(Explorer#)
+		defs.add(ExplorerCmds#)
 		defs.add(DefaultResourceViews#)
 		defs.add(DefaultFileViews#)
 	}
@@ -16,7 +16,7 @@ class ExplorerModule {
 	@Contribute { serviceType=RefluxIcons# }
 	static Void contributeRefluxIcons(Configuration config) {
 		ExplorerIcons.iconMap.each |uri, id| {
-			config[id] = uri.isAbs ? uri : `fan://afExplorer/res/icons-eclipse/` + uri
+			config[id] = uri.isAbs ? uri : `fan://afReflux/res/icons-eclipse/` + uri
 		}
 	}
 
@@ -33,7 +33,7 @@ class ExplorerModule {
 	
 	@Contribute { serviceType=EventTypes# }
 	static Void contributeEventHub(Configuration config) {
-		config["afReflux.fileExplorer"] = FileExplorerEvents#
+		config["afReflux.explorer"] = ExplorerEvents#
 	}
 
 	@Contribute { serviceType=DefaultResourceViews# }

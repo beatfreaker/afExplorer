@@ -1,4 +1,4 @@
 cls
 set fan_env=
-call fan build.fan
+call fanb
 call fan afExplorer

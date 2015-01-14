@@ -3,8 +3,8 @@ using afReflux
 
 internal class HttpResolver : UriResolver {
 	
-	@Inject private Registry		registry
-	@Inject private FileExplorer	fileExplorer
+	@Inject private Registry	registry
+	@Inject private Explorer	explorer
 
 	new make(|This|in) { in(this) }	
 	
@@ -14,7 +14,7 @@ internal class HttpResolver : UriResolver {
 		return registry.autobuild(HttpResource#, null, [
 			HttpResource#uri	: uri,
 			HttpResource#name	: uri.name,
-			HttpResource#icon	: fileExplorer.urlToIcon(uri)
+			HttpResource#icon	: explorer.urlToIcon(uri)
 		])
 	}	
 }

@@ -2,9 +2,8 @@ using afIoc
 using afReflux
 
 internal class FileResolver : UriResolver {
-	
-	@Inject private Registry		registry
-	@Inject private FileExplorer	fileExplorer
+	@Inject private Registry	registry
+	@Inject private Explorer	explorer
 
 	new make(|This|in) { in(this) }	
 	
@@ -18,7 +17,7 @@ internal class FileResolver : UriResolver {
 			FileResource#uri	: file.uri,
 			FileResource#name	: file.uri.name,
 			FileResource#file	: file,
-			FileResource#icon	: fileExplorer.fileToIcon(file)
+			FileResource#icon	: explorer.fileToIcon(file)
 		])
 	}	
 }

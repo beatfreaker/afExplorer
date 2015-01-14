@@ -1,7 +1,10 @@
 using afIoc
 using afReflux
 
+** Use to launch the Explorer application.
 class Main {
+	
+	// TODO: allow paths to be passed in on the command line
 	Void main() {
 		Reflux.start([ExplorerModule#]) |Reflux reflux| {
 			reflux.showPanel(FoldersPanel#)
@@ -16,7 +19,7 @@ class Main {
 //				panel := (FoldersPanel) reflux.getPanel(FoldersPanel#)
 //				panel.gotoFavourite("Projects")
 				
-				fileExplorer := (FileExplorer) reflux.registry.serviceById(FileExplorer#.qname)
+				fileExplorer := (Explorer) reflux.registry.serviceById(Explorer#.qname)
 				fav := fileExplorer.preferences.favourites["Projects"]
 				if (fav == null)
 					echo("Favourite 'Projects' not found!")
@@ -25,11 +28,4 @@ class Main {
 			}
 		}
 	}
-	
-//	static Void main() {
-//		Reflux.start([,]) |Reflux reflux| {
-//			reflux.showPanel(FoldersPanel#)
-//			reflux.load(File.osRoots.first.normalize.uri)			
-//		}
-//	}
 }

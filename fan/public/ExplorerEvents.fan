@@ -1,7 +1,7 @@
 using afIoc
 
 @NoDoc
-mixin FileExplorerEvents {
+mixin ExplorerEvents {
 
 	virtual Void onShowHiddenFiles(Bool show)	{ }
 

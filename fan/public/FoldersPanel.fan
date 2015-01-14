@@ -5,13 +5,13 @@ using fwt
 using afBeanUtils
 
 @NoDoc
-class FoldersPanel : Panel, RefluxEvents, FileExplorerEvents {
+class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	
 	@Inject		private Registry			registry
 	@Inject		private Reflux				reflux
 	@Inject		private RefluxIcons			icons
 	@Inject		private UriResolvers		uriResolvers
-	@Inject		private FileExplorer		fileExplorer
+	@Inject		private Explorer			explorer
 	@Autobuild	private FoldersTreeModel	model
 	
 	private Combo	combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) } }
@@ -38,12 +38,12 @@ class FoldersPanel : Panel, RefluxEvents, FileExplorerEvents {
 			}
 		}
 		
-		favourites = fileExplorer.preferences.favourites		
+		favourites = explorer.preferences.favourites		
 		combo.items = favourites.keys
 	}
 	
 	Void gotoFavourite(Str favourite) {
-		uri := fileExplorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", fileExplorer.preferences.favourites.keys)
+		uri := explorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", explorer.preferences.favourites.keys)
 		combo.selected = favourite
 	}
 
@@ -126,27 +126,27 @@ class FoldersPanel : Panel, RefluxEvents, FileExplorerEvents {
 }
 
 internal class FoldersTreeModel : TreeModel {
-	@Inject	private  FileExplorer	fileExplorer
+	@Inject	private  Explorer		explorer
 			override FileNode[]		roots
 			private	 Color			hiddenColour
 
 	new make(|This|in) {
 		in(this)
-		this.roots = FileNode.map(fileExplorer, File.osRoots.map { it.normalize })
+		this.roots = FileNode.map(explorer, File.osRoots.map { it.normalize })
 		this.hiddenColour = Desktop.sysListFg.lighter(0.5f)
 	}
 	override Str	text(Obj node)			{ n(node).name		}
-	override Image?	image(Obj node)			{ fileExplorer.fileToIcon(n(node).file) }
+	override Image?	image(Obj node)			{ explorer.fileToIcon(n(node).file) }
 	override Bool 	hasChildren(Obj node)	{ n(node).hasChildren	}
 	override FileNode[]	children(Obj node)	{ n(node).children	}
-	override Color? fg(Obj node)			{ fileExplorer.preferences.isHidden(n(node).file) ? hiddenColour : null  }
+	override Color? fg(Obj node)			{ explorer.preferences.isHidden(n(node).file) ? hiddenColour : null  }
 	private  FileNode n(FileNode node)		{ node }
 }
 
 internal class FileNode {
-	FileExplorer fe
+	Explorer fe
 	File file
-	new make(FileExplorer fe, File file) { this.fe = fe; this.file = file }
+	new make(Explorer fe, File file) { this.fe = fe; this.file = file }
 	Str name() { file.name }
 	Bool hasChildren() { !children.isEmpty }
 	FileNode[]? children {
@@ -160,7 +160,7 @@ internal class FileNode {
 		children = null
 	}
 	override Str toStr() { return file.toStr }
-	static FileNode[] map(FileExplorer fe, File[] files) {
+	static FileNode[] map(Explorer fe, File[] files) {
 		files.map { FileNode(fe, it) }
 	}
 }

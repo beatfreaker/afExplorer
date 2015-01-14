@@ -3,8 +3,8 @@ using afReflux
 using gfx
 using fwt
 
-** (Service) - Main service for explorer operations.
-mixin FileExplorer {
+** (Service) - The main service API for explorer operations.
+mixin Explorer {
 	abstract Void rename(File file)
 	abstract Void delete(File file)
 	abstract Void cut(File file)
@@ -15,14 +15,14 @@ mixin FileExplorer {
 	abstract Void openFile(File file)
 	abstract Image fileToIcon(File f)
 	abstract Image urlToIcon(Uri url)
-	abstract FileExplorerPrefs preferences()
+	abstract ExplorerPrefs preferences()
 }
 	
-internal class FileExplorerImpl : FileExplorer {
+internal class ExplorerImpl : Explorer {
 	@Inject private Registry	registry
 	@Inject private RefluxIcons	icons
-	@Inject private ImageSource	imgSrc
-	@Inject private PrefsCache	prefsCache
+	@Inject private Images		images
+	@Inject private Preferences	prefs
 	@Inject private Reflux		reflux
 					Uri			fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
 
@@ -142,11 +142,11 @@ internal class FileExplorerImpl : FileExplorer {
 		return fileIcon("fileTextHtml.png", false)
 	}
 
-	override once FileExplorerPrefs preferences() {
-		prefsCache.loadPrefs(FileExplorerPrefs#)
+	override once ExplorerPrefs preferences() {
+		prefs.loadPrefs(ExplorerPrefs#)
 	}
 
 	private Image? fileIcon(Str fileName, Bool hidden) {
-		imgSrc.get(fileIconsRoot.plusName(fileName), hidden, false)
+		images.get(fileIconsRoot.plusName(fileName), hidden, false)
 	}
 }

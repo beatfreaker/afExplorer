@@ -4,7 +4,7 @@ using fwt
 **
 ** TextEditorOptions configured general text document options.
 **
-@Serializable
+@Serializable @NoDoc
 const class TextEditorOptions {
 	** Default constructor with it-block
 	new make(|This|? f := null) { if (f != null) f(this) }

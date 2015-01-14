@@ -1,10 +1,10 @@
 using afIoc
 
-@Serializable
-class FileExplorerPrefs {
+@Serializable @NoDoc
+class ExplorerPrefs {
 
 	@Inject @Transient 
-	private FileExplorerEvents?	events
+	private ExplorerEvents?	events
 	
 	Str:Uri favourites := 
 		// FIXME: maps are serialised as ordered
@@ -55,7 +55,7 @@ class FileExplorerPrefs {
 }
 
 
-@Serializable
+@Serializable @NoDoc
 class FileAction {
 	Str 	verb
 	Str		ext
@@ -63,7 +63,7 @@ class FileAction {
 	new make(|This|? f := null) { f?.call(this) }
 }
 
-@Serializable
+@Serializable @NoDoc
 class FileLauncher {
 	Str 	id
 	Str 	name

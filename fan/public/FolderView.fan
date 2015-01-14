@@ -4,13 +4,13 @@ using fwt
 using afReflux
 
 @NoDoc
-class FolderView : View, RefluxEvents, FileExplorerEvents {
+class FolderView : View, RefluxEvents, ExplorerEvents {
 	
 	@Inject private Registry		registry
 	@Inject private Reflux			reflux
 	@Inject private RefluxIcons		icons
 	@Inject private UriResolvers	uriResolvers
-	@Inject	private FileExplorer	fileExplorer
+	@Inject	private Explorer		explorer
 	@Autobuild private FileResolver	fileResolver
 	@Autobuild private FolderViewModel model
 			private	Table			table
@@ -29,7 +29,7 @@ class FolderView : View, RefluxEvents, FileExplorerEvents {
 	override Void load(Resource resource) {
 		super.load(resource)
 		fileResource = (FolderResource) resource
-		model.fileRes = fileResource.file.listDirs.addAll(fileResource.file.listFiles).exclude { fileExplorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri) }
+		model.fileRes = fileResource.file.listDirs.addAll(fileResource.file.listFiles).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri) }
 		table.refreshAll
 	}
 	
@@ -57,7 +57,7 @@ class FolderView : View, RefluxEvents, FileExplorerEvents {
 internal class FolderViewModel : TableModel {
 	@Inject private LocaleFormat	locale
 	@Inject private UriResolvers	uriResolvers
-	@Inject	private FileExplorer	fileExplorer
+	@Inject	private Explorer		explorer
 			private	Color			hiddenColour
 	
 	FileResource[]? fileRes
@@ -74,7 +74,7 @@ internal class FolderViewModel : TableModel {
 	override Str header(Int col) { return headers[col] }
 	override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
 	override Int? prefWidth(Int col) { width[col] }
-	override Color? fg(Int col, Int row) { fileExplorer.preferences.isHidden(fileRes[row].file) ? hiddenColour : null }
+	override Color? fg(Int col, Int row) { explorer.preferences.isHidden(fileRes[row].file) ? hiddenColour : null }
 
 	override Str text(Int col, Int row) {
 		f := fileRes[row]

@@ -4,19 +4,19 @@ using gfx
 using fwt
 
 // TODO: convert to GlobalCommand
-internal class ShowHiddenFilesCommand : RefluxCommand, FileExplorerEvents {
-	@Inject	private FileExplorer	fileExplorer
-	@Inject	private Reflux			reflux
+internal class ShowHiddenFilesCommand : RefluxCommand, ExplorerEvents {
+	@Inject	private Reflux		reflux
+	@Inject private Explorer	explorer
 
 	new make(EventHub eventHub, |This|in) : super.make(in) {
 		eventHub.register(this)
 		this.name = "Show Hidden Files"
 		this.mode = CommandMode.toggle
-		this.selected = fileExplorer.preferences.showHiddenFiles
+		this.selected = explorer.preferences.showHiddenFiles
 	}
 
 	override Void invoked(Event? event) {
-		fileExplorer.preferences.showHiddenFiles = !fileExplorer.preferences.showHiddenFiles
+		explorer.preferences.showHiddenFiles = !explorer.preferences.showHiddenFiles
 		reflux.refresh
 	}
 	

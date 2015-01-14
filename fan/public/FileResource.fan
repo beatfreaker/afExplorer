@@ -4,13 +4,14 @@ using afReflux
 using gfx
 using fwt
 
+** (Resource) - 
+** Represents a file on the file system.
 class FileResource : Resource {
 
-	@Inject private 		FileExplorer		_fileExplorer
-	@Inject private 		Errors				_errors
-	@Inject protected const Registry			registry
-	@Inject protected const DefaultFileViews	defaultViews
-	@Inject protected 		FileExplorerCmds	fileCmds
+	@Inject private	Explorer			_explorer
+	@Inject private	Errors				_errors
+	@Inject private	ExplorerCmds		_fileCmds
+	@Inject private DefaultFileViews	_defaultViews
 
 	override Uri 	uri
 	override Str 	name
@@ -23,46 +24,46 @@ class FileResource : Resource {
 	}
 
 	override Type? defaultView() {
-		defaultViews[file.ext]
+		_defaultViews[file.ext]
 	}
 	
 	override Menu populatePopup(Menu m) {
 		menu := super.populatePopup(m)
 		
 		if (!file.isDir) {
-			addCmd(menu, fileCmds.openFileCmd(file))
+			addCmd(menu, _fileCmds.openFileCmd(file))
 			
 			fileExt := file.ext.lower
-			prefs	:= _fileExplorer.preferences
+			prefs	:= _explorer.preferences
 			actions := prefs.fileActions.findAll { it.ext == fileExt }
 			actions.each |action| {
 				launcher := prefs.fileLaunchers.find { it.id == action.launcherId }
 				if (launcher == null)
 					_errors.add(ArgNotFoundErr("Could not find a launcher with id '${action.launcherId}'", prefs.fileLaunchers.map { it.id }))
 				else
-					addCmd(menu, fileCmds.actionFileCmd(file, action, launcher))
+					addCmd(menu, _fileCmds.actionFileCmd(file, action, launcher))
 			}
 
 			menu.addSep
 		}		
 
-		addCmd(menu, fileCmds.renameFileCmd(file))
-		addCmd(menu, fileCmds.deleteFileCmd(file))
+		addCmd(menu, _fileCmds.renameFileCmd(file))
+		addCmd(menu, _fileCmds.deleteFileCmd(file))
 
 		menu.addSep
-		addCmd(menu, fileCmds.cutFileCmd(file))
-		addCmd(menu, fileCmds.copyFileCmd(file))
-		addCmd(menu, fileCmds.pasteFileCmd(file))
+		addCmd(menu, _fileCmds.cutFileCmd(file))
+		addCmd(menu, _fileCmds.copyFileCmd(file))
+		addCmd(menu, _fileCmds.pasteFileCmd(file))
 
 		menu.addSep
-		addCmd(menu, fileCmds.copyFileNameCmd(file))
-		addCmd(menu, fileCmds.copyFilePathCmd(file))
-		addCmd(menu, fileCmds.copyFileUriCmd(file))
+		addCmd(menu, _fileCmds.copyFileNameCmd(file))
+		addCmd(menu, _fileCmds.copyFilePathCmd(file))
+		addCmd(menu, _fileCmds.copyFileUriCmd(file))
 
 		if (file.isDir) {
 			menu.addSep
-			addCmd(menu, fileCmds.newFileCmd(file))
-			addCmd(menu, fileCmds.newFolderCmd(file))
+			addCmd(menu, _fileCmds.newFileCmd(file))
+			addCmd(menu, _fileCmds.newFolderCmd(file))
 		}
 		
 		// open
@@ -78,7 +79,7 @@ class FileResource : Resource {
 	
 	override Void doAction() {
 		// show view if there is one 
-		if (defaultViews[file.ext] != null) {
+		if (_defaultViews[file.ext] != null) {
 			super.doAction
 			return
 		}
@@ -99,6 +100,8 @@ class FileResource : Resource {
 
 
 
+** (Resource) - 
+** Represents a folder on the file system.
 class FolderResource : FileResource {
 	new make(|This|in) : super.make(in) { }
 	override Type? defaultView() {
