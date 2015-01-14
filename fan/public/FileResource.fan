@@ -23,15 +23,19 @@ class FileResource : Resource {
 		displayName = file.osPath
 	}
 
-	override Type? defaultView() {
-		_defaultViews[file.ext]
+	override Type[] viewTypes() {
+		[_defaultViews[file.ext]]
 	}
 	
 	override Menu populatePopup(Menu m) {
 		menu := super.populatePopup(m)
 		
+		if (file.isDir) {
+			addCmd(menu, _fileCmds.openDirInNewTab(file))
+		}
+
 		if (!file.isDir) {
-			addCmd(menu, _fileCmds.openFileCmd(file))
+			addCmd(menu, _fileCmds.openFileInSystemCmd(file))
 			
 			fileExt := file.ext.lower
 			prefs	:= _explorer.preferences
@@ -43,10 +47,9 @@ class FileResource : Resource {
 				else
 					addCmd(menu, _fileCmds.actionFileCmd(file, action, launcher))
 			}
-
-			menu.addSep
 		}		
 
+		menu.addSep
 		addCmd(menu, _fileCmds.renameFileCmd(file))
 		addCmd(menu, _fileCmds.deleteFileCmd(file))
 
@@ -104,7 +107,7 @@ class FileResource : Resource {
 ** Represents a folder on the file system.
 class FolderResource : FileResource {
 	new make(|This|in) : super.make(in) { }
-	override Type? defaultView() {
-		FolderView#
+	override Type[] viewTypes() {
+		[FolderView#]
 	}
 }

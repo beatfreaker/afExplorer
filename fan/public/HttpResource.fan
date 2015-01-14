@@ -11,4 +11,8 @@ class HttpResource : Resource {
 
 	@NoDoc
 	new make(|This|in) : super.make(in) { }
+	
+	override Type[] viewTypes() {
+		[HtmlView#]
+	}
 }

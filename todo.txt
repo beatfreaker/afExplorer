@@ -5,6 +5,8 @@ http://codingground.tutorialspoint.com:40372/index.htm?SESSIONID=fqbnhe5s5uk1fi4
 Folder command
  - add to zip
 
+Find in files
+
 Open in New Tab
  - Have means to define when new tab happens
  - How do we auto-create views + panels?

@@ -11,13 +11,15 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	@Inject private RefluxIcons		icons
 	@Inject private UriResolvers	uriResolvers
 	@Inject	private Explorer		explorer
+	@Inject private GlobalCommands	globalCommands
 	@Autobuild private FileResolver	fileResolver
 	@Autobuild private FolderViewModel model
 			private	Table			table
 			private FolderResource? fileResource
 
 	protected new make(|This| in) : super(in) {
-		content = table = Table {
+		this.reuseView = true
+		this.content = table = Table {
 			it.multi = true
 			it.onAction.add |e| { this->onAction(e) }
 			it.onPopup.add	|e| { this->onPopup (e) }
@@ -26,6 +28,14 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 		}
 	}
 	
+	override Void onActivate() {
+		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afReflux.textEditor", |->Bool| { true } )
+	}
+	
+	override Void onDeactivate() {
+		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afReflux.textEditor")
+	}
+
 	override Void load(Resource resource) {
 		super.load(resource)
 		fileResource = (FolderResource) resource

@@ -12,6 +12,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	@Inject		private RefluxIcons			icons
 	@Inject		private UriResolvers		uriResolvers
 	@Inject		private Explorer			explorer
+	@Inject 	private GlobalCommands		globalCommands
 	@Autobuild	private FoldersTreeModel	model
 	
 	private Combo	combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) } }
@@ -26,8 +27,8 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		tree = Tree {
 			it.model = this.model
 			it.border = false
-			it.onSelect.add |e| { this->onSelect(e) }
-			it.onPopup.add	|e| { this->onPopup(e) }
+			it.onMouseDown.add	|e| { this->onMouseDown(e) }
+			it.onPopup.add		|e| { this->onPopup(e) }
 		}
 		
 		content = EdgePane {
@@ -41,10 +42,13 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		favourites = explorer.preferences.favourites		
 		combo.items = favourites.keys
 	}
+
+	override Void onActivate() {
+		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afReflux.textEditor", |->Bool| { true } )
+	}
 	
-	Void gotoFavourite(Str favourite) {
-		uri := explorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", explorer.preferences.favourites.keys)
-		combo.selected = favourite
+	override Void onDeactivate() {
+		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afReflux.textEditor")
 	}
 
 	override Void onShowHiddenFiles(Bool show) {
@@ -52,6 +56,17 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		if (!isShowing || !isActive) return
 
 		onRefresh(fileResource)
+	}
+
+	override Void onViewActivated(View view) {
+		// Views are activated before being loaded (which sets the resource)
+		if (view.resource != null)
+			onRefresh(view.resource)
+	}
+	
+	Void gotoFavourite(Str favourite) {
+		uri := explorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", explorer.preferences.favourites.keys)
+		combo.selected = favourite
 	}
 
 	private Void onComboModify(Event event)	{
@@ -64,9 +79,13 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		}
 	}
 
-	private Void onSelect(Event event) {
-		file := ((FileNode) event.data).file
-		reflux.load(file.normalize.uri)
+	private Void onMouseDown(Event event) {
+		if (event.button != 1 || event.button != 1)
+			return
+		node := (FileNode?) tree.nodeAt(event.pos)
+		if (node == null)
+			return
+		reflux.load(node.file.normalize.uri)
 	}
 
 	private Void onPopup(Event event) {
@@ -76,7 +95,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		event.popup = res.populatePopup(Menu())
 	}
 
-	override Void onLoad(Resource resource) {
+	override Void onLoad(Resource resource, LoadCtx ctx) {
 		// FIXME: don't want to specify this line in every panel!
 		if (!isShowing || !isActive) return
 		if (resource isnot FolderResource || !resource.uri.isAbs) return
@@ -88,6 +107,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	override Void onRefresh(Resource resource)	{
 		// FIXME: don't want to specify this line in every panel!
 		if (!isShowing || !isActive) return
+
 		if (resource isnot FolderResource || !resource.uri.isAbs) return
 		fileResource = (FolderResource) resource
 

@@ -35,16 +35,16 @@ class TextEditorView : View {
 	override Void onActivate() {
 		super.onActivate
 		
-		globalCommands["afReflux.cmdFind"		].addInvoker("afReflux.textEditor", |Event? e|	{ find.showFind } )
-		globalCommands["afReflux.cmdFind"		].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afReflux.cmdFindNext"	].addInvoker("afReflux.textEditor", |Event? e|	{ find.next } )
-		globalCommands["afReflux.cmdFindNext"	].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afReflux.cmdFindPrev"	].addInvoker("afReflux.textEditor", |Event? e|	{ find.prev } )
-		globalCommands["afReflux.cmdFindPrev"	].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afReflux.cmdReplace"	].addInvoker("afReflux.textEditor", |Event? e|	{ find.showFindReplace } )
-		globalCommands["afReflux.cmdReplace"	].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afReflux.cmdGoto"		].addInvoker("afReflux.textEditor", |Event? e|	{ controller?.onGoto(e) } )
-		globalCommands["afReflux.cmdGoto"		].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdFind"				].addInvoker("afReflux.textEditor", |Event? e|	{ find.showFind } )
+		globalCommands["afExplorer.cmdFind"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdFindNext"			].addInvoker("afReflux.textEditor", |Event? e|	{ find.next } )
+		globalCommands["afExplorer.cmdFindNext"			].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdFindPrev"			].addInvoker("afReflux.textEditor", |Event? e|	{ find.prev } )
+		globalCommands["afExplorer.cmdFindPrev"			].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdReplace"			].addInvoker("afReflux.textEditor", |Event? e|	{ find.showFindReplace } )
+		globalCommands["afExplorer.cmdReplace"			].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdGoto"				].addInvoker("afReflux.textEditor", |Event? e|	{ controller?.onGoto(e) } )
+		globalCommands["afExplorer.cmdGoto"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
 
 		// restore viewport and caret position
 //		caretOffset := Actor.locals["fluxText.caretOffset.$resource.uri"]
@@ -57,16 +57,16 @@ class TextEditorView : View {
 	override Void onDeactivate() {
 		super.onDeactivate
 		
-		globalCommands["afReflux.cmdFind"		].removeInvoker("afReflux.textEditor")
-		globalCommands["afReflux.cmdFind"		].removeEnabler("afReflux.textEditor")
-		globalCommands["afReflux.cmdFindNext"	].removeInvoker("afReflux.textEditor")
-		globalCommands["afReflux.cmdFindNext"	].removeEnabler("afReflux.textEditor")
-		globalCommands["afReflux.cmdFindPrev"	].removeInvoker("afReflux.textEditor")
-		globalCommands["afReflux.cmdFindPrev"	].removeEnabler("afReflux.textEditor")
-		globalCommands["afReflux.cmdReplace"	].removeInvoker("afReflux.textEditor")
-		globalCommands["afReflux.cmdReplace"	].removeEnabler("afReflux.textEditor")
-		globalCommands["afReflux.cmdGoto"		].removeInvoker("afReflux.textEditor")
-		globalCommands["afReflux.cmdGoto"		].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdFind"				].removeInvoker("afReflux.textEditor")
+		globalCommands["afExplorer.cmdFind"				].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdFindNext"			].removeInvoker("afReflux.textEditor")
+		globalCommands["afExplorer.cmdFindNext"			].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdFindPrev"			].removeInvoker("afReflux.textEditor")
+		globalCommands["afExplorer.cmdFindPrev"			].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdReplace"			].removeInvoker("afReflux.textEditor")
+		globalCommands["afExplorer.cmdReplace"			].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdGoto"				].removeInvoker("afReflux.textEditor")
+		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afReflux.textEditor")
 
 		// save viewport and caret position
 //		Actor.locals["fluxText.caretOffset.$resource.uri"] = richText.caretOffset

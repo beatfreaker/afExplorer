@@ -11,10 +11,18 @@ internal class ExplorerCmds {
 
 	new make(|This|in) { in(this) }
 
-	Command openFileCmd(File file) {
-		command("OpenFile") {
+	Command openDirInNewTab(File file) {
+		command("OpenInNewTab") {
 			it.onInvoke.add {
-				explorer.openFile(file)
+				reflux.load(file.uri, LoadCtx() { newTab=true })
+			}
+		}
+	}
+
+	Command openFileInSystemCmd(File file) {
+		command("OpenInSystem") {
+			it.onInvoke.add {
+				explorer.openFileInSystem(file)
 			}
 		}
 	}
@@ -117,7 +125,7 @@ internal class ExplorerCmds {
 	}
 
 	private RefluxCommand command(Str baseName) {
-		((RefluxCommand) registry.autobuild(RefluxCommand#)) {
+		((RefluxCommand) registry.autobuild(RefluxCommand#, [null, null, null])) {
 			it.name = baseName.toDisplayName
 			it.icon = refluxIcons["cmd${baseName}"]
 		}

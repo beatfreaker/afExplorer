@@ -3,11 +3,21 @@ using afIoc
 internal class ExplorerIcons {
 	static const Str:Uri iconMap := [
 
+		// ---- Global Commands -----------------
+		"cmdFind"				: ``,
+		"cmdFindPrev"			: `nav_backward.gif`,
+		"cmdFindNext"			: `nav_forward.gif`,
+		"cmdReplace"			: ``,
+		"cmdGoto"				: ``,
+		"cmdShowHiddenFiles"	: ``,
+		
 		// ---- File Explorer -------------------
 		"icoFoldersPanel"		: `filenav_nav.gif`,
 		"icoFolderView"			: `fldr_obj.gif`,
 		"icoImageView"			: `image_obj.gif`,
 		"icoTextEditorView"		: `file_obj.gif`,
+		
+		"cmdOpenInNewTab"		: ``,
 		
 		"cmdOpenFile"			: ``,
 		"cmdActionFile"			: ``,

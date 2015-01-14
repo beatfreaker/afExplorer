@@ -12,7 +12,7 @@ mixin Explorer {
 	abstract Void paste(File destDir)
 	abstract Void newFile(File containingFolder)
 	abstract Void newFolder(File containingFolder)
-	abstract Void openFile(File file)
+	abstract Void openFileInSystem(File file)
 	abstract Image fileToIcon(File f)
 	abstract Image urlToIcon(Uri url)
 	abstract ExplorerPrefs preferences()
@@ -87,7 +87,7 @@ internal class ExplorerImpl : Explorer {
 		}
 	}
 	
-	override Void openFile(File file) {
+	override Void openFileInSystem(File file) {
 		Desktop.launchProgram(file.uri)
 	}
 	
