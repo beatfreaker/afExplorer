@@ -12,6 +12,7 @@ class FileResource : Resource {
 	@Inject private	Errors			_errors
 	@Inject private	ExplorerCmds	_fileCmds
 	@Inject private FileViewers		_fileViewers
+	@Inject private GlobalCommands	_globalCommands
 
 	override Uri 	uri
 	override Str 	name
@@ -54,8 +55,8 @@ class FileResource : Resource {
 		}		
 
 		menu.addSep
-		addCmd(menu, _fileCmds.renameFileCmd(file))
-		addCmd(menu, _fileCmds.deleteFileCmd(file))
+		addCmd(menu, _globalCommands["afExplorer.cmdRenameFile"].command)
+		addCmd(menu, _globalCommands["afExplorer.cmdDeleteFile"].command)
 
 		menu.addSep
 		addCmd(menu, _fileCmds.cutFileCmd(file))

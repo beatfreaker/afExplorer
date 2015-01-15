@@ -1,13 +1,18 @@
 
 // ---- Global Commands ----
 
-afExplorer.cmdFind.name				= Find...
-afExplorer.cmdFind.accelerator		= Ctrl+F
-afExplorer.cmdFindNext.name			= Find Next
-afExplorer.cmdFindPrev.name			= Find Prev
-afExplorer.cmdReplace.name			= Replace...
-afExplorer.cmdReplace.accelerator	= Ctrl+H
-afExplorer.cmdGoto.name				= Goto Line
-afExplorer.cmdGoto.accelerator		= Ctrl+G
+afExplorer.cmdFind.name					= Find...
+afExplorer.cmdFind.accelerator			= Ctrl+F
+afExplorer.cmdFindNext.name				= Find Next
+afExplorer.cmdFindPrev.name				= Find Prev
+afExplorer.cmdReplace.name				= Replace...
+afExplorer.cmdReplace.accelerator		= Ctrl+H
+afExplorer.cmdGoto.name					= Goto Line
+afExplorer.cmdGoto.accelerator			= Ctrl+G
 
-afExplorer.cmdShowHiddenFiles.name	= Show Hidden Files
+afExplorer.cmdShowHiddenFiles.name		= Show Hidden Files
+
+afExplorer.cmdRenameFile.name			= Rename...
+afExplorer.cmdRenameFile.accelerator	= F2
+afExplorer.cmdDeleteFile.name			= Delete
+afExplorer.cmdDeleteFile.accelerator	= Del

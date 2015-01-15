@@ -21,33 +21,64 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 		this.reuseView = true
 		this.content = table = Table {
 			it.multi = true
-			it.onAction.add |e| { this->onAction(e) }
-			it.onPopup.add	|e| { this->onPopup (e) }
+			it.onAction.add |e| { this->onAction (e) }
+			it.onPopup.add	|e| { this->onPopup  (e) }
+			it.onSelect.add	|e| { this->onSelect (e) }
+			it.onFocus.add	|e| { this->onFocus  ( ) }
+			it.onBlur.add	|e| { this->onBlur   ( ) }
 			it.border = false
 			it.model = this.model
 		}
 	}
 	
 	override Void onActivate() {
-		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afReflux.textEditor", |->Bool| { true } )
+		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afExplorer.folderView", |->Bool| { true } )
 	}
 	
 	override Void onDeactivate() {
-		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afExplorer.folderView")
 	}
 
-	override Void load(Resource resource) {
+	override Void onRefresh(Resource resource) {
 		super.load(resource)
 		fileResource = (FolderResource) resource
 		model.fileRes = fileResource.file.listDirs.addAll(fileResource.file.listFiles).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri) }
-		table.refreshAll
+		try table.refreshAll
+		catch {}	// supurius FWT errors - see http://fantom.org/forum/topic/2390
+	}
+
+	override Void load(Resource resource) {
+		if (this.resource == resource) return
+		onRefresh(resource)
 	}
 	
 	override Void onShowHiddenFiles(Bool show) {
 		load(fileResource)
 	}
 
-	internal Void onPopup(Event event) {
+	private Void onSelect() {
+		globalCommands["afExplorer.cmdRenameFile"].update
+		globalCommands["afExplorer.cmdDeleteFile"].update
+	}
+
+	private Void onFocus() {
+		fileFetcher := |->File?| { 
+			table.selected.isEmpty ? null : model.fileRes[table.selected.first].file 
+		}
+		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
+		cmdR.fileFetcher = fileFetcher
+		cmdD := (DeleteFileCommand) globalCommands["afExplorer.cmdDeleteFile"]
+		cmdD.fileFetcher = fileFetcher
+	}
+
+	private Void onBlur() {
+		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
+		cmdR.fileFetcher = null
+		cmdD := (DeleteFileCommand) globalCommands["afExplorer.cmdDeleteFile"]
+		cmdD.fileFetcher = null
+	}
+
+	private Void onPopup(Event event) {
 		if (event.index != null) {
 			fileRes := model.fileRes[event.index]
 			event.popup = fileRes.populatePopup(Menu())
@@ -55,7 +86,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 			event.popup = fileResource?.populatePopup(Menu())
 	}
 
-	internal Void onAction(Event event) {
+	private Void onAction(Event event) {
 		if (event.index != null) {
 			fileRes := model.fileRes[event.index]
 			fileRes.doAction

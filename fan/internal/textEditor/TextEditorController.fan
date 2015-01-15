@@ -36,7 +36,7 @@ internal class TextEditorController : TextEditorSupport {
 
 	Void onModified(Event event) {
 		pushUndo(event.data)
-		editor.dirty = true
+		editor.isDirty = true
 	}
 
 	Void onCaret(Event event) {

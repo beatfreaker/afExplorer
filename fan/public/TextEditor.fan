@@ -95,10 +95,7 @@ class TextEditor : View {
 		controller.updateCaretStatus
 
 		// update ui
-		edgePane.center = BorderPane {
-			it.content	= richText
-			it.border	 = Border("1,0,1,1 $Desktop.sysNormShadow")
-		}
+		edgePane.center = richText
 		edgePane.relayout
 		richText.focus
 	}
@@ -145,18 +142,18 @@ class TextEditor : View {
 
 	private Widget buildToolBar() {
 		return EdgePane {
-			top = InsetPane(4,4,5,4) {
-				ToolBar {
-					addCommand(globalCommands["afReflux.cmdSave"].command)
-					addSep
-//					addCommand(frame.command(CommandId.cut))
-//					addCommand(frame.command(CommandId.copy))
-//					addCommand(frame.command(CommandId.paste))
+//			top = InsetPane(4,4,5,4) {
+//				ToolBar {
+//					addCommand(globalCommands["afReflux.cmdSave"].command)
 //					addSep
-//					addCommand(frame.command(CommandId.undo))
-//					addCommand(frame.command(CommandId.redo))
-				},
-			}
+////					addCommand(frame.command(CommandId.cut))
+////					addCommand(frame.command(CommandId.copy))
+////					addCommand(frame.command(CommandId.paste))
+////					addSep
+////					addCommand(frame.command(CommandId.undo))
+////					addCommand(frame.command(CommandId.redo))
+//				},
+//			}
 			bottom = find
 		}
 	}

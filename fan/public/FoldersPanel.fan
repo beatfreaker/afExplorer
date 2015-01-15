@@ -27,8 +27,11 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		tree = Tree {
 			it.model = this.model
 			it.border = false
-			it.onMouseDown.add	|e| { this->onMouseDown(e) }
-			it.onPopup.add		|e| { this->onPopup(e) }
+			it.onMouseDown.add	|e| { this->onMouseDown	(e) }
+			it.onPopup.add		|e| { this->onPopup		(e) }
+			it.onSelect.add		|e| { this->onSelect	(e) }
+			it.onFocus.add		|e| { this->onFocus		( ) }
+			it.onBlur.add		|e| { this->onBlur		( ) }
 		}
 		
 		content = EdgePane {
@@ -43,12 +46,17 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		combo.items = favourites.keys
 	}
 
+	Void gotoFavourite(Str favourite) {
+		uri := explorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", explorer.preferences.favourites.keys)
+		combo.selected = favourite
+	}
+
 	override Void onActivate() {
-		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afReflux.textEditor", |->Bool| { true } )
+		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afExplorer.folderPanel", |->Bool| { true } )
 	}
 	
 	override Void onDeactivate() {
-		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afExplorer.folderPanel")
 	}
 
 	override Void onShowHiddenFiles(Bool show) {
@@ -63,10 +71,27 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		if (view.resource != null)
 			onRefresh(view.resource)
 	}
-	
-	Void gotoFavourite(Str favourite) {
-		uri := explorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", explorer.preferences.favourites.keys)
-		combo.selected = favourite
+
+	private Void onSelect() {
+		globalCommands["afExplorer.cmdRenameFile"].update
+		globalCommands["afExplorer.cmdDeleteFile"].update
+	}
+
+	private Void onFocus() {
+		fileFetcher := |->File?| {
+			tree.selected.isEmpty ? null : ((FileNode) tree.selected.first).file
+		}
+		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
+		cmdR.fileFetcher = fileFetcher
+		cmdD := (DeleteFileCommand) globalCommands["afExplorer.cmdDeleteFile"]
+		cmdD.fileFetcher = fileFetcher
+	}
+
+	private Void onBlur() {
+		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
+		cmdR.fileFetcher = null
+		cmdD := (DeleteFileCommand) globalCommands["afExplorer.cmdDeleteFile"]
+		cmdD.fileFetcher = null
 	}
 
 	private Void onComboModify(Event event)	{

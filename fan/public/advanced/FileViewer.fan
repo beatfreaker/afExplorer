@@ -9,7 +9,7 @@ class FileViewers {
 	}
 	
 	FileViewer[] getViewers(Str? ext) {
-		ext == null ? Type[,] : extViewers[ext]
+		ext == null ? Type#.emptyList : (extViewers[ext] ?: Type#.emptyList)
 	}
 
 	Type[] getTypes(Str? ext) {

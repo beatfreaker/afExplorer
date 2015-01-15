@@ -37,6 +37,9 @@ class ExplorerModule {
 	
 	@Contribute { serviceType=GlobalCommands# }
 	static Void contributeGlobalCommands(Configuration config) {
+		config["afExplorer.cmdRenameFile"]		= config.autobuild(RenameFileCommand#)
+		config["afExplorer.cmdDeleteFile"]		= config.autobuild(DeleteFileCommand#)
+
 		config["afExplorer.cmdFind"]			= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdFind"])
 		config["afExplorer.cmdFindNext"]		= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdFindNext"])
 		config["afExplorer.cmdFindPrev"]		= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdFindPrev"])
@@ -60,18 +63,25 @@ class ExplorerModule {
 		}
 	}
 
-	
-	
+
+
 	// ---- Reflux Tool Bar -----------------------------------------------------------------------
+
+	@Contribute { serviceId="afReflux.fileMenu" }
+	static Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {
+		config.set("afExplorer.rename", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command)).after("separator.01").before("afExplorer.delete")
+		config.set("afExplorer.delete",		MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command)).after("afExplorer.rename").before("separator.02")
+		config.set("separator.02",			MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.delete").before("afReflux.exit")
+	}
 
 	@Contribute { serviceId="afReflux.editMenu" }
 	static Void contributeEditMenu(Configuration config, GlobalCommands globalCmds) {
 		config["afExplorer.find"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdFind"].command)
 		config["afExplorer.findNext"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdFindNext"].command)
 		config["afExplorer.findPrev"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdFindPrev"].command)
-		config.add(MenuItem { it.mode = MenuItemMode.sep })
+		config["separator.01"]			= MenuItem { it.mode = MenuItemMode.sep }
 		config["afExplorer.replace"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdReplace"].command)
-		config.add(MenuItem { it.mode = MenuItemMode.sep })
+		config["separator.02"]			= MenuItem { it.mode = MenuItemMode.sep }
 		config["afExplorer.goto"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdGoto"].command)
 	}
 

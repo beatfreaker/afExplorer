@@ -35,25 +35,6 @@ internal class ExplorerCmds {
 		}
 	}
 
-	Command renameFileCmd(File file) {
-		command("RenameFile") {
-			it.name = "Rename"
-			it.accelerator = Key("F2")
-			it.onInvoke.add {
-				explorer.rename(file)
-			}
-		}
-	}
-
-	Command deleteFileCmd(File file) {
-		command("DeleteFile") {
-			it.name = "Delete"
-			it.onInvoke.add {
-				explorer.delete(file)
-			}
-		}
-	}
-
 	Command newFileCmd(File file) {
 		command("NewFile") {
 			it.onInvoke.add {
