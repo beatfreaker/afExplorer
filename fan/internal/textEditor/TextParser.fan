@@ -83,7 +83,6 @@ internal class TextParser {
 
 			if (!needFatLine) return Line { it.text = text; it.styling = styling }
 			return FatLine {
-			
 				it.text = text
 				it.styling = styling
 				it.commentNesting = this.commentNesting

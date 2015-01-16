@@ -19,12 +19,13 @@ class Main {
 //				panel := (FoldersPanel) reflux.getPanel(FoldersPanel#)
 //				panel.gotoFavourite("Projects")
 				
-				fileExplorer := (Explorer) reflux.registry.serviceById(Explorer#.qname)
-				fav := fileExplorer.preferences.favourites["Projects"]
-				if (fav == null)
-					echo("Favourite 'Projects' not found!")
-				else
-					reflux.load(fav)
+				reflux.load(`file:/C:/dude.xml`)
+//				fileExplorer := (Explorer) reflux.registry.serviceById(Explorer#.qname)
+//				fav := fileExplorer.preferences.favourites["Projects"]
+//				if (fav == null)
+//					echo("Favourite 'Projects' not found!")
+//				else
+//					reflux.load(fav)
 			}
 		}
 	}

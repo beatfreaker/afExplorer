@@ -39,9 +39,8 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afExplorer.folderView")
 	}
 
-	override Void onRefresh(Resource resource) {
-		super.load(resource)
-		fileResource = (FolderResource) resource
+	override Void refresh() {
+		super.load(resource)	// update tab details
 		model.fileRes = fileResource.file.listDirs.addAll(fileResource.file.listFiles).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri) }
 		try table.refreshAll
 		catch {}	// supurius FWT errors - see http://fantom.org/forum/topic/2390
@@ -49,7 +48,9 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 
 	override Void load(Resource resource) {
 		if (this.resource == resource) return
-		onRefresh(resource)
+		this.resource = resource
+		this.fileResource = resource
+		refresh
 	}
 	
 	override Void onShowHiddenFiles(Bool show) {

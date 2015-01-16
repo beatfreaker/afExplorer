@@ -60,16 +60,8 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 
 	override Void onShowHiddenFiles(Bool show) {
-		// FIXME: don't want to specify this line in every panel!
 		if (!isShowing || !isActive) return
-
-		onRefresh(fileResource)
-	}
-
-	override Void onViewActivated(View view) {
-		// Views are activated before being loaded (which sets the resource)
-		if (view.resource != null)
-			onRefresh(view.resource)
+		refresh
 	}
 
 	private Void onSelect() {
@@ -121,25 +113,18 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 
 	override Void onLoad(Resource resource, LoadCtx ctx) {
-		// FIXME: don't want to specify this line in every panel!
-		if (!isShowing || !isActive) return
 		if (resource isnot FolderResource || !resource.uri.isAbs) return
-		fileResource = (FolderResource) resource
+		fileResource = resource
 
+		if (!isShowing || !isActive) return
 		showFile(fileResource.uri)
 	}
 
-	override Void onRefresh(Resource resource)	{
-		// FIXME: don't want to specify this line in every panel!
-		if (!isShowing || !isActive) return
-
-		if (resource isnot FolderResource || !resource.uri.isAbs) return
-		fileResource = (FolderResource) resource
-
-		tree.model = model = registry.autobuild(FoldersTreeModel#)
+	override Void refresh()	{
 		tree.refreshAll
 		Desktop.callLater(50ms) |->| {
-			showFile(fileResource.uri)
+			if (fileResource != null)
+				showFile(fileResource.uri)
 		}
 	}
 	

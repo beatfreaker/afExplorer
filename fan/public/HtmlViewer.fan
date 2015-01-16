@@ -8,17 +8,15 @@ class HtmlViewer : View {
 	@Inject private Reflux	 	reflux
 			private WebBrowser?	browser
 
-	protected new make(|This| in) : super(in) { }
+	protected new make(|This| in) : super(in) { 
+		content = browser = WebBrowser() {
+			it.onHyperlink.add |e| { this->onHyperlink(e) }	
+		}
+	}
 
 	override Void load(Resource resource) {
 		super.load(resource)
 
-		browser = WebBrowser() {
-			it.onHyperlink.add |e| { this->onHyperlink(e) }	
-		}
-
-		content = browser
-		
 		if (resource is HttpResource) { 
 			// see http://fantom.org/sidewalk/topic/2069
 			browser.load(resource.uri.plusQuery(["dodgyLink":"true"]))
@@ -26,11 +24,15 @@ class HtmlViewer : View {
 		
 		if (resource is FileResource) {
 			file	:= (resource as FileResource).file
+
 			// TODO: have a resource -> HTML service
 //			fandoc 	:= file.readAllStr
 //			html	:= fandocToHtml(fandoc, resource.uri)
-			html	:= file.readAllStr
-			browser.loadStr(html)
+
+//			html	:= file.readAllStr
+//			browser.loadStr(html)
+
+			browser.load(resource.uri.plusQuery(["dodgyLink":"true"]))
 		}
 
 		// set focus so browser responds to scroll events
@@ -39,7 +41,7 @@ class HtmlViewer : View {
 			browser.focus
 		}
 	}
-
+	
 	private Void onHyperlink(Event event) {
 		// don't hyperlink in place, instead we route the hyperlink through the flux frame to save 
 		// the uri in the history and give consistent navigation

@@ -7,7 +7,6 @@ class ExplorerPrefs {
 	private ExplorerEvents?	events
 	
 	Str:Uri favourites := 
-		// FIXME: maps are serialised as ordered
 		Str:Uri[:] { it.ordered=true }
 			// FIXME: These dirs are Windows only
 			.add("My Computer", 	`file:/C:/`) 
@@ -25,7 +24,8 @@ class ExplorerPrefs {
 	
 	Str[] hiddenNameFilters := [
 		"^\\..*\$",
-		"^\\\$.*\$"
+		"^\\\$.*\$",
+		"^desktop.ini\$"
 	]
 
 	Str[] hiddenPathFilters := [

@@ -58,7 +58,7 @@ class ExplorerModule {
 			config["htmlViewer-${it}"] = FileViewer(it, HtmlViewer#)
 		}
 
-		"css fan fog fdoc fandoc htm html java js less md slim txt xml".split.each {
+		"cs css csv fan fandoc fdoc fog htm html inf ini java js less md slim svg txt xhtml xml".split.each {
 			config["textEditor-${it}"] = FileViewer(it, TextEditor#)
 		}
 	}

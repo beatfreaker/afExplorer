@@ -260,7 +260,6 @@ internal class TextDoc : RichTextModel {
 		delimiter := this.delimiter
 		lastLine := lines.size-1
 		lines.each |Line line, Int i| {
-		
 			text := line.text
 			if (stripws) text = text.trimEnd
 			out.print(text)
