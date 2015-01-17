@@ -8,6 +8,7 @@ using fwt
 ** A text editor with syntax highlighting. Borrowed from [fluxtext]`pod:fluxtext`.
 class TextEditor : View {
 	@Inject private Registry	registry
+	@Inject private Explorer	explorer
 	@Inject private Reflux		reflux
 	
 	** The 'File' being edited.
@@ -18,7 +19,7 @@ class TextEditor : View {
 	internal RichText? 			richText
 	internal TextDoc? 			doc
 
-	internal TextEditorController?	controller
+	private TextEditorController?	controller
 	internal FindBar				find
 	internal DateTime? 				fileTimeAtLoad
 	internal Label 					caretField		:= Label()
@@ -33,6 +34,7 @@ class TextEditor : View {
 			it.top = buildToolBar
 			it.bottom = buildStatusBar
 		}
+		&wordWrap = explorer.preferences.wordWrap
 	}
 	
 	@NoDoc
@@ -78,20 +80,30 @@ class TextEditor : View {
 //		Actor.locals["fluxText.topLine.$resource.uri"] = richText.topLine
 	}
 	
+	
+	Bool wordWrap {
+		set {
+			&wordWrap = it
+			newWidgets
+		}
+	}
+	
 	@NoDoc
 	override Void load(Resource resource) {
 		super.load(resource)
 
-		// init
 		file = (resource as FileResource).file
 
 		// load the document into memory
 		loadDoc
 		charsetField.text = charset.toStr
 
+		newWidgets
+	}
+	
+	private Void newWidgets() {
 		// create rich text widget
-		richText = RichText { model = doc; border = false }
-
+		richText = RichText { model = doc; border = false; wrap = wordWrap }
 		richText.font = options.font
 		richText.tabSpacing = options.tabSpacing
 
@@ -100,7 +112,6 @@ class TextEditor : View {
 		controller.register
 		controller.updateCaretStatus
 
-		// update ui
 		edgePane.center = richText
 		edgePane.relayout
 		richText.focus

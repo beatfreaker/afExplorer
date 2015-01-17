@@ -12,8 +12,6 @@ internal mixin TextEditorSupport {
 
 	SyntaxRules rules() { return editor.rules }
 
-	TextEditorController controller() { return editor.controller }
-
 	RichText richText() { return editor.richText }
 
 	TextDoc doc() { return editor.doc }

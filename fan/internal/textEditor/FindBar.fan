@@ -39,7 +39,7 @@ internal class FindBar : ContentPane, TextEditorSupport {
 		findText.onModify.add	|->| { find(null, true, true) }
 		findText.onKeyDown.add	| e| {
 			switch (e.key) {
-				case Key.esc:	 hide; editor.richText.focus
+				case Key.esc:	hide; editor.richText.focus
 				case Key.enter: next
 			}
 		}

@@ -45,7 +45,9 @@ class ExplorerModule {
 		config["afExplorer.cmdFindPrev"]		= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdFindPrev"])
 		config["afExplorer.cmdReplace"]			= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdReplace"])
 		config["afExplorer.cmdGoto"]			= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdGoto"])
+
 		config["afExplorer.cmdShowHiddenFiles"]	= config.autobuild(ShowHiddenFilesCommand#)
+		config["afExplorer.cmdWordWrap"]		= config.autobuild(WordWrapCommand#)
 	}
 
 	@Contribute { serviceType=FileViewers# }
@@ -91,7 +93,8 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.PrefsMenu" }
 	static Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
-		config["afReflux.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
+		config["afExplorer.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
+		config["afExplorer.cmdWordWrap"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdWordWrap"].command)
 	}
 }
 

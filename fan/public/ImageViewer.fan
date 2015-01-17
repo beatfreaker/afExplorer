@@ -138,7 +138,7 @@ internal class ImageFitToWindowCommand : RefluxCommand {
 		this.icon = icons["cmdImageFitToWindow"]
 	}
 
-	override Void invoked(Event? event) {
+	override Void doInvoke(Event? event) {
 		imageView.fitToWindow
 	}
 }
@@ -153,7 +153,7 @@ internal class ImageFullSizeCommand : RefluxCommand {
 		this.icon = icons["cmdImageFullSize"]
 	}
 
-	override Void invoked(Event? event) {
+	override Void doInvoke(Event? event) {
 		imageView.showFullSize
 	}
 }

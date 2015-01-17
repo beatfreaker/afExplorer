@@ -11,6 +11,8 @@ internal class ExplorerIcons {
 		"cmdGoto"				: ``,
 		"cmdShowHiddenFiles"	: ``,
 
+		"cmdEditPrefs"			: `editor.gif`,
+		"cmdWordWrap"			: `word-wrap.gif`,
 
 		// ---- File Explorer -------------------
 		"icoFoldersPanel"		: `filenav_nav.gif`,
@@ -48,5 +50,8 @@ internal class ExplorerIcons {
 
 		// ---- Text Editor ---------------------
 		"icoTextEditor"			: `file_obj.gif`,
+
+		// ---- Fandoc Viewer -------------------
+		"icoFandocViewer"		: `fan://afExplorer/res/icons-file/fileFan.png`,
 	]
 }

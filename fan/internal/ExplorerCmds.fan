@@ -36,7 +36,7 @@ internal class ExplorerCmds {
 	}
 
 	Command newFileCmd(File file) {
-		command("NewFile") {
+		command("NewFile...") {
 			it.onInvoke.add {
 				explorer.newFile(file)
 			}
@@ -44,7 +44,7 @@ internal class ExplorerCmds {
 	}
 
 	Command newFolderCmd(File file) {
-		command("NewFolder") {
+		command("NewFolder...") {
 			it.onInvoke.add {
 				explorer.newFolder(file)
 			}

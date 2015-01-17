@@ -151,14 +151,14 @@ internal class TextEditorController : TextEditorSupport {
 		if (!inUndo)
 			editor.addUndoRedo(
 				|->| {   
-					controller.inUndo = true
+					inUndo = true
 					try		change.undo(richText)
-					finally	controller.inUndo = false
+					finally	inUndo = false
 				}, 
 				|->| {   
-					controller.inUndo = true
+					inUndo = true
 					try		change.redo(richText)
-					finally	controller.inUndo = false
+					finally	inUndo = false
 				}
 			)
 	}

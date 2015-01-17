@@ -21,6 +21,8 @@ class ExplorerPrefs {
 			events?.onShowHiddenFiles(it)
 		}
 	}
+
+	Bool wordWrap	:= true 
 	
 	Str[] hiddenNameFilters := [
 		"^\\..*\$",

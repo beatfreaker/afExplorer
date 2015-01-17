@@ -13,7 +13,7 @@ class RenameFileCommand : GlobalCommand {
 		addEnabler("afExplorer.cmdRenameFile") |->Bool| { fileFetcher?.call() != null }
 	}
 	
-	override Void onInvoke(Event? e) {
+	override Void doInvoke(Event? e) {
 		file := fileFetcher?.call()
 		if (file != null)
 			explorer.rename(file)
