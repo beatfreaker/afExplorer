@@ -112,7 +112,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		event.popup = res.populatePopup(Menu())
 	}
 
-	override Void onLoad(Resource resource, LoadCtx ctx) {
+	override Void onLoad(Resource resource) {
 		if (resource isnot FolderResource || !resource.uri.isAbs) return
 		fileResource = resource
 

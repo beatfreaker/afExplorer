@@ -20,6 +20,11 @@ class Build : BuildPod {
 			"gfx        1.0.67 - 1.0",
 			"fwt        1.0.67 - 1.0",
 			"syntax     1.0.67 - 1.0",
+			"fandoc     1.0.67 - 1.0",
+			
+			"compilerDoc 1.0.67 - 1.0",
+			"web         1.0.67 - 1.0",
+			
 			"concurrent 1.0.67 - 1.0",	// for loading images
 			
 			// ---- Core ------------------------
@@ -32,7 +37,7 @@ class Build : BuildPod {
 			"afReflux     0+"
 		]
 
-		srcDirs = [`fan/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/textEditor/`]
-		resDirs = [`locale/`, `res/icons-file/`]
+		srcDirs = [`fan/`, `fan/todo/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/textEditor/`]
+		resDirs = [`locale/`, `res/css/`, `res/icons-file/`, `res/syntax/`]
 	}
 }

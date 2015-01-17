@@ -51,15 +51,19 @@ class ExplorerModule {
 	@Contribute { serviceType=FileViewers# }
 	static Void contributeFileViewers(Configuration config) {
 		"bmp gif jpg png".split.each {
-			config["imageViewer-${it}"] = FileViewer(it, ImageViewer#)
+			config["imageViewer-${it}"] = FileViewMapping(it, ImageViewer#)
 		}
 
-		"htm html xml".split.each {
-			config["htmlViewer-${it}"] = FileViewer(it, HtmlViewer#)
+		"htm html svg xml".split.each {
+			config["htmlViewer-${it}"] = FileViewMapping(it, HtmlViewer#)
 		}
 
-		"cs css csv fan fandoc fdoc fog htm html inf ini java js less md slim svg txt xhtml xml".split.each {
-			config["textEditor-${it}"] = FileViewer(it, TextEditor#)
+		"fandoc fdoc".split.each {
+			config["fandocViewer-${it}"] = FileViewMapping(it, FandocViewer#)
+		}
+
+		"cs css csv efan fan fandoc fdoc fog htm html inf ini java js less md slim svg txt xhtml xml".split.each {
+			config["textEditor-${it}"] = FileViewMapping(it, TextEditor#)
 		}
 	}
 
@@ -69,25 +73,25 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.fileMenu" }
 	static Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {
-		config.set("afExplorer.rename", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command)).after("separator.01").before("afExplorer.delete")
-		config.set("afExplorer.delete",		MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command)).after("afExplorer.rename").before("separator.02")
-		config.set("separator.02",			MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.delete").before("afReflux.exit")
+		config.set("afExplorer.cmdRenameFile", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command)).after("separator.01").before("afExplorer.cmdDeleteFile")
+		config.set("afExplorer.cmdDeleteFile",	MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command)).after("afExplorer.cmdRenameFile").before("separator.02")
+		config.set("separator.02",				MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.cmdDeleteFile").before("afReflux.cmdExit")
 	}
 
 	@Contribute { serviceId="afReflux.editMenu" }
 	static Void contributeEditMenu(Configuration config, GlobalCommands globalCmds) {
-		config["afExplorer.find"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdFind"].command)
-		config["afExplorer.findNext"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdFindNext"].command)
-		config["afExplorer.findPrev"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdFindPrev"].command)
-		config["separator.01"]			= MenuItem { it.mode = MenuItemMode.sep }
-		config["afExplorer.replace"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdReplace"].command)
-		config["separator.02"]			= MenuItem { it.mode = MenuItemMode.sep }
-		config["afExplorer.goto"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdGoto"].command)
+		config["afExplorer.cmdFind"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdFind"].command)
+		config["afExplorer.cmdFindNext"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdFindNext"].command)
+		config["afExplorer.cmdFindPrev"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdFindPrev"].command)
+		config["separator.02"]				= MenuItem { it.mode = MenuItemMode.sep }
+		config["afExplorer.cmdReplace"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdReplace"].command)
+		config["separator.03"]				= MenuItem { it.mode = MenuItemMode.sep }
+		config["afExplorer.cmdGoto"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdGoto"].command)
 	}
 
-	@Contribute { serviceId="afReflux.optionsMenu" }
-	static Void contributeOptionsMenu(Configuration config, GlobalCommands globalCmds) {
-		config["afReflux.showHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
+	@Contribute { serviceId="afReflux.PrefsMenu" }
+	static Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
+		config["afReflux.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
 	}
 }
 

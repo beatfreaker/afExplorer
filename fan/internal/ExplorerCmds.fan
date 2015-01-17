@@ -27,7 +27,7 @@ internal class ExplorerCmds {
 		}
 	}
 
-	Command openFileWithViewCmd(Resource resource, FileViewer viewer) {
+	Command openFileWithViewCmd(Resource resource, FileViewMapping viewer) {
 		command("OpenIn${viewer.viewType.name}", "") {
 			it.onInvoke.add {
 				reflux.loadResource(resource, LoadCtx() { it.viewType = viewer.viewType })

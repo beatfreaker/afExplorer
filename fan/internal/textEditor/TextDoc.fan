@@ -47,19 +47,19 @@ internal class TextDoc : RichTextModel {
 
 	override Void modify(Int startOffset, Int len, Str newText) {
 		// compute the lines being replaced
-		endOffset			:= startOffset + len
-		startLineIndex := lineAtOffset(startOffset)
-		endLineIndex	 := lineAtOffset(endOffset)
-		startLine			:= lines[startLineIndex]
-		endLine				:= lines[endLineIndex]
-		oldText				:= textRange(startOffset, len)
+		endOffset		:= startOffset + len
+		startLineIndex	:= lineAtOffset(startOffset)
+		endLineIndex	:= lineAtOffset(endOffset)
+		startLine		:= lines[startLineIndex]
+		endLine			:= lines[endLineIndex]
+		oldText			:= textRange(startOffset, len)
 
 		// sample styles before insert
-		samplesBefore := [ lineStyling(endLineIndex+1), lineStyling(lines.size-1) ]
+		samplesBefore	:= [ lineStyling(endLineIndex+1), lineStyling(lines.size-1) ]
 
 		// compute the new text of the lines being replaced
-		offsetInStart := startOffset - startLine.offset
-		offsetInEnd	 := endOffset - endLine.offset
+		offsetInStart	:= startOffset - startLine.offset
+		offsetInEnd		:= endOffset - endLine.offset
 		newLinesText	:= startLine.text[0..<offsetInStart] + newText + endLine.text[offsetInEnd..-1]
 
 		// split new text into new lines
@@ -82,7 +82,6 @@ internal class TextDoc : RichTextModel {
 
 		// fire modification event
 		tc := TextChange {
-		
 			it.startOffset		= startOffset
 			it.startLine			= startLineIndex
 			it.oldText				= oldText
@@ -126,20 +125,14 @@ internal class TextDoc : RichTextModel {
 			// otherwise this line either closes the current open block
 			// or is inside the block
 			if (block == null) {
-			
 				line.stylingOverride = null
 				block = line.opens
-			}
-			else {
-			
+			} else {
 				Line? closes := line.closes(block)
 				if (closes == null || commentLevel > 0) {
-				
 					// override this line as str/comment block
 					line.stylingOverride = block.stylingOverride
-				}
-				else {
-				
+				} else {
 					// close the current block, and re-parse line appropriately
 					line.stylingOverride = closes.styling
 					block = closes.opens
@@ -159,7 +152,6 @@ internal class TextDoc : RichTextModel {
 
 			// apply bracket styling if current line is matched brackets
 			if (lineIndex == bracketLine1 || lineIndex == bracketLine2) {
-			
 				styling = styling.dup
 				lineLen := line.text.size
 				if (lineIndex == bracketLine1) insertBracketMatch(styling, bracketCol1, lineLen)
@@ -205,14 +197,12 @@ internal class TextDoc : RichTextModel {
 
 		// a) if we are replacing a single char run
 		if (offset == iOffset && left == 0) {
-		
 			styling[i+1] = options.bracketMatch
 			return
 		}
 
 		// b) if end of run, insert only
 		if (left == 0) {
-		
 			styling.insert(i, options.bracketMatch)
 			styling.insert(i, offset)
 			return
@@ -220,7 +210,6 @@ internal class TextDoc : RichTextModel {
 
 		// c) if starting a run of more than one character
 		if (offset == iOffset) {
-		
 			styling[i] = offset+1	// move to left one char
 			styling.insert(i, options.bracketMatch)
 			styling.insert(i, offset)
@@ -244,7 +233,6 @@ internal class TextDoc : RichTextModel {
 	internal Void load(Str[] strLines) {
 		lines = Line[,] { capacity = strLines.size + 100 }
 		strLines.each |Str str| {
-		
 			lines.add(parser.parseLine(str))
 		}
 		if (lines.isEmpty) lines.add(parser.parseLine(""))
@@ -283,7 +271,6 @@ internal class TextDoc : RichTextModel {
 		offsetInLine := offset - lines[lineIndex].offset
 
 		while (lineIndex < lines.size) {
-		
 			line := lines[lineIndex]
 			r := matchCase ?
 				line.text.index(s, offsetInLine) :
@@ -308,7 +295,6 @@ internal class TextDoc : RichTextModel {
 		offsetInLine := offset - lines[lineIndex].offset
 
 		while (lineIndex >= 0) {
-		
 			line := lines[lineIndex]
 			r := matchCase ?
 				line.text.indexr(s, offsetInLine) :
@@ -342,13 +328,11 @@ internal class TextDoc : RichTextModel {
 		nesting := 0
 
 		while (true) {
-		
 			if (line.text[offsetInLine] == a) ++nesting
 			else if (line.text[offsetInLine] == b) --nesting
 			if (nesting == 0) return offset
 
 			if (forward) {
-			
 				offset++; offsetInLine++
 				while (offsetInLine >= line.text.size) {
 				
@@ -356,9 +340,7 @@ internal class TextDoc : RichTextModel {
 					if (lineIndex >= lines.size) return null
 					line = lines[lineIndex]; offsetInLine = 0
 				}
-			}
-			else {
-			
+			} else {
 				offset--; offsetInLine--
 				while (offsetInLine < 0) {
 				
@@ -379,11 +361,9 @@ internal class TextDoc : RichTextModel {
 	**
 	internal Void setBracketMatch(Int line1, Int col1, Int line2, Int col2) {
 		if (line1 < line2 || col1 < col2) {
-		
 			bracketLine1 = line1; bracketCol1 = col1
 			bracketLine2 = line2; bracketCol2 = col2
 		} else {
-		
 			bracketLine1 = line2; bracketCol1 = col2
 			bracketLine2 = line1; bracketCol2 = col1
 		}
@@ -391,7 +371,6 @@ internal class TextDoc : RichTextModel {
 
 	internal const static Int:Int bracketPairs
 	static {
-	
 		m := Int:Int[:]
 		m['{'] = '}'; m['}'] = '{'
 		m['('] = ')'; m[')'] = '('
@@ -501,7 +480,6 @@ internal class FatLine : Line {
 	** line which takes into account that this line is the closing line
 	** of a multi-line comment or string.
 	override Line? closes(Block open) {
-	
 		if (closeBlocks == null) return null
 		for (i:=0; i<closeBlocks.size; ++i) {
 		
@@ -517,7 +495,6 @@ internal class FatLine : Line {
 
 	** Debug information
 	internal override Str debug() {
-	
 		return "{$commentNesting, $opens, $closeBlocks}"
 	}
 }

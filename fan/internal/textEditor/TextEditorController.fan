@@ -1,16 +1,24 @@
+using afIoc
+using afReflux
 using fwt
 
 **
 ** TextEditorController manages user events on the text editor.
 **
 internal class TextEditorController : TextEditorSupport {
-	
+	@Inject private Reflux		reflux
+
 	override TextEditor editor { private set }
 	Int		caretLine
 	Int		caretCol
 	Bool	inUndo := false
 
-	new make(TextEditor editor) { this.editor = editor }
+	Str		actorGotoLast	:= "1"
+	
+	new make(TextEditor editor, |This|in) {
+		in(this)
+		this.editor = editor
+	}
 
 //////////////////////////////////////////////////////////////////////////
 // Eventing
@@ -30,7 +38,6 @@ internal class TextEditorController : TextEditorSupport {
 
 	Void onVerify(Event event) {
 		clearBraceMatch
-		checkTabConvert(event.data)
 		checkAutoIndent(event)
 	}
 
@@ -62,25 +69,10 @@ internal class TextEditorController : TextEditorSupport {
 
 	Void updateCaretStatus() {
 		try {
-		
 			editor.caretField.text = "${(caretLine+1)}:${caretCol+1}"
 			editor.caretField.parent?.relayout
 		}
 		catch (Err e) e.trace
-	}
-
-//////////////////////////////////////////////////////////////////////////
-// Tab-to-Spaces
-//////////////////////////////////////////////////////////////////////////
-
-	Void checkTabConvert(TextChange tc) {
-		if (!options.convertTabsToSpaces) return
-		if (!tc.newText.containsChar('\t')) return
-
-		line := doc.line(tc.startLine)
-		tab	:= options.tabSpacing
-		numSpaces := tab - ((line.size + tab) % tab)
-		tc.newText = tc.newText.replace("\t", Str.spaces(numSpaces))
 	}
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,7 +117,7 @@ internal class TextEditorController : TextEditorSupport {
 
 		// build a replacement string for lines
 		s := StrBuf()
-		ws := options.convertTabsToSpaces ? Str.spaces(options.tabSpacing) : "\t"
+		ws := "\t"
 		(startLine..endLine).each |Int i| {
 		
 			line := doc.line(i)
@@ -155,9 +147,20 @@ internal class TextEditorController : TextEditorSupport {
 // Undo
 //////////////////////////////////////////////////////////////////////////
 
-	Void pushUndo(TextChange tc) {
-		// FIXME: undo stack
-//		if (!inUndo) editor.commandStack.push(TextChangeCommand(tc))
+	Void pushUndo(TextChange change) {
+		if (!inUndo)
+			editor.addUndoRedo(
+				|->| {   
+					controller.inUndo = true
+					try		change.undo(richText)
+					finally	controller.inUndo = false
+				}, 
+				|->| {   
+					controller.inUndo = true
+					try		change.redo(richText)
+					finally	controller.inUndo = false
+				}
+			)
 	}
 
 //////////////////////////////////////////////////////////////////////////
@@ -209,14 +212,14 @@ internal class TextEditorController : TextEditorSupport {
 		if (editor.fileTimeAtLoad == editor.file.modified) return
 		editor.fileTimeAtLoad = editor.file.modified
 
-		// FIXME: inject window
 		// prompt user to reload
-//		r := Dialog.openQuestion(editor.window,
-//					"File has been modified by another application:
-//					     $editor.file.name
-//					 Reload the file?", Dialog.yesNo)
-		// FIXME: use Reflux service
-//		if (r == Dialog.yes) editor.reload
+		r := Dialog.openQuestion(reflux.window,
+			"File has been modified by another application:
+			
+			     $editor.file.name
+			
+			 Reload the file?", Dialog.yesNo)
+		if (r == Dialog.yes) editor.refresh
 	}
 
 //////////////////////////////////////////////////////////////////////////
@@ -239,20 +242,18 @@ internal class TextEditorController : TextEditorSupport {
 //////////////////////////////////////////////////////////////////////////
 
 
-	Void onGoto(Event event) {
-	
-		// FIXME: inject window
-//		Str last := Actor.locals.get("fluxText.gotoLast", "1")
-//		r := Dialog.openPromptStr(frame, "Goto Line:", last, 6)
-//		if (r == null) return
-//
-//		line := r.toInt(10, false)
-//		if (line == null) return
-//		Actor.locals.set("fluxText.gotoLast", r)
-//
-//		line -= 1
-//		if (line >= doc.lineCount) line = doc.lineCount-1
-//		if (line < 0) line = 0
-//		richText.select(doc.offsetAtLine(line), 0)
+	Void onGoto(Event event) {	
+		r := Dialog.openPromptStr(reflux.window, "Goto Line:", actorGotoLast, 6)
+		if (r == null) return
+
+		line := r.toInt(10, false)
+		if (line == null) return
+		actorGotoLast = r
+
+		line -= 1
+		if (line >= doc.lineCount) line = doc.lineCount-1
+		if (line < 0) line = 0
+		richText.select(doc.offsetAtLine(line), 0)
+		updateCaretStatus
 	}
 }

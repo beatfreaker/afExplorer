@@ -8,8 +8,6 @@ internal mixin TextEditorSupport {
 
 	abstract TextEditor editor()
 
-//	Frame frame() { return editor.frame }
-
 	TextEditorOptions options() { return editor.options }
 
 	SyntaxRules rules() { return editor.rules }

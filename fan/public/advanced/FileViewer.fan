@@ -1,14 +1,14 @@
 
 class FileViewers {
-	private Str:FileViewer[] extViewers	:= Str:FileViewer[][:]
+	private Str:FileViewMapping[] extViewers	:= Str:FileViewMapping[][:]
 	
-	internal new make(FileViewer[] extViewers) {
+	internal new make(FileViewMapping[] extViewers) {
 		extViewers.each |viewer| {
-			this.extViewers.getOrAdd(viewer.ext) { FileViewer[,] }.add(viewer)
+			this.extViewers.getOrAdd(viewer.ext) { FileViewMapping[,] }.add(viewer)
 		}
 	}
 	
-	FileViewer[] getViewers(Str? ext) {
+	FileViewMapping[] getViewers(Str? ext) {
 		ext == null ? Type#.emptyList : (extViewers[ext] ?: Type#.emptyList)
 	}
 
@@ -17,7 +17,7 @@ class FileViewers {
 	}
 }
 
-class FileViewer {
+class FileViewMapping {
 	Str		ext
 	Type	viewType
 

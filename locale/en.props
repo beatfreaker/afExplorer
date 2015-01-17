@@ -14,5 +14,5 @@ afExplorer.cmdShowHiddenFiles.name		= Show Hidden Files
 
 afExplorer.cmdRenameFile.name			= Rename...
 afExplorer.cmdRenameFile.accelerator	= F2
-afExplorer.cmdDeleteFile.name			= Delete
+afExplorer.cmdDeleteFile.name			= Delete...
 afExplorer.cmdDeleteFile.accelerator	= Del

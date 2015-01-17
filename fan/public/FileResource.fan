@@ -20,7 +20,7 @@ class FileResource : Resource {
 	override Str	displayName
 			 File	file
 
-	new make(|This|in) : super.make(in) { 
+	internal new make(|This|in) : super.make(in) { 
 		displayName = file.osPath
 	}
 
@@ -111,7 +111,9 @@ class FileResource : Resource {
 ** (Resource) - 
 ** Represents a folder on the file system.
 class FolderResource : FileResource {
-	new make(|This|in) : super.make(in) { }
+	internal new make(|This|in) : super.make(in) { }
+	
+	** Returns 'FolderView#'.
 	override Type[] viewTypes() {
 		[FolderView#]
 	}

@@ -27,18 +27,9 @@ const class TextEditorOptions {
 	** Default is '4'.
 	const Int tabSpacing := 4
 
-	** If true, then all tabs to converted to space characters based on the configured `tabSpacing`.
-	** 
-	** The default is 'true'.
-	const Bool convertTabsToSpaces := false
-
 	** Default char encoding to use when load/saving
 	** text files.	Defaults to utf8.
 	const Charset charset := Charset.utf8
-
-//////////////////////////////////////////////////////////////////////////
-// Styling
-//////////////////////////////////////////////////////////////////////////
 
 	const Font font						:= Desktop.sysFontMonospace
 	const Color highlightCurLine		:= Color(0xf0_f0_f0)
@@ -54,7 +45,6 @@ const class TextEditorOptions {
 //////////////////////////////////////////////////////////////////////////
 
 	internal static TextEditorOptions load() {
-	
 		// FIXME: prefs
 //		return Flux.loadOptions(TextEditorOptions#.pod, "text-editor", TextEditorOptions#)
 		TextEditorOptions()

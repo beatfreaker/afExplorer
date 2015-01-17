@@ -1,0 +1,71 @@
+
+/* -------------- Skinny Fandoc Stylin' --------------- */
+/* ------------ For styling Fandoc Files -------------- */
+/* - http://www.fantomfactory.org/pods/afFandocViewer - */
+
+body {
+	font:				10pt Arial, sans-serif;
+	margin:				0;
+	padding: 			1.5em;
+	background-color: 	#FFFFFF;
+}
+
+h1 { color: #2f5381; }
+h2 { color: #ad4e00; }
+h3 { color: #25272a; }
+a  { color: #185098; }
+
+h3, h4 {
+	margin-top:		2em;
+}
+
+input {
+	font:					10pt Arial, sans-serif;
+}
+
+code,
+pre,
+textarea {
+	font:					9pt Monaco, 'Courier New', monospace; 
+}
+
+pre {
+	overflow-y:				hidden; 
+	overflow-x:				auto; 
+}
+
+blockquote {
+	margin:					1em 0;
+	padding-left:			1em;
+	color:					#a0a;
+	border-left:			1px solid #ccc;
+}
+
+code {
+	color:					#080;
+}
+
+p.sig 
+code 
+a {
+	color:#080;
+}
+
+pre {
+  color:					#333; 
+  background:				#f7f7ed; 
+  border:					1px solid #dfe0cd; 
+  padding:					10px;
+  border-radius:			5px;
+  -webkit-border-radius:	5px; 
+  -moz-border-radius:		5px; 
+}
+
+
+
+table { border-collapse:collapse; border-top:1px solid #d0dae5; }
+table tr { border-bottom:1px solid #d0dae5; }
+table tr:nth-child(odd) { background:#f2f6f8; }
+table td { padding:5px; }
+table td div { font-size:9pt; }
+

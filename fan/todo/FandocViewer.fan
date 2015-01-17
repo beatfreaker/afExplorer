@@ -2,9 +2,10 @@ using afIoc
 using afReflux
 using gfx
 using fwt
+using fandoc
 
 ** (View) - A simple HTML viewer for http and file resources. 
-class HtmlViewer : View {
+class FandocViewer : View {
 	@Inject private Reflux	 	reflux
 			private WebBrowser?	browser
 
@@ -16,23 +17,14 @@ class HtmlViewer : View {
 
 	override Void load(Resource resource) {
 		super.load(resource)
-
-		if (resource is HttpResource) { 
-			// see http://fantom.org/sidewalk/topic/2069
-			browser.load(resource.uri.plusQuery(["dodgyLink":"true"]))
-		}
 		
 		if (resource is FileResource) {
 			file	:= (resource as FileResource).file
 
 			// TODO: have a resource -> HTML service
-//			fandoc 	:= file.readAllStr
-//			html	:= fandocToHtml(fandoc, resource.uri)
-
-//			html	:= file.readAllStr
-//			browser.loadStr(html)
-
-			browser.load(resource.uri.plusQuery(["dodgyLink":"true"]))
+			fandoc 	:= file.readAllStr
+			html	:= fandocToHtml(fandoc, resource.uri)
+			browser.loadStr(html)
 		}
 
 		// set focus so browser responds to scroll events
@@ -67,5 +59,12 @@ class HtmlViewer : View {
 
 		// route the URI through reflux so it gets stored in the history
 		reflux.load(uri)
+	}
+	
+	private static Str fandocToHtml(Str fandoc, Uri? base := null) {
+		writer	:= FandocWriter(base)
+		doc 	:= FandocParser().parseStr(fandoc)
+		doc.write(writer)
+		return writer.toHtml
 	}
 }

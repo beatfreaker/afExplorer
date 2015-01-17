@@ -7,13 +7,16 @@ using fwt
 ** (View) - 
 ** A text editor with syntax highlighting. Borrowed from [fluxtext]`pod:fluxtext`.
 class TextEditor : View {
+	@Inject private Registry	registry
+	@Inject private Reflux		reflux
 	
-	File? 				file
-	TextEditorOptions	options := TextEditorOptions.load
-	Charset 			charset := options.charset
-	SyntaxRules? 		rules
-	RichText? 			richText
-	internal TextDoc? 	doc
+	** The 'File' being edited.
+			File? 				file
+	internal TextEditorOptions	options := TextEditorOptions.load
+	internal Charset 			charset := options.charset
+	internal SyntaxRules? 		rules
+	internal RichText? 			richText
+	internal TextDoc? 			doc
 
 	internal TextEditorController?	controller
 	internal FindBar				find
@@ -32,6 +35,7 @@ class TextEditor : View {
 		}
 	}
 	
+	@NoDoc
 	override Void onActivate() {
 		super.onActivate
 		
@@ -54,6 +58,7 @@ class TextEditor : View {
 		richText?.focus
 	}
 	
+	@NoDoc
 	override Void onDeactivate() {
 		super.onDeactivate
 		
@@ -73,6 +78,7 @@ class TextEditor : View {
 //		Actor.locals["fluxText.topLine.$resource.uri"] = richText.topLine
 	}
 	
+	@NoDoc
 	override Void load(Resource resource) {
 		super.load(resource)
 
@@ -90,7 +96,7 @@ class TextEditor : View {
 		richText.tabSpacing = options.tabSpacing
 
 		// initialize controller
-		controller = TextEditorController(this)
+		controller = registry.autobuild(TextEditorController#, [this])
 		controller.register
 		controller.updateCaretStatus
 
@@ -100,7 +106,7 @@ class TextEditor : View {
 		richText.focus
 	}
 
-	
+	@NoDoc
 	override Void save() {	
 		out := file.out { it.charset = this.charset }
 		try		doc.save(out)
@@ -110,6 +116,16 @@ class TextEditor : View {
 		super.save
 	}
 	
+	@NoDoc
+	override Bool confirmClose() {
+		if (!isDirty) return true
+		
+		r := Dialog.openQuestion(reflux.window, "Save changes to $resource.name?", [Dialog.yes, Dialog.no, Dialog.cancel])
+		if (r == Dialog.cancel) return false
+		if (r == Dialog.yes) save
+
+		return true
+	}
 	
 	internal Void loadDoc() {
 		// read document into memory, if we fail with the
@@ -167,5 +183,4 @@ class TextEditor : View {
 			it.add(charsetField)
 		}
 	}
-	
 }

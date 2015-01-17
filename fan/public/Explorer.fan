@@ -3,7 +3,8 @@ using afReflux
 using gfx
 using fwt
 
-** (Service) - The main service API for explorer operations.
+** (Service) - 
+** The main service API for Explorer operations.
 mixin Explorer {
 	abstract Void rename(File file)
 	abstract Void delete(File file)

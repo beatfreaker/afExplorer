@@ -66,10 +66,6 @@ internal class TextParser {
 	**
 	Line parseLine(Str text, BlockClose? close := null) {
 		try {
-		
-			if (options.convertTabsToSpaces)
-				text = convertTabsToSpaces(text, options.tabSpacing)
-
 			init(text)
 
 			styling := Obj[,]
@@ -94,19 +90,6 @@ internal class TextParser {
 			e.trace
 			return Line { it.text = text; it.styling = [0, options.text] }
 		}
-	}
-
-	internal static Str convertTabsToSpaces(Str text, Int ts) {
-		if (!text.contains("\t")) return text
-		s := StrBuf()
-		text.each |Int ch, Int i| {
-		
-			if (ch == '\t')
-				s.add(Str.spaces(ts - (s.size%ts)))
-			else
-				s.addChar(ch)
-		}
-		return s.toStr
 	}
 
 	private Void parseStyling(Obj[] styling) {
