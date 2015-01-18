@@ -53,7 +53,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	}
 	
 	override Void onShowHiddenFiles(Bool show) {
-		load(fileResource)
+		refresh
 	}
 
 	private Void onSelect() {

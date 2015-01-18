@@ -6,19 +6,19 @@ class ExplorerPrefs {
 	@Inject @Transient 
 	private ExplorerEvents?	events
 	
-	Str:Uri favourites := 
-		Str:Uri[:] { it.ordered=true }
-			// FIXME: These dirs are Windows only
-			.add("My Computer", 	`file:/C:/`) 
-			.add("My Documents",	`file:/C:/Users/${Env.cur.user}/Documents/`) 
-			.add("My Downloads",	`file:/C:/Users/${Env.cur.user}/Downloads/`) 
-			.add("Fantom Home",		Env.cur.homeDir.normalize.uri)
-			.add("Temp", 			`file:/C:/Temp/`) 
+	Str:Str favourites := 
+		Str:Str[:] { it.ordered=true }
+			.add("My Computer", 	"file:/") 
+			.add("Fantom Home",		"\${Env.cur.homeDir}")
+			.add("Work Dir",		"\${Env.cur.workDir}")
+			.add("Temp", 			"\${Env.cur.tempDir}") 
 
 	Bool showHiddenFiles	:= false {
 		set {
-			&showHiddenFiles = it
-			events?.onShowHiddenFiles(it)
+			if (&showHiddenFiles != it) {
+				&showHiddenFiles = it
+				events?.onShowHiddenFiles(it)
+			}
 		}
 	}
 

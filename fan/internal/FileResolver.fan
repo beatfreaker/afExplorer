@@ -10,14 +10,26 @@ internal class FileResolver : UriResolver {
 	override Resource? resolve(Str uri) {
 		file := (File?) null
 
-		try {
-			file = File.os(uri).normalize
-		} catch { }
+		// check for some special cases
+		if (uri == "\${Env.cur.homeDir}")
+			file = Env.cur.homeDir.normalize
+		if (uri == "\${Env.cur.workDir}")
+			file = Env.cur.workDir.normalize
+		if (uri == "\${Env.cur.tempDir}")
+			file = Env.cur.tempDir.normalize
 		
-		try {
-			if (uri.toUri.scheme == "file")
-				file = uri.toUri.toFile.normalize
-		} catch { }
+		// check for os specific paths
+		if (file == null)
+			try {
+				file = File.os(uri).normalize
+			} catch { }
+		
+		// check for standard file: scheme URIs
+		if (file == null)
+			try {
+				if (uri.toUri.scheme == "file")
+					file = uri.toUri.toFile.normalize
+			} catch { }
 
 		if (file == null || !file.exists)
 			return null

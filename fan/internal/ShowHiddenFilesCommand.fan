@@ -12,13 +12,17 @@ internal class ShowHiddenFilesCommand : GlobalCommand, RefluxEvents {
 	}
 
 	override Void doInvoke(Event? event) {
-		val := !explorer.preferences.showHiddenFiles
-		explorer.preferences.showHiddenFiles = val
-		this.command.selected = val
+		// setting this fires the event
+		explorer.preferences.showHiddenFiles = command.selected
 	}
 	
 	override Void onLoadSession(Str:Obj? session) {
-		this.command.selected = session.getOrAdd("afExplorer.cmdShowHiddenFiles") { true }
+		showHide := (Bool?) session["afExplorer.cmdShowHiddenFiles"]
+		
+		if (showHide != null) {
+			command.selected = showHide
+			explorer.preferences.showHiddenFiles = showHide
+		}
 	}
 	override Void onSaveSession(Str:Obj? session) {
 		session["afExplorer.cmdShowHiddenFiles"] = this.command.selected

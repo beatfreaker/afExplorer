@@ -65,14 +65,31 @@ class ExplorerModule {
 			config["fandocViewer-${it}"] = FileViewMapping(it, FandocViewer#)
 		}
 
-		"cs css csv efan fan fandoc fdoc fog htm html inf ini java js less md slim svg txt xhtml xml".split.each {
+		"bat cmd cs css csv efan fan fandoc fdoc fog htm html inf ini java js less md props properties slim svg txt xhtml xml".split.each {
+			config["textEditor-${it}"] = FileViewMapping(it, TextEditor#)
+		}
+		
+		// F4 config files
+		"buildpath classpath project".split.each {
+			config["textEditor-${it}"] = FileViewMapping(it, TextEditor#)
+		}
+		
+		// other . files
+		"gitignore hgignore hgtags".split.each {
 			config["textEditor-${it}"] = FileViewMapping(it, TextEditor#)
 		}
 	}
 
 	@Contribute { serviceType=RegistryStartup# }
-	static Void contributeRegistryStartup(Configuration config) {
+	static Void contributeRegistryStartup(Configuration config, Log log) {
 		config.remove("afIoc.logServices")
+		
+		config["afExplorer.installer"] = |->| {
+			installer := (Installer) config.autobuild(Installer#)
+			try installer.installFandocSyntaxFile
+			catch (Err err)
+				log.err("Could not install fandoc syntax file", err)
+		}
 	}
 
 	// ---- Reflux Tool Bar -----------------------------------------------------------------------
