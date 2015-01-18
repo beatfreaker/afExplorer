@@ -21,11 +21,11 @@ class Build : BuildPod {
 			"fwt        1.0.67 - 1.0",
 			"syntax     1.0.67 - 1.0",
 			"fandoc     1.0.67 - 1.0",
+			"concurrent 1.0.67 - 1.0",	// for loading images
 			
 			"compilerDoc 1.0.67 - 1.0",
 			"web         1.0.67 - 1.0",
 			
-			"concurrent 1.0.67 - 1.0",	// for loading images
 			
 			// ---- Core ------------------------
 			"afBeanUtils  1.0.4  - 1.0", 

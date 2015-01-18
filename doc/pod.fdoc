@@ -1,6 +1,6 @@
 Overview [#overview]
 ********************
-A 'Reflux' application; A file explorer with associated editors and viewers.
+A 'Reflux' File Explorer application with associated viewers and editors.
 
 
 
@@ -25,4 +25,9 @@ Full API & fandocs are available on the [Status302 repository]`http://repo.statu
 Quick Start [#quickStart]
 *************************
 
+Features I like:
 
+ - text editor sytax highlighting
+ - text editor word wrap
+ - a bug free html / web browser
+ - Quick F12 View toggle (handy for editing / viewing fandoc)

@@ -1,3 +1,5 @@
+using afIoc
+using afReflux
 using gfx
 using fwt
 
@@ -6,6 +8,8 @@ using fwt
 **
 internal class FindBar : ContentPane, TextEditorSupport {
 
+	@Inject	private Session session
+	
 	override TextEditor editor { private set }
 	private Int caretPos
 
@@ -27,10 +31,12 @@ internal class FindBar : ContentPane, TextEditorSupport {
 	private Command cmdReplace		:= Command("Replace", 	  null)										{ replace }
 	private Command cmdReplaceAll	:= Command("Replace All", null)										{ replaceAll }
 
-	new make(TextEditor editor) {
+	new make(TextEditor editor, Registry registry, |This|in) {
+		in(this)
 	
 		this.editor = editor
-		history := FindHistory.load
+		
+		history := (FindHistory) session.data.getOrAdd("afExplorer.textEditor.findHistory") { FindHistory() }
 
 		findText = Combo() { editable = true }
 		findText.items = history.find
@@ -279,7 +285,7 @@ internal class FindBar : ContentPane, TextEditorSupport {
 			cmdReplaceAll.enabled	= false
 			setMsg("Not Found")
 		}
- }
+	}
 
 	**
 	** Replace all occurences of the current query string with
@@ -320,12 +326,11 @@ internal class FindBar : ContentPane, TextEditorSupport {
 
 	private Void updateHistory() {
 		// save history
-		history := FindHistory.load
+		history := (FindHistory) session.data.getOrAdd("afExplorer.textEditor.findHistory") { FindHistory() }
 		if (replacePane.visible)
 			history.pushFind(replaceText.text)
 		history.pushFind(findText.text)
 		history.matchCase = matchCase.selected
-		history.save
 
 		// update ui
 		updateCombo(findText)

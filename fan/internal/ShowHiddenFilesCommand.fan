@@ -3,10 +3,11 @@ using afReflux
 using gfx
 using fwt
 
-internal class ShowHiddenFilesCommand : GlobalCommand {
+internal class ShowHiddenFilesCommand : GlobalCommand, RefluxEvents {
 	@Inject private Explorer	explorer
 
-	new make(|This|in) : super.make("cmdShowHiddenFiles", in) {
+	new make(EventHub eventHub, |This|in) : super.make("cmdShowHiddenFiles", in) {
+		eventHub.register(this)
 		this.command.mode = CommandMode.toggle
 		this.command.selected = explorer.preferences.showHiddenFiles
 	}
@@ -15,5 +16,12 @@ internal class ShowHiddenFilesCommand : GlobalCommand {
 		val := !explorer.preferences.showHiddenFiles
 		explorer.preferences.showHiddenFiles = val
 		this.command.selected = val
+	}
+	
+	override Void onLoadSession(Str:Obj? session) {
+		this.command.selected = session.getOrAdd("afExplorer.cmdShowHiddenFiles") { true }
+	}
+	override Void onSaveSession(Str:Obj? session) {
+		session["afExplorer.cmdShowHiddenFiles"] = this.command.selected
 	}
 }

@@ -41,7 +41,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 
 	override Void refresh() {
 		super.load(resource)	// update tab details
-		model.fileRes = fileResource.file.listDirs.addAll(fileResource.file.listFiles).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri) }
+		model.fileRes = fileResource.file.listDirs.addAll(fileResource.file.listFiles).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri.toStr) }
 		try table.refreshAll
 		catch {}	// supurius FWT errors - see http://fantom.org/forum/topic/2390
 	}

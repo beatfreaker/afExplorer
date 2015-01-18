@@ -13,20 +13,24 @@ internal class WordWrapCommand : GlobalCommand, RefluxEvents {
 	new make(EventHub eventHub, |This|in) : super.make("cmdWordWrap", in) {
 		eventHub.register(this)
 		this.command.mode = CommandMode.toggle
-		this.command.selected = explorer.preferences.wordWrap
 		this.addEnabler("afExplorer.cmdWordWrap", |->Bool| { reflux.activeView is TextEditor }, false)
 	}
 
 	override Void doInvoke(Event? event) {
-		val := this.command.selected
-		explorer.preferences.wordWrap = val
-		(reflux.activeView as TextEditor).wordWrap = val
+		(reflux.activeView as TextEditor).wordWrap = this.command.selected
 	}
 	
 	override Void update() {
 		super.update
 		if (reflux.activeView is TextEditor)
 			this.command.selected = (reflux.activeView as TextEditor).wordWrap
+	}
+
+	override Void onLoadSession(Str:Obj? session) {
+		this.command.selected = session.getOrAdd("afExplorer.cmdWordWrap") { true }
+	}
+	override Void onSaveSession(Str:Obj? session) {
+		session["afExplorer.cmdWordWrap"] = this.command.selected
 	}
 
 	override Void onViewActivated	(View view) { update }

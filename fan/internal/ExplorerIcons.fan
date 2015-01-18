@@ -11,7 +11,7 @@ internal class ExplorerIcons {
 		"cmdGoto"				: ``,
 		"cmdShowHiddenFiles"	: ``,
 
-		"cmdEditPrefs"			: `editor.gif`,
+		"cmdEditPrefs"			: ``,
 		"cmdWordWrap"			: `word-wrap.gif`,
 
 		// ---- File Explorer -------------------

@@ -14,7 +14,7 @@ internal class ExplorerCmds {
 	Command openDirInNewTab(File file) {
 		command("OpenInNewTab") {
 			it.onInvoke.add {
-				reflux.load(file.uri, LoadCtx() { newTab=true })
+				reflux.load(file.uri.toStr, LoadCtx() { newTab=true })
 			}
 		}
 	}

@@ -5,7 +5,7 @@ using fwt
 ** TextEditorOptions configured general text document options.
 **
 @Serializable @NoDoc
-const class TextEditorOptions {
+const class TextEditorPrefs {
 
 	@NoDoc
 	new make(|This|? f := null) { if (f != null) f(this) }
@@ -44,10 +44,10 @@ const class TextEditorOptions {
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-	internal static TextEditorOptions load() {
+	internal static TextEditorPrefs load() {
 		// FIXME: prefs
 //		return Flux.loadOptions(TextEditorOptions#.pod, "text-editor", TextEditorOptions#)
-		TextEditorOptions()
+		TextEditorPrefs()
 	}
 }
 

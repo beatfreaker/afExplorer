@@ -6,7 +6,7 @@
 
 ## Overview
 
-A `Reflux` application; A file explorer with associated editors and viewers.
+A `Reflux` File Explorer application with associated viewers and editors.
 
 ## Install
 
@@ -23,4 +23,11 @@ To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan
 Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afExplorer/).
 
 ## Quick Start
+
+Features I like:
+
+- text editor sytax highlighting
+- text editor word wrap
+- a bug free html / web browser
+- Quick F12 View toggle (handy for editing / viewing fandoc)
 

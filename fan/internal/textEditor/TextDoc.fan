@@ -11,7 +11,7 @@ internal class TextDoc : RichTextModel {
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-	new make(TextEditorOptions options, SyntaxRules rules) {
+	new make(TextEditorPrefs options, SyntaxRules rules) {
 		lines.add(Line { it.offset=0; it.text="" })
 		this.options	 = options
 		this.rules		 = rules
@@ -402,7 +402,7 @@ internal class TextDoc : RichTextModel {
 //////////////////////////////////////////////////////////////////////////
 
 	** Text options for current document
-	TextEditorOptions options { private set }
+	TextEditorPrefs options { private set }
 
 	** Syntax rules for current document
 	SyntaxRules rules { private set }

@@ -1,3 +1,6 @@
+using afIoc
+using afReflux
+
 **
 ** FindHistory maintains the most recent find text
 ** queries for the entire application.
@@ -5,24 +8,12 @@
 @Serializable @NoDoc
 class FindHistory {
 
-	**
-	** Convenience for loading from "session/find"
-	**
-	static FindHistory load() {
-		// FIXME: load prefs
-//		return Flux.loadOptions(Flux.pod, "session/find", FindHistory#)
-		FindHistory()
-	}
+	** Get whether find should match the case of the query term.
+	Bool matchCase := false
 
-	**
-	** Convenience for save to "session/history".
-	** Return this.
-	**
-	This save() {
-		// FIXME: save prefs
-//		Flux.saveOptions(Flux.pod, "session/find", this)
-		return this
-	}
+	@Transient private Int max := 20
+	private Str[] findList	:= Str[,]
+	private Uri[] dirList	:= Uri[,]
 
 	**
 	** Log the given find text into the history.
@@ -76,14 +67,4 @@ class FindHistory {
 	Str[] dirAsStr() {
 		dirList.map |Uri u->Str| { u.toStr }
 	}
-
-	**
-	** Get whether find should match the case of the query term.
-	**
-	Bool matchCase := false
-
-	@Transient private Int max := 20
-	private Str[] findList := Str[,]
-	private Uri[] dirList	:= Uri[,]
-
 }

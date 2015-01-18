@@ -383,26 +383,26 @@ internal class TextParser {
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-	internal TextEditorOptions options // configured options
-	internal SyntaxRules rules			 // syntax rules for current document
+	internal TextEditorPrefs options	// configured options
+	internal SyntaxRules rules			// syntax rules for current document
 
-	private Str brackets						 // str of bracket symbols
-	private Int:Bool keywordPrefixes // first two letter of keywords
-	private Str:Bool keywords				// keywords
-	private Matcher[] comments			 // matchers for eol comments
-	private Matcher commentStart		 // matcher to check comment start
-	private Matcher commentEnd			 // matcher to check comment end
+	private Str brackets				// str of bracket symbols
+	private Int:Bool keywordPrefixes	// first two letter of keywords
+	private Str:Bool keywords			// keywords
+	private Matcher[] comments			// matchers for eol comments
+	private Matcher commentStart		// matcher to check comment start
+	private Matcher commentEnd			// matcher to check comment end
 	private BlockOpen commentOpen		// open handle for block comments
-	private StrMatch[] strs					// matchers for str literals
+	private StrMatch[] strs				// matchers for str literals
 
-	private Str text := ""					 // line being parsed
-	private Int pos									// index into text for cur
-	private Int cur									// current char
-	private Int peek								 // next char
+	private Str text := ""				// line being parsed
+	private Int pos						// index into text for cur
+	private Int cur						// current char
+	private Int peek					// next char
 
-	private Int commentNesting			 // levels of block comments opened/closed
-	private Block? opens						 // if current line opens block
-	private Block[]? closes					// if current line closes block
+	private Int commentNesting			// levels of block comments opened/closed
+	private Block? opens				// if current line opens block
+	private Block[]? closes				// if current line closes block
 }
 
 

@@ -7,13 +7,17 @@ using fwt
 ** (View) - 
 ** A text editor with syntax highlighting. Borrowed from [fluxtext]`pod:fluxtext`.
 class TextEditor : View {
-	@Inject private Registry	registry
-	@Inject private Explorer	explorer
-	@Inject private Reflux		reflux
+	@Inject private Registry		registry
+	@Inject private Explorer		explorer
+	@Inject private Reflux			reflux
+	@Inject private TextStash		stash
+	@Inject private GlobalCommands	globalCommands
+			private	EdgePane		edgePane
+	
 	
 	** The 'File' being edited.
 			File? 				file
-	internal TextEditorOptions	options := TextEditorOptions.load
+	internal TextEditorPrefs	options := TextEditorPrefs.load
 	internal Charset 			charset := options.charset
 	internal SyntaxRules? 		rules
 	internal RichText? 			richText
@@ -25,16 +29,13 @@ class TextEditor : View {
 	internal Label 					caretField		:= Label()
 	internal Label 					charsetField	:= Label()
 	
-	@Inject private GlobalCommands	globalCommands
-			private	EdgePane		edgePane
-	
-	protected new make(|This| in) : super(in) {
-		find = FindBar(this)
+	protected new make(GlobalCommands globCmds, |This| in) : super(in) {
+		find = registry.autobuild(FindBar#, [this])
 		content = edgePane = EdgePane {
 			it.top = buildToolBar
 			it.bottom = buildStatusBar
 		}
-		&wordWrap = explorer.preferences.wordWrap
+		&wordWrap = globCmds["afExplorer.cmdWordWrap"].command.selected
 	}
 	
 	@NoDoc
@@ -53,10 +54,10 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdGoto"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
 
 		// restore viewport and caret position
-//		caretOffset := Actor.locals["fluxText.caretOffset.$resource.uri"]
-//		topLine := Actor.locals["fluxText.topLine.$resource.uri"]
-//		if (caretOffset != null) richText.caretOffset = caretOffset
-//		if (topLine != null) richText.topLine = topLine
+		caretOffset := stash["${resource?.uri}.caretOffset"]
+		topLine		:= stash["${resource?.uri}.topLine"]
+		if (caretOffset != null) richText.caretOffset = caretOffset
+		if (topLine != null)	 richText.topLine = topLine
 		richText?.focus
 	}
 	
@@ -76,8 +77,8 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afReflux.textEditor")
 
 		// save viewport and caret position
-//		Actor.locals["fluxText.caretOffset.$resource.uri"] = richText.caretOffset
-//		Actor.locals["fluxText.topLine.$resource.uri"] = richText.topLine
+		stash["${resource?.uri}.caretOffset"] = richText.caretOffset
+		stash["${resource?.uri}.topLine"] 	= richText.topLine
 	}
 	
 	
@@ -128,12 +129,18 @@ class TextEditor : View {
 	}
 	
 	@NoDoc
-	override Bool confirmClose() {
+	override Bool confirmClose(Bool force) {
 		if (!isDirty) return true
 		
-		r := Dialog.openQuestion(reflux.window, "Save changes to $resource.name?", [Dialog.yes, Dialog.no, Dialog.cancel])
-		if (r == Dialog.cancel) return false
-		if (r == Dialog.yes) save
+		if (force) {
+			r := Dialog.openQuestion(reflux.window,"Save changes to $resource.name?", [Dialog.yes, Dialog.no])
+			if (r == Dialog.yes) save
+
+		} else {
+			r := Dialog.openQuestion(reflux.window, "Save changes to $resource.name?\n\nClick 'Cancel' to continue editing.", [Dialog.yes, Dialog.no, Dialog.cancel])
+			if (r == Dialog.cancel) return false
+			if (r == Dialog.yes) save
+		}
 
 		return true
 	}

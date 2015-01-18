@@ -91,7 +91,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 			// this event fires when we switch tabs - then errs when we're not attached! Grr...
 			if (lastComboIndex != combo.selectedIndex) {
 				lastComboIndex  = combo.selectedIndex
-				reflux.load(favourites[combo.selected])
+				reflux.load(favourites[combo.selected].toStr)
 			}
 		}
 	}
@@ -102,13 +102,13 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		node := (FileNode?) tree.nodeAt(event.pos)
 		if (node == null)
 			return
-		reflux.load(node.file.normalize.uri)
+		reflux.load(node.file.normalize.uri.toStr)
 	}
 
 	private Void onPopup(Event event) {
 		if (event.data == null) return
 		file := ((FileNode) event.data).file
-		res	 := uriResolvers.resolve(file.normalize.uri)
+		res	 := uriResolvers.resolve(file.normalize.uri.toStr)
 		event.popup = res.populatePopup(Menu())
 	}
 

@@ -10,6 +10,7 @@ class ExplorerModule {
 		defs.add(Explorer#)
 		defs.add(ExplorerCmds#)
 		defs.add(FileViewers#)
+		defs.add(TextStash#)
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
@@ -69,7 +70,10 @@ class ExplorerModule {
 		}
 	}
 
-
+	@Contribute { serviceType=RegistryStartup# }
+	static Void contributeRegistryStartup(Configuration config) {
+		config.remove("afIoc.logServices")
+	}
 
 	// ---- Reflux Tool Bar -----------------------------------------------------------------------
 
@@ -93,6 +97,10 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.PrefsMenu" }
 	static Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
+		config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [RefluxPrefs#, ``]))
+		config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [ExplorerPrefs#, ``]))
+		config["afExplorer.cmdTextEditorPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [TextEditorPrefs#, ``]))
+		config["separator.01"]					= MenuItem { it.mode = MenuItemMode.sep }
 		config["afExplorer.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
 		config["afExplorer.cmdWordWrap"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdWordWrap"].command)
 	}

@@ -58,7 +58,7 @@ class FandocViewer : View {
 			uri = `${resource.uri.parent}${uri.pathStr}`
 
 		// route the URI through reflux so it gets stored in the history
-		reflux.load(uri)
+		reflux.load(uri.toStr)
 	}
 	
 	private static Str fandocToHtml(Str fandoc, Uri? base := null) {

@@ -22,8 +22,6 @@ class ExplorerPrefs {
 		}
 	}
 
-	Bool wordWrap	:= true 
-	
 	Str[] hiddenNameFilters := [
 		"^\\..*\$",
 		"^\\\$.*\$",
