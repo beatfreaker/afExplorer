@@ -29,6 +29,15 @@ class TextEditor : View {
 	internal Label 					caretField		:= Label()
 	internal Label 					charsetField	:= Label()
 	
+	Bool wordWrap {
+		set {
+			&wordWrap = it
+			stashPrefs
+			newWidgets
+			restorePrefs
+		}
+	}
+
 	protected new make(GlobalCommands globCmds, |This| in) : super(in) {
 		find = registry.autobuild(FindBar#, [this])
 		content = edgePane = EdgePane {
@@ -53,12 +62,7 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdGoto"				].addInvoker("afReflux.textEditor", |Event? e|	{ controller?.onGoto(e) } )
 		globalCommands["afExplorer.cmdGoto"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
 
-		// restore viewport and caret position
-		caretOffset := stash["${resource?.uri}.caretOffset"]
-		topLine		:= stash["${resource?.uri}.topLine"]
-		if (caretOffset != null) richText.caretOffset = caretOffset
-		if (topLine != null)	 richText.topLine = topLine
-		richText?.focus
+		restorePrefs
 	}
 	
 	@NoDoc
@@ -76,17 +80,7 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdGoto"				].removeInvoker("afReflux.textEditor")
 		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afReflux.textEditor")
 
-		// save viewport and caret position
-		stash["${resource?.uri}.caretOffset"] = richText.caretOffset
-		stash["${resource?.uri}.topLine"] 	= richText.topLine
-	}
-	
-	
-	Bool wordWrap {
-		set {
-			&wordWrap = it
-			newWidgets
-		}
+		stashPrefs
 	}
 	
 	@NoDoc
@@ -100,6 +94,7 @@ class TextEditor : View {
 		charsetField.text = charset.toStr
 
 		newWidgets
+		restorePrefs
 	}
 	
 	private Void newWidgets() {
@@ -115,6 +110,22 @@ class TextEditor : View {
 
 		edgePane.center = richText
 		edgePane.relayout
+	}
+	
+	private Void stashPrefs() {
+		// save viewport and caret position
+		stash["${resource?.uri}.caretOffset"] = richText.caretOffset
+		stash["${resource?.uri}.topLine"] 	= richText.topLine
+	}
+
+	private Void restorePrefs() {
+		if (richText == null) return
+
+		// restore viewport and caret position
+		caretOffset := stash["${resource?.uri}.caretOffset"]
+		topLine		:= stash["${resource?.uri}.topLine"]
+		if (caretOffset != null) richText.caretOffset = caretOffset
+		if (topLine != null)	 richText.topLine = topLine		
 		richText.focus
 	}
 
