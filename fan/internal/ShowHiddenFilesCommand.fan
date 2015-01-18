@@ -6,8 +6,7 @@ using fwt
 internal class ShowHiddenFilesCommand : GlobalCommand, RefluxEvents {
 	@Inject private Explorer	explorer
 
-	new make(EventHub eventHub, |This|in) : super.make("cmdShowHiddenFiles", in) {
-		eventHub.register(this)
+	new make(|This|in) : super.make("cmdShowHiddenFiles", in) {
 		this.command.mode = CommandMode.toggle
 		this.command.selected = explorer.preferences.showHiddenFiles
 	}

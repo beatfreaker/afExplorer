@@ -10,8 +10,7 @@ internal class WordWrapCommand : GlobalCommand, RefluxEvents {
 	@Inject private Registry	registry
 	@Inject private Explorer	explorer
 
-	new make(EventHub eventHub, |This|in) : super.make("cmdWordWrap", in) {
-		eventHub.register(this)
+	new make(|This|in) : super.make("cmdWordWrap", in) {
 		this.command.mode = CommandMode.toggle
 		this.addEnabler("afExplorer.cmdWordWrap", |->Bool| { reflux.activeView is TextEditor }, false)
 	}

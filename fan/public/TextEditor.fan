@@ -141,6 +141,9 @@ class TextEditor : View {
 			if (r == Dialog.cancel) return false
 			if (r == Dialog.yes) save
 		}
+		
+		// clear flag to reset the tab text, because the tab (not this view panel) gets reused if we're switching views
+		isDirty = false
 
 		return true
 	}

@@ -10,7 +10,6 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	@Inject		private Registry			registry
 	@Inject		private Reflux				reflux
 	@Inject		private RefluxIcons			icons
-	@Inject		private UriResolvers		uriResolvers
 	@Inject		private Explorer			explorer
 	@Inject 	private GlobalCommands		globalCommands
 	@Autobuild	private FoldersTreeModel	model
@@ -108,11 +107,17 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	private Void onPopup(Event event) {
 		if (event.data == null) return
 		file := ((FileNode) event.data).file
-		res	 := uriResolvers.resolve(file.normalize.uri.toStr)
+		res	 := reflux.resolve(file.normalize.uri.toStr)
 		event.popup = res.populatePopup(Menu())
 	}
 
 	override Void onLoad(Resource resource) {
+		if (resource isnot FolderResource && resource is FileResource) {
+			folder := ((FileResource) resource).file.parent
+			if (folder != null)
+				resource = reflux.resolve(folder.uri.toStr)
+		}
+
 		if (resource isnot FolderResource || !resource.uri.isAbs) return
 		fileResource = resource
 

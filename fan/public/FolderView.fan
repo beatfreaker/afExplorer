@@ -9,7 +9,6 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	@Inject private Registry		registry
 	@Inject private Reflux			reflux
 	@Inject private RefluxIcons		icons
-	@Inject private UriResolvers	uriResolvers
 	@Inject	private Explorer		explorer
 	@Inject private GlobalCommands	globalCommands
 	@Autobuild private FileResolver	fileResolver
@@ -98,7 +97,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 
 internal class FolderViewModel : TableModel {
 	@Inject private LocaleFormat	locale
-	@Inject private UriResolvers	uriResolvers
+	@Inject private Reflux			reflux
 	@Inject	private Explorer		explorer
 			private	Color			hiddenColour
 	
