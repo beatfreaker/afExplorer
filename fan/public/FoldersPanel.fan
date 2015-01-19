@@ -59,7 +59,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 
 	override Void onShowHiddenFiles(Bool show) {
-		if (!isShowing || !isActive) return
+		if (!isShowing) return
 		refresh
 	}
 
@@ -121,7 +121,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		if (resource isnot FolderResource || !resource.uri.isAbs) return
 		fileResource = resource
 
-		if (!isShowing || !isActive) return
+		if (!isShowing) return
 		showFile(fileResource.uri)
 	}
 

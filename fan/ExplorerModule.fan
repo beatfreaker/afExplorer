@@ -10,7 +10,8 @@ class ExplorerModule {
 		defs.add(Explorer#)
 		defs.add(ExplorerCmds#)
 		defs.add(FileViewers#)
-		defs.add(TextStash#)
+		defs.add(AppStash#)
+		defs.add(IframeBlocker#)
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
@@ -78,6 +79,12 @@ class ExplorerModule {
 		"gitignore hgignore hgtags".split.each {
 			config["textEditor-${it}"] = FileViewMapping(it, TextEditor#)
 		}
+	}
+
+	@Contribute { serviceType=IframeBlocker# }
+	static Void contributeIframeBlocker(Configuration config) {
+		config.add("^https?://.*\\.addthis\\.com/.*\$")
+		config.add("^https?://.*\\.google(apis)?\\.com/[_o]/.*\$")
 	}
 
 	@Contribute { serviceType=RegistryStartup# }

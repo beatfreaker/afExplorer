@@ -1,6 +1,6 @@
 
 ** Stashes resource specific values for use by multiple view instances. 
-internal class TextStash {
+internal class AppStash {
 	
 	Str:Obj?	stash	:= Str:Obj?[:]
 	
@@ -12,5 +12,9 @@ internal class TextStash {
 	@Operator
 	Void set(Str key, Obj? val) {
 		stash[key] = val
+	}
+	
+	Void remove(Str key) {
+		stash.remove(key)
 	}
 }

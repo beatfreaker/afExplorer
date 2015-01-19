@@ -10,7 +10,7 @@ class TextEditor : View {
 	@Inject private Registry		registry
 	@Inject private Explorer		explorer
 	@Inject private Reflux			reflux
-	@Inject private TextStash		stash
+	@Inject private AppStash		stash
 	@Inject private GlobalCommands	globalCommands
 			private	EdgePane		edgePane
 	
@@ -49,8 +49,6 @@ class TextEditor : View {
 	
 	@NoDoc
 	override Void onActivate() {
-		super.onActivate
-		
 		globalCommands["afExplorer.cmdFind"				].addInvoker("afReflux.textEditor", |Event? e|	{ find.showFind } )
 		globalCommands["afExplorer.cmdFind"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
 		globalCommands["afExplorer.cmdFindNext"			].addInvoker("afReflux.textEditor", |Event? e|	{ find.next } )
@@ -61,14 +59,11 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdReplace"			].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
 		globalCommands["afExplorer.cmdGoto"				].addInvoker("afReflux.textEditor", |Event? e|	{ controller?.onGoto(e) } )
 		globalCommands["afExplorer.cmdGoto"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-
 		restorePrefs
 	}
 	
 	@NoDoc
 	override Void onDeactivate() {
-		super.onDeactivate
-		
 		globalCommands["afExplorer.cmdFind"				].removeInvoker("afReflux.textEditor")
 		globalCommands["afExplorer.cmdFind"				].removeEnabler("afReflux.textEditor")
 		globalCommands["afExplorer.cmdFindNext"			].removeInvoker("afReflux.textEditor")
@@ -79,7 +74,6 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdReplace"			].removeEnabler("afReflux.textEditor")
 		globalCommands["afExplorer.cmdGoto"				].removeInvoker("afReflux.textEditor")
 		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afReflux.textEditor")
-
 		stashPrefs
 	}
 	
@@ -113,17 +107,23 @@ class TextEditor : View {
 	}
 	
 	private Void stashPrefs() {
-		// save viewport and caret position
-		stash["${resource?.uri}.caretOffset"] = richText.caretOffset
-		stash["${resource?.uri}.topLine"] 	= richText.topLine
+		// we want to keep the scroll pos when switching between views, 
+		// but clear it when closing the tab - so when re-opened, we're at the top again!
+		if (stash["${resource?.uri}.textEditor.clear"] == true)
+			stash.remove("${resource?.uri}.textEditor.clear")
+		else {
+			// save viewport and caret position
+			stash["${resource?.uri}.textEditor.caretOffset"] = richText.caretOffset
+			stash["${resource?.uri}.textEditor.topLine"] 	 = richText.topLine
+		}
 	}
 
 	private Void restorePrefs() {
 		if (richText == null) return
 
 		// restore viewport and caret position
-		caretOffset := stash["${resource?.uri}.caretOffset"]
-		topLine		:= stash["${resource?.uri}.topLine"]
+		caretOffset := stash["${resource?.uri}.textEditor.caretOffset"]
+		topLine		:= stash["${resource?.uri}.textEditor.topLine"]
 		if (caretOffset != null) richText.caretOffset = caretOffset
 		if (topLine != null)	 richText.topLine = topLine		
 		richText.focus
@@ -141,6 +141,10 @@ class TextEditor : View {
 	
 	@NoDoc
 	override Bool confirmClose(Bool force) {
+		stash.remove("${resource?.uri}.textEditor.caretOffset")
+		stash.remove("${resource?.uri}.textEditor.topLine")
+		stash["${resource?.uri}.textEditor.clear"] = true
+		
 		if (!isDirty) return true
 		
 		if (force) {
