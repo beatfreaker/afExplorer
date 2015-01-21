@@ -9,6 +9,7 @@ mixin IframeBlocker {
 internal class IframeBlockerImpl : IframeBlocker {
 	private const Regex[] filters
 	
+	// FIXME: IframeBlocker - move config from module code session
 	new make(Regex[] filters) {
 		this.filters = filters
 	}

@@ -17,7 +17,6 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 			private FolderResource? fileResource
 
 	protected new make(|This| in) : super(in) {
-		this.reuseView = true
 		this.content = table = Table {
 			it.multi = false
 			it.onAction.add |e| { this->onAction (e) }
@@ -29,6 +28,8 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 			it.model = this.model
 		}
 	}
+	
+	override Bool reuseView(Resource resource) { true }
 	
 	override Void onActivate() {
 		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afExplorer.folderView", |->Bool| { true } )

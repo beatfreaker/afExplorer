@@ -9,9 +9,17 @@ using compilerDoc
 
 ** (View) - A viewer for '.fandoc' files. 
 class FandocViewer : HtmlViewer {
+	private Str[]		podNames
 
 	protected new make(|This| in) : super(in) {
-		reuseView = false
+		// BugFix: Pod.list throws an Err if any pod is invalid (wrong dependencies etc) 
+		// this way we don't even load the pod into memory!
+		podNames = Env.cur().findAllPodNames
+	}
+	
+	override Bool reuseView(Resource resource) {
+		// open new tabs for different types of resources
+		this.resource?.typeof == resource.typeof
 	}
 	
 	** Hook for subclasses to convert the resource into either a URI or a Str.
@@ -46,11 +54,12 @@ class FandocViewer : HtmlViewer {
 		return writer.toHtml
 	}
 	
+	// ---- Ripped from Fandoc Viewer ----
 	
 	private static const FandocEnv	docEnv	:= FandocEnv()
 
 	private Str toHtml(FandocResource resource) {
-		isTopIndex := (resource.uri.host == null || resource.uri.host.isEmpty) 
+		isTopIndex := (resource.uri.path.isEmpty) 
 		doc := isTopIndex ? topIndex : loadFrom(resource.uri)
 	
 		// Renders the `compilerDoc::Doc` to a HTML Str.
@@ -63,22 +72,22 @@ class FandocViewer : HtmlViewer {
 	
 	private Doc topIndex() {
 		DocTopIndex() {
-			it.spaces = Pod.list.map { 
-				docEnv.space(it.name)
+			it.spaces = podNames.map { 
+				docEnv.space(it)
 			}
 		}
 	}
 	
 	private Doc loadFrom(Uri uri) {
-		podFile := Env.cur.findPodFile(uri.auth)
-		// we get a nice 'Pod file not found err' is auth / pod doesn't exist
+		podFile := Env.cur.findPodFile(uri.path[0])
+		// we get a nice 'Pod file not found err' is pod doesn't exist
 		docPod 	:= DocPod.load(podFile)
-		doc 	:= docPod.doc(uri.name, false)
+		doc 	:= docPod.doc(uri.path[1], false)
 		
 		if (doc == null) {
 			docNames := [,]
 			docPod.eachDoc { docNames.add(it.docName) }
-			throw ArgNotFoundErr("${docPod.name}::${uri.name}", docNames)
+			throw ArgNotFoundErr("Doc not found - ${docPod.name}::${uri.path[1]}", docNames)
 		}
 		
 		return doc

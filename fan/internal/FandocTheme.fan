@@ -12,7 +12,7 @@ using web::WebOutStream
 **  - '%FAN_HOME%/etc/afFandocViewer/fandoc.css' for styling pod documentation. 
 **  - '%FAN_HOME%/etc/afFandocViewer/fandoc-skiny.css' for styling '.fandoc' file. This usually a 
 ** subset of 'fandoc.css'. 
-const class FandocTheme : DocTheme {
+internal const class FandocTheme : DocTheme {
 
 	** Write opening HTML for page.  This should generate the doc type, html, head, and opening body tags.  
 	override Void writeStart(DocRenderer r) {
@@ -33,7 +33,7 @@ const class FandocTheme : DocTheme {
 		out := r.out
 		out.div("class='header'")
 		out.div
-		out.a(`fandoc://`)
+		out.a(`fandoc:/`)
 		out.img(`http://fantom.org/pod/fantomws/res/img/fantom.png`)
 		out.aEnd
 		out.divEnd
@@ -75,11 +75,11 @@ const class FandocTheme : DocTheme {
 		out.div("class='breadcrumb'").ul
 		
 		if (doc.isTopIndex) {
-			writeCrumb(out, `fandoc://`, "Doc Index", true)
+			writeCrumb(out, `fandoc:/`, "Doc Index", true)
 			
 		} else {
-			writeCrumb(out, `fandoc://`, "Doc Index", false)
-			writeCrumb(out, `../index`, r.doc.space.breadcrumb, doc.isSpaceIndex)
+			writeCrumb(out, `fandoc:/`, "Doc Index", false)
+			writeCrumb(out, `fandoc:/${r.doc.space.spaceName}`, r.doc.space.breadcrumb, doc.isSpaceIndex)
 			
 			if (doc.isSpaceIndex) {
 				// skip

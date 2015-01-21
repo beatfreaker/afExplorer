@@ -14,7 +14,6 @@ class HtmlViewer : View {
 
 	@NoDoc
 	protected new make(|This| in) : super(in) {
-		reuseView = true
 		content = EdgePane() {
 			it.center = browser = Browser() {
 				it.onHyperlink.add	|e| { this->onHyperlink(e) }	
@@ -31,6 +30,8 @@ class HtmlViewer : View {
 		}
 	}
 
+	override Bool reuseView(Resource resource) { true }
+	
 	@NoDoc
 	override Void onDeactivate() {
 		try {
@@ -90,6 +91,11 @@ class HtmlViewer : View {
 	}
 
 	private Void onStatusText(Event event) {
+		try {
+			url := event.data.toStr.toUri
+			if (url.scheme == "about") 
+				event.data = normaliseBrowserUrl(url).toStr
+		} catch {}
 		statusBar.text = event.data
 	}
 
@@ -104,27 +110,43 @@ class HtmlViewer : View {
 		// the URI in the history and give consistent navigation
 		url := (Uri) event.data
 
-		// ignore links to anchors on the same page (IE defines these links as "about:blank#anchor")
-		if (url.scheme == "about" && url.name == "blank")
-			return
-
 		// if a shitty url, cancel the event
 		if (iframeBlocker.block(url)) {
 			event.data = null
 			return
 		}
-		
-		// anything beyond this point will be routed through `Reflux.load()` and have its URI resolved 
+
+		// doesn't work 'cos stoopid Fandoc emits `className#wot` when it should be `#wot`
+		// TODO: rewrite Fandoc generator
+//		url = normaliseBrowserUrl(url)
+//		if (Url(resource.uri).minusFrag == Url(url).minusFrag)
+//			return
+
+		// the other work around
+		if (url.scheme == "about" && url.name == "blank" && url.frag != null)
+			return
+
+		// normalise AFTER the above fudge
+		url = normaliseBrowserUrl(url)
+
+		// anything beyond this point will be routed through `Reflux.load()` 
 		// so cancel the link event in the browser
 		event.data = null
-		
-		// IE gives relative links the scheme 'about' so strip it off and return an absolute URI, 
-		// using the existing resource as the base 
-		if (url.scheme == "about" && !url.isPathAbs) 
-			url = `${resource.uri.parent}${url.pathStr}`
 
 		// route the URI through reflux so it gets stored in the history
 		reflux.load(url.toStr)
+	}
+	
+	protected Uri normaliseBrowserUrl(Uri url) {
+		// anchors on the same page are defined as `about:blank#anchor`
+		if (url.scheme == "about" && url.name == "blank" && url.frag != null)
+			url = (resource.uri.parent ?: resource.uri).plusName(resource.uri.name + "#" + url.frag)
+		
+		// IE gives relative links the scheme 'about' so resolve it relative to the current resource 
+		if (url.scheme == "about")
+			url = Url(resource.uri + url.pathOnly).plusQuery(url.queryStr).plusFrag(url.frag).toUri
+
+		return url
 	}
 	
 	private static Str fandocToHtml(Str fandoc, Uri? base := null) {

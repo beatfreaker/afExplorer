@@ -9,16 +9,26 @@ internal class HttpResolver : UriResolver {
 	new make(|This|in) { in(this) }	
 	
 	override Resource? resolve(Str str) {
-		try {
-			uri := str.toUri
-			if (uri.scheme == "http" || uri.scheme == "https")
-				return registry.autobuild(HttpResource#, null, [
-					HttpResource#uri	: uri,
-					HttpResource#name	: uri.name,
-					HttpResource#icon	: explorer.urlToIcon(uri)
-				])
-		} catch { }
+		url := (Uri?) null
+
+		if (url == null)
+			if (str.startsWith("www."))
+				url = `http://${str}`
 		
-		return null
+		if (url == null)
+			try {
+				uri := str.toUri
+				if (uri.scheme == "http" || uri.scheme == "https")
+					url = uri 
+			} catch { }
+		
+		if (url == null)
+			return null
+		
+		return registry.autobuild(HttpResource#, null, [
+			HttpResource#uri	: url,
+			HttpResource#name	: url.name,
+			HttpResource#icon	: explorer.urlToIcon(url)
+		])
 	}	
 }
