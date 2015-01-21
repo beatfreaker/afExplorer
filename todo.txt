@@ -1,23 +1,17 @@
 
 http://codingground.tutorialspoint.com:40372/index.htm?SESSIONID=fqbnhe5s5uk1fi4krn5vd5htp4#
 
+FolderView - handle multiple selections
+
+image view should tap into window resize event to auto resize...
+
+FileResource
+ - if an img and <50k and size< 100x100 then create a re-sized preview icon
 
 Folder command
  - add to zip
 
 Find in files
-
-Open in New Tab
- - Have means to define when new tab happens
- - How do we auto-create views + panels?
- 
-HtmlView -> Fandoc vs Internet vs Files
- - have a RefluxBroswerWidget
- - different views for each resource?
-  - HtmlView for files AND internet
-  - FandocView
- 
-View fandoc files
 
 View fandoc from pods
  
@@ -25,14 +19,15 @@ Fandoc Viewer
  - Sidebar viewer
  - search bar
 
-How to open extensions -> associate laucnch prog and icon
- - parse icon files?
- - assoc edit
- 
-Can views manipulate the menu / toolbar?
-	-> NO! Menus are defined at app startup.
-	-> GlobalCommands, however, maybe enabled / disabled  
+Select All - glob cmd - ctrl-A
 
+F1 for fandoc index
+
+put back convert tabs to spaces in text-ed
+
+TinyPNG API key:
+uLIl4pepCXk0rnxhHdbaAfo8IxtHnHsq
+https://tinypng.com/developers/reference
 
 
 http://demo.wizzardsoftware.com/attprocess.php

@@ -23,8 +23,9 @@ class ExplorerModule {
 
 	@Contribute { serviceType=UriResolvers# }
 	internal static Void contributeUriResolvers(Configuration config) {
-		config["file"] = config.autobuild(FileResolver#)
-		config["http"] = config.autobuild(HttpResolver#)
+		config["file"]		= config.autobuild(FileResolver#)
+		config["http"]		= config.autobuild(HttpResolver#)
+		config["fandoc"]	= config.autobuild(FandocResolver#)
 	}
 
 	@Contribute { serviceType=Panels# }
@@ -85,6 +86,7 @@ class ExplorerModule {
 	static Void contributeIframeBlocker(Configuration config) {
 		config.add("^https?://.*\\.addthis\\.com/.*\$")
 		config.add("^https?://.*\\.google(apis)?\\.com/[_o]/.*\$")
+		config.add("^https?://api\\.flattr\\.com/.*\$")
 	}
 
 	@Contribute { serviceType=RegistryStartup# }
@@ -99,7 +101,7 @@ class ExplorerModule {
 		}
 	}
 
-	// ---- Reflux Tool Bar -----------------------------------------------------------------------
+	// ---- Reflux Menu Bar -----------------------------------------------------------------------
 
 	@Contribute { serviceId="afReflux.fileMenu" }
 	static Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {

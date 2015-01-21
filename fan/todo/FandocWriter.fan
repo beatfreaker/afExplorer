@@ -36,6 +36,10 @@ internal class FandocWriter : HtmlDocWriter {
 	override Void docHead(Doc doc) {
 		super.docHead(doc)
 		
+		if (base.scheme == "file") {
+			web.tag("base", "href='${base.toFile.normalize.osPath}'")
+		}
+		
 		// we can't link to anything (unless we start our own web server) so just embedd the css
 		web.style("type='text/css'")
 		web.printLine(cssAsStr(true))
@@ -44,17 +48,6 @@ internal class FandocWriter : HtmlDocWriter {
 	
 	Str toHtml() {
 		buff.toStr
-	}
-
-	private Str? getDirectiveName(DocElem elem) {
-		if (!(elem is Para))
-			return null
-		
-		directiveName := (elem as Para).admonition?.lower
-		if (directiveName == null)
-			return null
-		
-		return Env.cur.index("afFandocViewer.directive.$directiveName").first
 	}
 	
 	** Returns the CSS for fandoc as a Str. 'skinny' CSS is used for '.fandoc' files .  

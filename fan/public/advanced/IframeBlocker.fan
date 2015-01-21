@@ -1,5 +1,6 @@
 
 ** (Service) - 
+@NoDoc // advanced
 mixin IframeBlocker {
 	
 	abstract Bool block(Uri url)

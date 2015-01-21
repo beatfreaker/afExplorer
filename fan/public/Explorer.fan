@@ -98,7 +98,8 @@ internal class ExplorerImpl : Explorer {
 		if (f.isDir) {
 			// can't cache osRoots 'cos it changes with flash drives et al
 			osRoots	:= File.osRoots.map { it.normalize }		
-			return osRoots.contains(f) ? icons.icon("icoFolderRoot", hidden) : icons.icon("icoFolder", hidden)
+			name := osRoots.contains(f) ? "icoFolderRoot" : "icoFolder"
+			return hidden ? icons.getFaded(name) : icons.get(name)
 		}
 		
 		// look for explicit match based off ext
@@ -148,6 +149,7 @@ internal class ExplorerImpl : Explorer {
 	}
 
 	private Image? fileIcon(Str fileName, Bool hidden) {
-		images.get(fileIconsRoot.plusName(fileName), hidden, false)
+		uri := fileIconsRoot.plusName(fileName)
+		return hidden ?	images.getFaded(uri, false) : images.get(uri, false)
 	}
 }

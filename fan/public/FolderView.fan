@@ -19,7 +19,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	protected new make(|This| in) : super(in) {
 		this.reuseView = true
 		this.content = table = Table {
-			it.multi = true
+			it.multi = false
 			it.onAction.add |e| { this->onAction (e) }
 			it.onPopup.add	|e| { this->onPopup  (e) }
 			it.onSelect.add	|e| { this->onSelect (e) }

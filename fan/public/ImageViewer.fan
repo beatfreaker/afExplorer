@@ -2,11 +2,11 @@ using afIoc
 using afReflux
 using gfx
 using fwt
-using concurrent
 
 ** (View) - A simple image viewer for file resources. 
 class ImageViewer : View {
 
+	@Inject private Images				images
 	@Inject private RefluxIcons 		icons
 	@Inject private Registry			registry
 			private ImageViewWidget?	imageWidget
@@ -18,7 +18,7 @@ class ImageViewer : View {
 	override Void load(Resource resource) {
 		super.load(resource)
 		fileResource := (FileResource) resource
-		image := loadImage(fileResource.file) 
+		image := images.load(resource.uri) 
 
 		imageWidget = ImageViewWidget(image ?: icons["icoImageNotFound"])
 		toolBar := ToolBar {
@@ -57,22 +57,6 @@ class ImageViewer : View {
 	** Displays the image at 100%
 	Void showFullSize() {
 		imageWidget?.doFullSize
-	}
-
-	private Image? loadImage(File file) {
-		image := (Image?) (file.exists ? Image.makeFile(file) : null)
-		
-		if (image != null) {
-			napTime := 0sec
-			while (napTime < 200ms && (image.size.w == 0 || image.size.h == 0)) {
-				napTime += 20ms
-				Actor.sleep(20ms)
-			}
-			if (image.size.w == 0 || image.size.h == 0)
-				image = null
-		}
-		
-		return image
 	}
 	
 	private Button toolBarCommand(Type cmdType, Obj[] args) {

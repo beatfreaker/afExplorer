@@ -2,6 +2,7 @@ using afIoc
 using afReflux
 using fwt
 
+@NoDoc	// advanced
 class EditPrefsCmd : RefluxCommand {
 	@Inject RefluxIcons icons
 	

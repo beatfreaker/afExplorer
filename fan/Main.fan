@@ -22,7 +22,6 @@ using afReflux
 **   C:\> fan afExplorer http://www.fantomfactory.org/ 
 ** 
 class Main {
-	
 	Void main(Str[] args) {
 		Reflux.start("Explorer", [ExplorerModule#]) |Reflux reflux| {
 			if (args.isEmpty)

@@ -6,6 +6,8 @@
 
 ## Overview
 
+*Explorer is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
+
 A `Reflux` File Explorer application with associated viewers and editors.
 
 ## Install
@@ -30,4 +32,5 @@ Features I like:
 - text editor word wrap
 - a bug free html / web browser
 - Quick F12 View toggle (handy for editing / viewing fandoc)
+- easily show / hide hidden files
 

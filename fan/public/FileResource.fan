@@ -5,7 +5,7 @@ using gfx
 using fwt
 
 ** (Resource) - 
-** Represents a file on the file system.
+** Represents a file on the file system or a pod resource.
 class FileResource : Resource {
 
 	@Inject private	Explorer		_explorer
@@ -21,7 +21,7 @@ class FileResource : Resource {
 			 File	file
 
 	internal new make(|This|in) : super.make(in) { 
-		displayName = file.osPath
+		displayName = file.osPath ?: file.toStr	// fan: schemes don't have osPaths
 	}
 
 	override Type[] viewTypes() {
@@ -113,7 +113,7 @@ class FileResource : Resource {
 class FolderResource : FileResource {
 	internal new make(|This|in) : super.make(in) { }
 	
-	** Returns 'FolderView#'.
+	** Returns '[FolderView#]'.
 	override Type[] viewTypes() {
 		[FolderView#]
 	}

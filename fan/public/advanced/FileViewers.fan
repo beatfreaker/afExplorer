@@ -1,4 +1,5 @@
 
+@NoDoc
 class FileViewers {
 	private Str:FileViewMapping[] extViewers	:= Str:FileViewMapping[][:]
 	
@@ -17,6 +18,7 @@ class FileViewers {
 	}
 }
 
+@NoDoc
 class FileViewMapping {
 	Str		ext
 	Type	viewType

@@ -4,7 +4,7 @@ using gfx
 using fwt
 using fandoc
 
-** (View) - A simple HTML viewer for HTTP and file resources. 
+** (View) - A HTML viewer for HTTP and file resources. 
 class HtmlViewer : View {
 	@Inject private IframeBlocker	iframeBlocker
 	@Inject private AppStash		stash
@@ -22,7 +22,12 @@ class HtmlViewer : View {
 				it.onStatusText.add	|e| { this->onStatusText(e) }
 				it.onLoad.add		|e| { this->onLoad(e) }
 			}
-			it.bottom = statusBar = Label()
+			it.bottom = EdgePane() {
+				it.top = BorderPane {
+					it.border = Border("1,0,0 $Desktop.sysNormShadow")
+				}				
+				it.center = statusBar = Label()
+			}
 		}
 	}
 
@@ -40,10 +45,6 @@ class HtmlViewer : View {
 			
 		} catch (Err err)
 			typeof.pod.log.warn("JS Err: ${err.msg}")
-	}
-
-	override Void onHide() {
-		echo("hiding")
 	}
 
 	override Bool confirmClose(Bool force) {
@@ -64,7 +65,6 @@ class HtmlViewer : View {
 		else
 			throw Err("Resource should resolve to either a URI or a Str, not: $res")
 
-		
 		// set focus so browser responds to scroll events
 		// see http://fantom.org/sidewalk/topic/2024#c13355
 		Desktop.callLater(50ms) |->| {
@@ -94,7 +94,9 @@ class HtmlViewer : View {
 	}
 
 	private Void onTitleText(Event event) {
-		name = event.data
+		// don't show useless titles!
+		if (event.data != "about:blank")
+			name = event.data
 	}
 	
 	private Void onHyperlink(Event event) {

@@ -7,28 +7,31 @@ internal class FileResolver : UriResolver {
 
 	new make(|This|in) { in(this) }	
 	
-	override Resource? resolve(Str uri) {
+	override Resource? resolve(Str str) {
 		file := (File?) null
 
 		// check for some special cases
-		if (uri == "\${Env.cur.homeDir}")
+		if (str == "\${Env.cur.homeDir}")
 			file = Env.cur.homeDir.normalize
-		if (uri == "\${Env.cur.workDir}")
+		if (str == "\${Env.cur.workDir}")
 			file = Env.cur.workDir.normalize
-		if (uri == "\${Env.cur.tempDir}")
+		if (str == "\${Env.cur.tempDir}")
 			file = Env.cur.tempDir.normalize
 		
 		// check for os specific paths
 		if (file == null)
 			try {
-				file = File.os(uri).normalize
+				file = File.os(str).normalize
 			} catch { }
 		
 		// check for standard file: scheme URIs
 		if (file == null)
 			try {
-				if (uri.toUri.scheme == "file")
-					file = uri.toUri.toFile.normalize
+				uri := str.toUri
+				if (uri.scheme == "fan")
+					file = uri.get
+				if (uri.scheme == "file")
+					file = uri.toFile.normalize
 			} catch { }
 
 		if (file == null || !file.exists)
