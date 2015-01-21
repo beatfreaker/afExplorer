@@ -10,7 +10,7 @@ class HttpResource : Resource {
 	override Image?	icon
 
 	@NoDoc
-	new make(|This|in) : super.make(in) { }
+	new make(|This|in) { in(this) }
 	
 	override Type[] viewTypes() {
 		[HtmlViewer#]

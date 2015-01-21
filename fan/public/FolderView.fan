@@ -90,7 +90,22 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	private Void onAction(Event event) {
 		if (event.index != null) {
 			fileRes := model.fileRes[event.index]
-			fileRes.doAction
+			
+			// show view if there is one 
+			if (!fileRes.viewTypes.isEmpty) {
+				ctx := (event.key != null && event.key.isCtrl) ? LoadCtx() { it.newTab = true } : LoadCtx()
+				reflux.loadResource(fileRes, ctx)
+				return
+			}
+	
+			if (fileRes.file.isDir) {
+				ctx := (event.key != null && event.key.isCtrl) ? LoadCtx() { it.newTab = true } : LoadCtx()
+				reflux.loadResource(fileRes, ctx)
+				return			
+			}
+			
+			// else launch it
+			Desktop.launchProgram(fileRes.uri)
 		}
 	}
 }

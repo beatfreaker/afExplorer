@@ -20,7 +20,8 @@ class FileResource : Resource {
 	override Str	displayName
 			 File	file
 
-	internal new make(|This|in) : super.make(in) { 
+	internal new make(|This|in) {
+		in(this)
 		displayName = file.osPath ?: file.toStr	// fan: schemes don't have osPaths
 	}
 
@@ -33,6 +34,7 @@ class FileResource : Resource {
 		
 		if (file.isDir) {
 			addCmd(menu, _fileCmds.openDirInNewTab(file))
+			addCmd(menu, _fileCmds.openFileInSystemCmd(file))
 		}
 
 		if (!file.isDir) {
@@ -83,22 +85,6 @@ class FileResource : Resource {
 		// properties
 		
 		return menu 
-	}
-	
-	override Void doAction() {
-		// show view if there is one 
-		if (!viewTypes.isEmpty) {
-			super.doAction
-			return
-		}
-
-		if (file.isDir) {
-			super.doAction
-			return			
-		}
-		
-		// else launch it
-		Desktop.launchProgram(uri)
 	}
 	
 	Void addCmd(Menu menu, Command cmd) {

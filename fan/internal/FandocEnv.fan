@@ -1,19 +1,46 @@
 using compilerDoc::DefaultDocEnv
 using compilerDoc::DocLink
 using compilerDoc::DocTheme
+using compilerDoc::Doc
 
 internal const class FandocEnv : DefaultDocEnv {
 	override DocTheme theme() { FandocTheme() }
 	
 	override Uri linkUri(DocLink link) {
-		uri := super.linkUri(link)
+		uri := ""
 
-		// Note the #frag from super.linkUri(link) is for doc chapters
+		if (link.from.isTopIndex)
+			uri += link.target.space.spaceName + "/"
+		else if (link.from.space !== link.target.space)
+			uri += "../" + link.target.space.spaceName + "/"
+	
+		docName := link.target.docName
 		
-//		// top doc links don't have anything relative to resolve against
-//		if (link.from.isTopIndex)
-//			uri = `fandoc:/$uri`
-		return uri
+		fromDoc := "err"	// topIndex throws UnsupportedErr
+		try fromDoc = link.from.docName
+		catch {}
+		
+		// DON'T write `index#wotever` but rather `#wotever` so the SWT browser can perform internal linking
+		if (fromDoc != docName) {
+			if (docName == "pod-doc")
+				docName = "index"
+			uri += docName
+		}
+
+		if (link.frag != null)
+			uri += "#" + link.frag
+
+		// Un-convert (from the build system) http resources to local
+		//   - http://fantom.org/doc/flux/index      --> fandoc:/flux/index
+		//   - http://repo.status302.com/doc/afSlim/ --> fandoc:/afSlim
+
+		return uri.toUri
+	}
+	
+	override DocLink? link(Doc from, Str link, Bool checked := true) {
+		if (link.startsWith("http"))
+			echo(link)
+		return super.link(from, link, checked)
 	}
 	
 	override Str? linkUriExt() { Str.defVal }

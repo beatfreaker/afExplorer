@@ -134,7 +134,7 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.helpMenu" }
 	static Void contributeAboutMenu(Configuration config, Reflux reflux) {
-		command := (RefluxCommand) config.autobuild(RefluxCommand#, ["Fantom Docs", Image(`fan://afExplorer/res/icons-file/fileFandoc.png`), |->| { reflux.load("fandoc:/") }])
+		command := (RefluxCommand) config.autobuild(RefluxCommand#, ["Fantom Docs", Image(`fan://afExplorer/res/icons-file/fileFandoc.png`), |->| { reflux.load("fandoc:/") }], [Command#accelerator:Key("F1")])
 		config.set("afExplorer.cmdFandocs", MenuItem(command))
 			.before("afReflux.cmdAbout")
 	}
