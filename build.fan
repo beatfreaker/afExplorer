@@ -6,7 +6,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afExplorer"
 		summary = "A Reflux file explorer application with associated editors and viewers"
-		version = Version("0.0.1")
+		version = Version("0.0.3")
 
 		meta = [
 			"proj.name"		: "Explorer",

@@ -1,6 +1,6 @@
 Overview [#overview]
 ********************
-'Explorer' is a file explorer application based on the [Reflux]`pod:Reflux` framework. More than just an application, Explorer also provides Views and 
+'Explorer' is a file explorer application based on the [Reflux]`pod:afReflux` framework. More than just an application, Explorer also provides Views and 
 
 Current features:
  - System file explorer 

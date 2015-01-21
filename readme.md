@@ -1,14 +1,14 @@
-#Explorer v0.0.0
+#Explorer v0.0.2
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.0.0](http://img.shields.io/badge/pod-v0.0.0-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
+[![pod: v0.0.2](http://img.shields.io/badge/pod-v0.0.2-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
 
 *Explorer is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
 
-`Explorer` is a file explorer application based on the [Reflux](http://www.fantomfactory.org/pods/Reflux) framework. More than just an application, Explorer also provides Views and
+`Explorer` is a file explorer application based on the [Reflux](http://www.fantomfactory.org/pods/afReflux) framework. More than just an application, Explorer also provides Views and
 
 Current features:
 
