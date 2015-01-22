@@ -3,9 +3,10 @@ TinyPNG API key:
 uLIl4pepCXk0rnxhHdbaAfo8IxtHnHsq
 https://tinypng.com/developers/reference
 
+Hustlers'n'Harcore
+
 Bugs:
 =====
- - put back convert tabs to spaces in text-ed
  - Select All - glob cmd - ctrl-A
  - Folder command
    - add to zip

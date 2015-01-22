@@ -10,6 +10,9 @@ afExplorer.cmdReplace.accelerator		= Ctrl+H
 afExplorer.cmdGoto.name					= Goto Line
 afExplorer.cmdGoto.accelerator			= Ctrl+G
 
+afExplorer.cmdSelectAll.name			= Select All
+afExplorer.cmdSelectAll.accelerator		= Ctrl+A
+
 afExplorer.cmdShowHiddenFiles.name		= Show Hidden Files
 
 afExplorer.cmdRenameFile.name			= Rename...

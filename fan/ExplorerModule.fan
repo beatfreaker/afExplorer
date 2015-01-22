@@ -50,6 +50,7 @@ class ExplorerModule {
 		config["afExplorer.cmdGoto"]			= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdGoto"])
 
 		config["afExplorer.cmdShowHiddenFiles"]	= config.autobuild(ShowHiddenFilesCommand#)
+		config["afExplorer.cmdSelectAll"]		= config.autobuild(SelectAllCommand#)
 		config["afExplorer.cmdWordWrap"]		= config.autobuild(WordWrapCommand#)
 	}
 
@@ -105,9 +106,9 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.fileMenu" }
 	static Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {
+		config.set("separator.02",				MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.cmdDeleteFile").before("afReflux.cmdExit")
 		config.set("afExplorer.cmdRenameFile", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command)).after("separator.01").before("afExplorer.cmdDeleteFile")
 		config.set("afExplorer.cmdDeleteFile",	MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command)).after("afExplorer.cmdRenameFile").before("separator.02")
-		config.set("separator.02",				MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.cmdDeleteFile").before("afReflux.cmdExit")
 	}
 
 	@Contribute { serviceId="afReflux.editMenu" }
@@ -118,6 +119,8 @@ class ExplorerModule {
 		config["separator.02"]				= MenuItem { it.mode = MenuItemMode.sep }
 		config["afExplorer.cmdReplace"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdReplace"].command)
 		config["separator.03"]				= MenuItem { it.mode = MenuItemMode.sep }
+		config["afExplorer.cmdSelectAll"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdSelectAll"].command)
+		config["separator.04"]				= MenuItem { it.mode = MenuItemMode.sep }
 		config["afExplorer.cmdGoto"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdGoto"].command)
 	}
 

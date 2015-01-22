@@ -74,6 +74,11 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdReplace"			].removeEnabler("afReflux.textEditor")
 		globalCommands["afExplorer.cmdGoto"				].removeInvoker("afReflux.textEditor")
 		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afReflux.textEditor")
+		
+		// onBlur doesn't always fire!?
+		globalCommands["afExplorer.cmdSelectAll"		].removeInvoker("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdSelectAll"		].removeEnabler("afExplorer.textEditor")		
+
 		stashPrefs
 	}
 	

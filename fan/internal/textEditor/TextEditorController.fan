@@ -6,7 +6,8 @@ using fwt
 ** TextEditorController manages user events on the text editor.
 **
 internal class TextEditorController : TextEditorSupport {
-	@Inject private Reflux		reflux
+	@Inject private Reflux			reflux
+	@Inject private GlobalCommands	globalCommands
 
 	override TextEditor editor { private set }
 	Int		caretLine
@@ -30,6 +31,7 @@ internal class TextEditorController : TextEditorSupport {
 		richText.onModify.add		{ onModified(it) }
 		richText.onCaret.add		{ onCaret(it) }
 		richText.onFocus.add		{ onFocus(it) }
+		richText.onBlur.add			{ onBlur(it) }
 	}
 
 	Void onVerifyKey(Event event) {
@@ -54,6 +56,13 @@ internal class TextEditorController : TextEditorSupport {
 
 	Void onFocus(Event event) {
 		checkFileOutOfDate
+		globalCommands["afExplorer.cmdSelectAll"].addInvoker("afExplorer.textEditor") |Event e| { richText.selectAll }
+		globalCommands["afExplorer.cmdSelectAll"].addEnabler("afExplorer.textEditor") |-> Bool| { true }
+	}
+
+	Void onBlur(Event event) {
+		globalCommands["afExplorer.cmdSelectAll"].removeInvoker("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdSelectAll"].removeEnabler("afExplorer.textEditor")		
 	}
 
 //////////////////////////////////////////////////////////////////////////
