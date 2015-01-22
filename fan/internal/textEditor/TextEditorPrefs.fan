@@ -27,6 +27,10 @@ const class TextEditorPrefs {
 	** Default is '4'.
 	const Int tabSpacing := 4
 
+	** If true, then all tabs to converted to space characters
+	** based on the configured `tabSpacing`.  The default is true.
+	const Bool convertTabsToSpaces := true
+	
 	** Default char encoding to use when load/saving
 	** text files.	Defaults to utf8.
 	const Charset charset := Charset.utf8

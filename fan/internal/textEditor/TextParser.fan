@@ -31,9 +31,7 @@ internal class TextParser {
 		keywords = Str :Bool[:] { def=false }
 		keywordPrefixes = Int:Bool[:] { def=false }
 		if (rules.keywords != null) {
-		
 			rules.keywords.each |Str k| {
-			
 				keywords[k] = true
 				keywordPrefixes[k[0].shiftl(16).or(k[1])] = true
 			}
@@ -66,11 +64,12 @@ internal class TextParser {
 	**
 	Line parseLine(Str text, BlockClose? close := null) {
 		try {
+			if (options.convertTabsToSpaces)
+				text = convertTabsToSpaces(text, options.tabSpacing)
 			init(text)
 
 			styling := Obj[,]
 			if (close != null) {
-			
 				styling.addAll(close.stylingOverride)
 				consumeN(close.pos)
 			}
@@ -91,13 +90,24 @@ internal class TextParser {
 			return Line { it.text = text; it.styling = [0, options.text] }
 		}
 	}
+	
+	internal static Str convertTabsToSpaces(Str text, Int ts) {
+		if (!text.contains("\t")) return text
+		s := StrBuf()
+		text.each |Int ch, Int i| {
+			if (ch == '\t')
+				s.add(Str.spaces(ts - (s.size%ts)))
+			else
+				s.addChar(ch)
+		}
+		return s.toStr
+	}
 
 	private Void parseStyling(Obj[] styling) {
 		while (cur != 0) {
 			p := pos
 			tok := next
 			switch (tok) {
-			
 				case Token.bracket: addStyle(styling, p, options.bracket)
 				case Token.keyword: addStyle(styling, p, options.keyword)
 				case Token.literal: addStyle(styling, p, options.literal)
@@ -126,9 +136,7 @@ internal class TextParser {
 	private Token next() {
 		// check for end-of-line comments
 		for (i:=0; i<comments.size; ++i) {
-		
 			if (comments[i].isMatch) {
-			
 				cur = 0
 				return Token.comment
 			}
@@ -144,7 +152,6 @@ internal class TextParser {
 
 		// brackets
 		if (brackets.containsChar(cur)) {
-		
 			consume
 			return Token.bracket
 		}
@@ -157,7 +164,6 @@ internal class TextParser {
 
 		// identifier which might be keyword
 		if (keywordPrefixes[cur.shiftl(16).or(peek)]) {
-		
 			start := pos
 			consume
 			consume
@@ -169,7 +175,6 @@ internal class TextParser {
 
 		// tokenize an identifier in one big swoop
 		if (cur.isAlpha) {
-		
 			while (cur.isAlphaNum || cur == '_') consume
 			return Token.text
 		}
@@ -189,7 +194,6 @@ internal class TextParser {
 	**
 	private Token number() {
 		while (true) {
-		
 			if (cur.isAlphaNum ||	cur == '_') { consume; continue }
 			if (cur == '.' && peek.isDigit) { consume; continue }
 			if (peek == '-' && (cur == 'e' || cur == 'E')) { consume; consume; continue }
@@ -204,9 +208,7 @@ internal class TextParser {
 	private Token strLiteral(StrMatch s) {
 		s.start.consume
 		while (cur != 0) {
-		
 			if (s.end.isMatch && countEscapes(s.escape).isEven) {
-			
 				s.end.consume
 				return Token.literal
 			}
@@ -232,16 +234,13 @@ internal class TextParser {
 	Token blockComment() {
 		thisNesting := 0
 		while (cur != 0) {
-		
 			if (commentStart.isMatch) {
-			
 				commentStart.consume
 				commentNesting++
 				thisNesting++
 			}
 
 			if (commentEnd.isMatch) {
-			
 				commentEnd.consume
 				commentNesting--
 				thisNesting--
@@ -271,7 +270,6 @@ internal class TextParser {
 	Matcher toMatcher(Str? tok, Int esc := 0) {
 		tok = tok?.trim ?: ""
 		switch (tok.size) {
-		
 			case 0:
 				return Matcher(0, |->Bool| { noMatch }, |->| {})
 			case 1:
@@ -302,7 +300,6 @@ internal class TextParser {
 	Bool matchN(Str chars) {
 		// assume no escape for 3 or more 
 		try {
-		
 			if (cur != chars[0] || peek != chars[1]) return false
 			for (i:=2; i<chars.size; ++i) if (chars[i] != text[pos+i]) return false
 			return true
@@ -364,9 +361,7 @@ internal class TextParser {
 	**
 	private Void checkCloses() {
 		strs.each |StrMatch m| {
-		
 			if (m.multiLine && m.end.isMatch) {
-			
 				if (closes == null) closes = Block[,]
 				closes.add(BlockClose(m.blockOpen, pos+m.end.size))
 			}
@@ -483,7 +478,6 @@ internal class BlockClose : Block {
 	override Obj[]? stylingOverride() { return open.stylingOverride }
 
 	override Line? closes(Line line, Block open) {
-	
 		if (open !== this.open) return null
 		if (cachedLineOnClose == null)
 			cachedLineOnClose = ((BlockOpen)open).parser.parseLine(line.text, this)

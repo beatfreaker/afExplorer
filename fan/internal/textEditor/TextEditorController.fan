@@ -76,6 +76,20 @@ internal class TextEditorController : TextEditorSupport {
 	}
 
 //////////////////////////////////////////////////////////////////////////
+// Tab-to-Spaces
+//////////////////////////////////////////////////////////////////////////
+
+	Void checkTabConvert(TextChange tc) {
+		if (!editor.options.convertTabsToSpaces) return
+		if (!tc.newText.containsChar('\t')) return
+		
+		line := doc.line(tc.startLine)
+		tab  := editor.options.tabSpacing
+		numSpaces := tab - ((line.size + tab) % tab)
+		tc.newText = tc.newText.replace("\t", Str.spaces(numSpaces))
+	}
+
+//////////////////////////////////////////////////////////////////////////
 // Indenting
 //////////////////////////////////////////////////////////////////////////
 
@@ -117,9 +131,8 @@ internal class TextEditorController : TextEditorSupport {
 
 		// build a replacement string for lines
 		s := StrBuf()
-		ws := "\t"
+		ws := editor.options.convertTabsToSpaces ? Str.spaces(editor.options.tabSpacing) : "\t"
 		(startLine..endLine).each |Int i| {
-		
 			line := doc.line(i)
 			if (indent) {
 				// indent
