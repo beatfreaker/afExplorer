@@ -13,6 +13,7 @@ class ExplorerPrefs {
 			.add("Work Dir",		"\${Env.cur.workDir}")
 			.add("Temp", 			"\${Env.cur.tempDir}") 
 
+	@Transient	// saved in the session instead
 	Bool showHiddenFiles	:= false {
 		set {
 			if (&showHiddenFiles != it) {

@@ -21,6 +21,7 @@ class Build : BuildPod {
 			"gfx         1.0.67 - 1.0",
 			"fwt         1.0.67 - 1.0",
 			"syntax      1.0.67 - 1.0",
+			"util        1.0.67 - 1.0",
 			
 			"fandoc      1.0.67 - 1.0",
 			"compilerDoc 1.0.67 - 1.0",
@@ -29,10 +30,7 @@ class Build : BuildPod {
 			
 			// ---- Core ------------------------
 			"afBeanUtils  1.0.4  - 1.0", 
-			"afConcurrent 1.0.8  - 1.0", 
-			"afPlastic    1.0.16 - 1.0", 
 			"afIoc        2.0.2  - 2.0", 
-			"afIocConfig  1.0.16 - 1.0",
 			
 			"afReflux     0+"
 		]

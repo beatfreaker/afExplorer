@@ -33,6 +33,9 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 			it.onBlur.add		|e| { this->onBlur		( ) }
 		}
 		
+		favourites = explorer.preferences.favourites		
+		combo.items = favourites.keys
+
 		content = EdgePane {
 			top = InsetPane(2, 0, 2, 2) { it.add(combo) }
 			center = BorderPane {
@@ -40,14 +43,16 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 				it.border	= Border("1, 1, 0, 0 $Desktop.sysNormShadow")
 			}
 		}
-		
-		favourites = explorer.preferences.favourites		
-		combo.items = favourites.keys
 	}
 
 	Void gotoFavourite(Str favourite) {
 		uri := explorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", explorer.preferences.favourites.keys)
 		combo.selected = favourite
+	}
+	
+	override Void onShow() {
+		// without this, the combo get's all squashed up when the panel is re-shown 
+		content.relayout
 	}
 
 	override Void onActivate() {
@@ -60,6 +65,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 
 	override Void onShowHiddenFiles(Bool show) {
 		if (!isShowing) return
+		model.refresh
 		refresh
 	}
 
@@ -169,6 +175,10 @@ internal class FoldersTreeModel : TreeModel {
 		in(this)
 		this.roots = FileNode.map(explorer, File.osRoots.map { it.normalize })
 		this.hiddenColour = Desktop.sysListFg.lighter(0.5f)
+	}
+	
+	Void refresh() {
+		this.roots = FileNode.map(explorer, File.osRoots.map { it.normalize })
 	}
 	override Str	text(Obj node)			{ n(node).name		}
 	override Image?	image(Obj node)			{ explorer.fileToIcon(n(node).file) }

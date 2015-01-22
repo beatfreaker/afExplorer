@@ -1,5 +1,7 @@
 using afIoc
 using afReflux
+using util
+using fwt
 
 ** Use to launch the Explorer application from the command line. 
 ** 
@@ -21,13 +23,44 @@ using afReflux
 **  
 **   C:\> fan afExplorer http://www.fantomfactory.org/ 
 ** 
-class Main {
-	Void main(Str[] args) {
-		Reflux.start("Explorer", [ExplorerModule#]) |Reflux reflux| {
-			if (args.isEmpty)
+class Main : AbstractMain {
+
+	@Opt { help = "Hides all panels on startup"; aliases=["noTabs"] }
+	Bool noPanels
+	
+	@Opt { help = "Hides all panels on startup" }
+	Bool noPlugins
+	
+	@Arg { help = "A resource URI, name or file to load" }
+	Str[]? uri
+	
+	override Int run() {
+		moduleTypes := [ExplorerModule#]
+		
+		if (!noPlugins) {
+			moduleTypeNames := Env.cur.index("afExplorer.module")
+			pluginTypes := moduleTypeNames.join(",")
+				.split(',', true)
+				.exclude { it.trim.isEmpty }
+				.map |moduleTypeName -> Type?| {
+					return Type.find(moduleTypeName)
+				}
+			moduleTypes.addAll(pluginTypes)
+		}
+		
+		Reflux.start("Explorer", moduleTypes.unique) |Reflux reflux, Window window| {
+			if (noPanels) {
+				panels := (Panels) reflux.registry.serviceById(Panels#.qname)
+				panels.panelTypes.each { reflux.hidePanel(it) }
+			}
+
+			if (uri == null)
 				reflux.load(reflux.preferences.homeUri.toStr)
 			else
-				args.each { reflux.load(it) }
+				uri.each { reflux.load(it) }
 		}
+		return 0
 	}
+	
+	
 }
