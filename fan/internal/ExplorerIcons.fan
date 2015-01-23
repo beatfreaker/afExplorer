@@ -11,9 +11,9 @@ internal class ExplorerIcons {
 		"cmdGoto"				: ``,
 		"cmdShowHiddenFiles"	: ``,
 
-//		"cmdEditPrefs"			: `fan://icons/x16/settings.png`,
 		"cmdEditPrefs"			: `thread_view.gif`,
 		"cmdWordWrap"			: `word-wrap.gif`,
+		"cmdFandocIndex"		: `fan://afExplorer/res/icons-file/fileFandoc.png`,
 
 		// ---- File Explorer -------------------
 		"icoFoldersPanel"		: `filenav_nav.gif`,
@@ -34,6 +34,8 @@ internal class ExplorerIcons {
 		"cmdCopyFileName"		: ``,
 		"cmdCopyFilePath"		: ``,
 		"cmdCopyFileUri"		: ``,
+		"cmdEditText"			: `fan://afExplorer/res/icons-file/fileText.png`,
+		"cmdCompressToZip"		: `fan://afExplorer/res/icons-file/fileZip.png`,
 
 		"icoFile"				: `file_obj.gif`,
 		"icoFileImage"			: `image_obj.gif`,

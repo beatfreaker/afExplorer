@@ -73,6 +73,7 @@ Release Notes [#releaseNotes]
 v0.0.4 [#v0.0.4]
 ================
  - New: Explorer Plugins!
+ - New: Compress to .zip command.
  - New: Edit preferences commands.
  - New: Added a 'Select All' global command, enabled in the Text Editor.
  - New: Ctrl+Select in Folder Panel will open folder in new tab.

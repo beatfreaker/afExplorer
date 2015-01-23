@@ -20,6 +20,8 @@ afExplorer.cmdRenameFile.accelerator	= F2
 afExplorer.cmdDeleteFile.name			= Delete...
 afExplorer.cmdDeleteFile.accelerator	= Del
 
+afExplorer.cmdFandocIndex.name			= Fantom Docs
+afExplorer.cmdFandocIndex.accelerator	= F1
 
 
 // ---- Dialog Properties ----

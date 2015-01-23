@@ -21,6 +21,9 @@ mixin Explorer {
 	abstract Void newFolder(File containingFolder, Str? defFolderName := null)
 
 	abstract Void openFileInSystem(File file)
+
+	abstract Void compressToZip(File toCompress, File dst)
+	
 	abstract Image fileToIcon(File f)
 	abstract Image urlToIcon(Uri url)
 
@@ -33,6 +36,7 @@ internal class ExplorerImpl : Explorer {
 	@Inject private Images		images
 	@Inject private Preferences	prefs
 	@Inject private Reflux		reflux
+	@Inject private Errors		errors
 	@Inject private Dialogues	dialogues
 					Uri			fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
 
@@ -99,6 +103,34 @@ internal class ExplorerImpl : Explorer {
 	
 	override Void openFileInSystem(File file) {
 		Desktop.launchProgram(file.uri)
+	}
+	
+	override Void compressToZip(File toCompress, File dst) {
+		if (dst.isDir || dst.exists)
+			throw ArgErr("Cannot write to $dst")
+		
+		try {
+			// TODO: Pop up progress monitor for long running zip tasks
+			parentUri := toCompress.parent.uri
+			zip := Zip.write(dst.out)
+			try {
+				toCompress.walk |src| {
+					if (src.isDir) return
+
+					path := src.uri.relTo(parentUri)
+					out := zip.writeNext(path)
+					try {
+						src.in(16 * 1024).pipe(out)
+					} finally
+						out.close
+				}
+			} finally
+				zip.close
+
+		} catch (Err err)
+			errors.add(err)
+
+		reflux.refresh
 	}
 	
 	override Image fileToIcon(File f) {

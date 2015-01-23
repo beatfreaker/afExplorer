@@ -52,6 +52,8 @@ class ExplorerModule {
 		config["afExplorer.cmdShowHiddenFiles"]	= config.autobuild(ShowHiddenFilesCommand#)
 		config["afExplorer.cmdSelectAll"]		= config.autobuild(SelectAllCommand#)
 		config["afExplorer.cmdWordWrap"]		= config.autobuild(WordWrapCommand#)
+
+		config["afExplorer.cmdFandocIndex"]		= config.autobuild(FandocIndexCommand#)
 	}
 
 	@Contribute { serviceType=FileViewers# }
@@ -135,11 +137,22 @@ class ExplorerModule {
 	}
 
 	@Contribute { serviceId="afReflux.helpMenu" }
-	static Void contributeAboutMenu(Configuration config, Reflux reflux) {
-		command := (RefluxCommand) config.autobuild(RefluxCommand#, ["Fantom Docs", Image(`fan://afExplorer/res/icons-file/fileFandoc.png`), |->| { reflux.load("fandoc:/") }], [Command#accelerator:Key("F1")])
-		config.set("afExplorer.cmdFandocs", MenuItem(command))
+	static Void contributeAboutMenu(Configuration config, GlobalCommands globalCmds) {
+		config.set("afExplorer.cmdFandocs", MenuItem(globalCmds["afExplorer.cmdFandocIndex"].command))
 			.before("afReflux.cmdAbout")
 	}
+
+//	@Contribute { serviceId="afReflux.toolBar" }
+//	static Void contributeToolBar(Configuration config, GlobalCommands globalCmds) {
+//		config["afExplorer.cmdFandocIndex"]		= toolBarCommand(globalCmds["afExplorer.cmdFandocIndex"].command)
+//	}
+	
+    private static Button toolBarCommand(Command command) {
+        button  := Button.makeCommand(command)
+        if (command.icon != null)
+            button.text = ""
+        return button
+    }
 }
 
 

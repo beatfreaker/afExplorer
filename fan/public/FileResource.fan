@@ -54,8 +54,17 @@ class FileResource : Resource {
 				else
 					addCmd(menu, _fileCmds.actionFileCmd(file, action, launcher))
 			}
-		}		
+		}
 
+		// add standard commands
+		menu.addSep
+		addCmd(menu, _fileCmds.compressToZip(file))
+		addCmd(menu, _fileCmds.openInTextEditor(this))
+		
+		return addFileCommands(menu) 
+	}
+	
+	virtual Menu addFileCommands(Menu menu) {		
 		menu.addSep
 		addCmd(menu, _globalCommands["afExplorer.cmdRenameFile"].command)
 		addCmd(menu, _globalCommands["afExplorer.cmdDeleteFile"].command)
@@ -81,18 +90,5 @@ class FileResource : Resource {
 	
 	Void addCmd(Menu menu, Command cmd) {
 		menu.add(MenuItem.makeCommand(cmd))
-	}
-}
-
-
-
-** (Resource) - 
-** Represents a folder on the file system.
-class FolderResource : FileResource {
-	internal new make(|This|in) : super.make(in) { }
-	
-	** Returns '[FolderView#]'.
-	override Type[] viewTypes() {
-		[FolderView#]
 	}
 }

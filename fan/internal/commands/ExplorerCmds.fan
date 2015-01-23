@@ -113,10 +113,32 @@ internal class ExplorerCmds {
 		}
 	}
 
+	Command compressToZip(File file) {
+		name := file.ext != null ? file.name[0..<-(file.ext.size+1)] : file.name
+		name += ".zip"
+		return command("Compress to '${name}'", "cmdCompressToZip") {
+			it.onInvoke.add {
+				explorer.compressToZip(file, (file.isDir ? file.parent : file) + name.toUri)
+			}
+		}
+	}
+
+	Command openInTextEditor(Resource resource) {
+		command("EditText") {
+			it.onInvoke.add {
+				reflux.loadResource(resource, LoadCtx { it.viewType = TextEditor# })
+			}
+		}
+	}
+
 	private RefluxCommand command(Str baseName, Str? iconName := null) {
 		((RefluxCommand) registry.autobuild(RefluxCommand#, [null, null, null])) {
-			it.name = baseName.toDisplayName.replace(" In ", " in ")
-			if (iconName != null && !iconName.isEmpty)
+			if (baseName.containsChar(' '))
+				it.name = baseName
+			else
+				it.name = baseName.toDisplayName.replace(" In ", " in ")
+
+			if (iconName == null || (iconName != null && !iconName.isEmpty))
 				it.icon = refluxIcons[iconName ?: "cmd${baseName}"]
 		}
 	}

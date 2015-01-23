@@ -9,17 +9,12 @@ Bugs:
 =====
  - Folder 
    - add to zip comand
- - image view should tap into window resize event to auto resize...
- - FileResource
-   - if an img and <10k and size< 96x96 then create a re-sized preview icon
-
-  - keep view panel sort, resource specific, keep local stash
-  - keep table col sizes
  
  drag and drop?
 
 Features:
 =========
+ - TextEditor prefs based on ext
  - Fandoc Viewer
    - Sidebar viewer
    - search bar
@@ -29,7 +24,8 @@ Features:
    - sort by ext
  - Folder Panel
    - Sync command
- - Zip View with Panel 
+ - .zip Viewer with Panel 
+ - Console Viewer
 
 Other:
 ======
