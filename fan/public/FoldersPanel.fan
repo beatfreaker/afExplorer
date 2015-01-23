@@ -66,7 +66,6 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 
 	override Void onShowHiddenFiles(Bool show) {
 		if (!isShowing) return
-		model.refresh
 		refresh
 	}
 
@@ -135,6 +134,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 
 	override Void refresh()	{
+		model.refresh
 		tree.refreshAll
 		Desktop.callLater(50ms) |->| {
 			if (fileResource != null)

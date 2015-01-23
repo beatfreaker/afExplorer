@@ -50,6 +50,8 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 		if (this.resource == resource) return
 		this.resource = resource
 		this.fileResource = resource
+		// revert sorting when showing new resources  
+		this.table.sort(null)
 		refresh
 	}
 	

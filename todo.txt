@@ -8,15 +8,13 @@ Hustlers'n'Harcore
 Bugs:
 =====
  - Folder 
-   - deleting a folder does not remove it from the folder view
    - add to zip comand
  - image view should tap into window resize event to auto resize...
  - FileResource
-   - if an img and <50k and size< 100x100 then create a re-sized preview icon
+   - if an img and <10k and size< 96x96 then create a re-sized preview icon
 
   - keep view panel sort, resource specific, keep local stash
-
- - Edit prefs in menu
+  - keep table col sizes
  
  drag and drop?
 
@@ -36,6 +34,7 @@ Features:
 Other:
 ======
  - change explorer flux icon
+  - update about
 
 http://demo.wizzardsoftware.com/attprocess.php
 http://www.wizzardsoftware.com/wizzard_wavefile_factory.php

@@ -24,7 +24,7 @@ class EditPrefsCmd : RefluxCommand {
 			return
 		}
 
-		msg := "AAPreferences file does not exist:\n\n${prefsFile.osPath}\n\nCreating it for you..."
+		msg := "Preferences file does not exist:\n\n${prefsFile.osPath}\n\nCreating it for you..."
 		cmd := Dialog.openMsgBox(Explorer#.pod, "cmdEditPrefs", reflux.window, msg, null, [dialogues.ok, dialogues.cancel])
 		if (cmd == dialogues.ok) {
 			// can't copy from fan:// files so we do it the long way round
