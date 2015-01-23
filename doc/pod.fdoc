@@ -73,7 +73,10 @@ Release Notes [#releaseNotes]
 v0.0.4 [#v0.0.4]
 ================
  - New: Explorer Plugins!
+ - New: Edit preferences commands.
  - New: Added a 'Select All' global command, enabled in the Text Editor.
+ - New: Ctrl+Select in Folder Panel will open folder in new tab.
+ - Chg: All dialogs are routed through the new Reflux Dialogues class.
  - Bug: Show / hide hidden file command now shows and hides hidden files in the Folders Panel (again!)  
  - Bug: Folders Panel favourites combo was displayed squashed when panel re-shown. 
 

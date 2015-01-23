@@ -25,6 +25,7 @@ internal class ExplorerImpl : Explorer {
 	@Inject private Images		images
 	@Inject private Preferences	prefs
 	@Inject private Reflux		reflux
+	@Inject private Dialogues	dialogues
 					Uri			fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
 
 	private File? copiedFile
@@ -33,7 +34,7 @@ internal class ExplorerImpl : Explorer {
 	new make(|This| in) { in(this) }
 
 	override Void rename(File file) {
-		newName := Dialog.openPromptStr(reflux.window, "Rename", file.name)
+		newName := dialogues.openPromptStr("Rename", file.name)
 		if (newName != null) {
 			file.rename(newName)
 			reflux.refresh
@@ -41,8 +42,8 @@ internal class ExplorerImpl : Explorer {
 	}
 
 	override Void delete(File file) {
-		okay := Dialog.openQuestion(reflux.window, "Delete ${file.osPath}?", null, Dialog.yesNo)
-		if (okay == Dialog.yes) {
+		okay := dialogues.openQuestion("Delete ${file.osPath}?", null, dialogues.yesNo)
+		if (okay == dialogues.yes) {
 			file.delete
 			reflux.refresh
 		}
@@ -73,7 +74,7 @@ internal class ExplorerImpl : Explorer {
 	}
 	
 	override Void newFile(File containingFolder) {
-		fileName := Dialog.openPromptStr(reflux.window, "New File", "NewFile.txt")
+		fileName := dialogues.openPromptStr("New File", "NewFile.txt")
 		if (fileName != null) {
 			containingFolder.createFile(fileName)
 			reflux.refresh
@@ -81,7 +82,7 @@ internal class ExplorerImpl : Explorer {
 	}
 
 	override Void newFolder(File containingFolder) {
-		dirName := Dialog.openPromptStr(reflux.window, "New Folder", "NewFolder")
+		dirName := dialogues.openPromptStr("New Folder", "NewFolder")
 		if (dirName != null) {
 			containingFolder.createDir(dirName)
 			reflux.refresh

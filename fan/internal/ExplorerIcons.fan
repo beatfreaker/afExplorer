@@ -11,15 +11,16 @@ internal class ExplorerIcons {
 		"cmdGoto"				: ``,
 		"cmdShowHiddenFiles"	: ``,
 
-		"cmdEditPrefs"			: ``,
+//		"cmdEditPrefs"			: `fan://icons/x16/settings.png`,
+		"cmdEditPrefs"			: `thread_view.gif`,
 		"cmdWordWrap"			: `word-wrap.gif`,
 
 		// ---- File Explorer -------------------
 		"icoFoldersPanel"		: `filenav_nav.gif`,
 		"icoFolderView"			: `fldr_obj.gif`,
-		
+
 		"cmdOpenInNewTab"		: ``,
-		
+
 		"cmdOpenInSystem"		: ``,
 		"cmdOpenFile"			: ``,
 		"cmdActionFile"			: ``,

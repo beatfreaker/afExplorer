@@ -7,6 +7,8 @@ using fwt
 **
 internal class TextEditorController : TextEditorSupport {
 	@Inject private Reflux			reflux
+	@Inject private Errors			errors
+	@Inject private Dialogues		dialogues
 	@Inject private GlobalCommands	globalCommands
 
 	override TextEditor editor { private set }
@@ -26,12 +28,28 @@ internal class TextEditorController : TextEditorSupport {
 //////////////////////////////////////////////////////////////////////////
 
 	Void register() {
-		richText.onVerifyKey.add	{ onVerifyKey(it) }
-		richText.onVerify.add		{ onVerify(it) }
-		richText.onModify.add		{ onModified(it) }
-		richText.onCaret.add		{ onCaret(it) }
-		richText.onFocus.add		{ onFocus(it) }
-		richText.onBlur.add			{ onBlur(it) }
+		richText.onVerifyKey.add	{ this->onVerifyKey(it) }
+		richText.onVerify.add		{ this->onVerify(it) }
+		richText.onModify.add		{ this->onModified(it) }
+		richText.onCaret.add		{ this->onCaret(it) }
+		richText.onFocus.add		{ this->onFocus(it) }
+		richText.onBlur.add			{ this->onBlur(it) }
+	}
+
+	** Simple Err handling without fuss!
+	override Obj? trap(Str name, Obj?[]? args := null) {
+		retVal := null
+		try retVal = super.trap(name, args)
+		catch (Err err) {
+			// because we handle the err and return null, we want to make sure we only do it for fwt events
+			if (name.startsWith("on") && typeof.method(name, false)?.returns == Void#) {
+				errors.add(err)
+				return null
+			}
+			else throw err
+		}
+		
+		return retVal
 	}
 
 	Void onVerifyKey(Event event) {
@@ -229,19 +247,26 @@ internal class TextEditorController : TextEditorSupport {
 //////////////////////////////////////////////////////////////////////////
 
 	Void checkFileOutOfDate() {
+		// Meh - we've been here before!
+		if (editor.fileTimeAtLoad == null)
+			return
+
+		if (!editor.file.exists) {
+			dialogues.openWarn("File has been deleted by another application!\n\n${editor.file.osPath}")
+			editor.fileTimeAtLoad = null
+			editor.isDirty = true	// set dirty flag so user can re-same
+			return
+		}
+		
 		// on focus always check if the file has been modified
 		// from out from under us and ask user if they want to reload
 		if (editor.fileTimeAtLoad == editor.file.modified) return
 		editor.fileTimeAtLoad = editor.file.modified
 
 		// prompt user to reload
-		r := Dialog.openQuestion(reflux.window,
-			"File has been modified by another application:
-			
-			     $editor.file.name
-			
-			 Reload the file?", Dialog.yesNo)
-		if (r == Dialog.yes) editor.refresh
+		r := dialogues.openQuestion("File has been modified by another application:\n\n${editor.file.osPath}\n\nReload the file?", dialogues.yesNo)
+		if (r == dialogues.yes)
+			editor.refresh
 	}
 
 //////////////////////////////////////////////////////////////////////////

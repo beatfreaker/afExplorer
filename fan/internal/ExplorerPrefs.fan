@@ -68,7 +68,7 @@ class FileAction {
 class FileLauncher {
 	Str 	id
 	Str 	name
-	Uri		iconUri
+	Uri?	iconUri
 	Uri		programUri
 	new make(|This|? f := null) { f?.call(this) }
 }

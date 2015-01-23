@@ -12,6 +12,7 @@ class TextEditor : View {
 	@Inject private Reflux			reflux
 	@Inject private AppStash		stash
 	@Inject private GlobalCommands	globalCommands
+	@Inject private Dialogues		dialogues
 			private	EdgePane		edgePane
 	
 	
@@ -153,13 +154,13 @@ class TextEditor : View {
 		if (!isDirty) return true
 		
 		if (force) {
-			r := Dialog.openQuestion(reflux.window,"Save changes to $resource.name?", [Dialog.yes, Dialog.no])
-			if (r == Dialog.yes) save
+			r := dialogues.openQuestion("Save changes to $resource.name?", [dialogues.yes, dialogues.no])
+			if (r == dialogues.yes) save
 
 		} else {
-			r := Dialog.openQuestion(reflux.window, "Save changes to $resource.name?\n\nClick 'Cancel' to continue editing.", [Dialog.yes, Dialog.no, Dialog.cancel])
-			if (r == Dialog.cancel) return false
-			if (r == Dialog.yes) save
+			r := dialogues.openQuestion("Save changes to $resource.name?\n\nClick 'Cancel' to continue editing.", [dialogues.yes, dialogues.no, Dialog.cancel])
+			if (r == dialogues.cancel) return false
+			if (r == dialogues.yes) save
 		}
 		
 		// clear flag to reset the tab text, because the tab (not this view panel) gets reused if we're switching views
@@ -223,5 +224,13 @@ class TextEditor : View {
 			it.add(caretField)
 			it.add(charsetField)
 		}
+	}
+	
+	static Void main() {
+		prefs:=RefluxPrefs()
+		prefs.panelPrefAligns[FoldersPanel#] = Halign.left
+		s:=StrBuf()
+		s.out.writeObj(prefs)
+		echo(s)
 	}
 }

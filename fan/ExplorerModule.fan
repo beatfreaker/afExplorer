@@ -126,11 +126,10 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.PrefsMenu" }
 	static Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
-		// TODO: edit prefs cmd
-//		config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [RefluxPrefs#, ``]))
-//		config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [ExplorerPrefs#, ``]))
-//		config["afExplorer.cmdTextEditorPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [TextEditorPrefs#, ``]))
-//		config["separator.01"]					= MenuItem { it.mode = MenuItemMode.sep }
+		config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [RefluxPrefs#, `fan://afExplorer/res/fogs/afReflux.fog`]))
+		config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [ExplorerPrefs#, `fan://afExplorer/res/fogs/afExplorer.fog`]))
+		config["afExplorer.cmdTextEditorPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [TextEditorPrefs#, `fan://afExplorer/res/fogs/fluxText.fog`]))
+		config["separator.01"]					= MenuItem { it.mode = MenuItemMode.sep }
 		config["afExplorer.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
 		config["afExplorer.cmdWordWrap"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdWordWrap"].command)
 	}

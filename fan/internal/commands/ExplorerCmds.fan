@@ -106,7 +106,7 @@ internal class ExplorerCmds {
 	Command actionFileCmd(File file, FileAction action, FileLauncher laucher) {
 		command("ActionFile", "") {
 			it.name = "${action.verb} with ${laucher.name}"
-			it.icon = refluxIcons.fromUri(laucher.iconUri)
+			it.icon = refluxIcons.fromUri(laucher.iconUri, false)
 			it.onInvoke.add {
 				Process([laucher.programUri.toFile.osPath, file.osPath], file.parent).run
 			}

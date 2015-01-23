@@ -36,6 +36,6 @@ class Build : BuildPod {
 		]
 
 		srcDirs = [`fan/`, `fan/todo/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/textEditor/`, `fan/internal/commands/`]
-		resDirs = [`locale/`, `res/css/`, `res/icons-file/`, `res/syntax/`]
+		resDirs = [`locale/`, `res/css/`, `res/fogs/`, `res/icons-file/`, `res/syntax/`]
 	}
 }

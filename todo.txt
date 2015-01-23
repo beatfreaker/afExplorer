@@ -7,9 +7,9 @@ Hustlers'n'Harcore
 
 Bugs:
 =====
- - Select All - glob cmd - ctrl-A
- - Folder command
-   - add to zip
+ - Folder 
+   - deleting a folder does not remove it from the folder view
+   - add to zip comand
  - image view should tap into window resize event to auto resize...
  - FileResource
    - if an img and <50k and size< 100x100 then create a re-sized preview icon
@@ -17,6 +17,8 @@ Bugs:
   - keep view panel sort, resource specific, keep local stash
 
  - Edit prefs in menu
+ 
+ drag and drop?
 
 Features:
 =========

@@ -60,6 +60,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 	
 	override Void onDeactivate() {
+		onBlur	// onBlur doesn't always fire when we switch tabs
 		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afExplorer.folderPanel")
 	}
 
@@ -94,10 +95,11 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	private Void onComboModify(Event event)	{
 		if (isActive && combo.selectedIndex >= 0) {
 			// this event fires when we switch tabs - then errs when we're not attached! Grr...
-			if (lastComboIndex != combo.selectedIndex) {
+//			if (lastComboIndex != combo.selectedIndex) {
+			// dunno, seems to work now! I revisited this 'cos I wanted to re-select an option in the drop down
 				lastComboIndex  = combo.selectedIndex
 				reflux.load(favourites[combo.selected])
-			}
+//			}
 		}
 	}
 
@@ -107,7 +109,8 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		node := (FileNode?) tree.nodeAt(event.pos)
 		if (node == null)
 			return
-		reflux.load(node.file.normalize.uri.toStr)
+		ctx := (event.key != null && event.key.isCtrl) ? LoadCtx() { it.newTab = true } : LoadCtx()
+		reflux.load(node.file.normalize.uri.toStr, ctx)
 	}
 
 	private Void onPopup(Event event) {

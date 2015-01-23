@@ -19,3 +19,10 @@ afExplorer.cmdRenameFile.name			= Rename...
 afExplorer.cmdRenameFile.accelerator	= F2
 afExplorer.cmdDeleteFile.name			= Delete...
 afExplorer.cmdDeleteFile.accelerator	= Del
+
+
+
+// ---- Dialog Properties ----
+
+cmdEditPrefs.name						= Create Settings File
+cmdEditPrefs.image						= fan://icons/x32/gears.png
