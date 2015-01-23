@@ -46,7 +46,10 @@ class ImageViewer : View {
 				}
 			}
 			center = ScrollPane { it.content = imageWidget; it.border = false }
-	    }		
+	    }
+
+		// dunno why super.load(resource) doesn't do this!?
+		this.icon = resource.icon
 	}
 	
 	** Expands or shrinks the image to fit the view.
@@ -101,7 +104,7 @@ internal class ImageViewWidget : Canvas {
 		zoom = w.min(h)
 		iSize = parent.size
 		parent->onLayout
-		repaint
+		repaint		
 	}
 
 	Void doFullSize() {

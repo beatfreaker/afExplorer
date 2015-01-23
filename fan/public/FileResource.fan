@@ -76,14 +76,6 @@ class FileResource : Resource {
 			addCmd(menu, _fileCmds.newFolderCmd(file))
 		}
 		
-		// open
-		// open in new tab
-		// edit
-		// find in files
-		// cmd prompt
-		// add to zip
-		// properties
-		
 		return menu 
 	}
 	

@@ -11,11 +11,19 @@ mixin Explorer {
 	abstract Void cut(File file)
 	abstract Void copy(File file)
 	abstract Void paste(File destDir)
-	abstract Void newFile(File containingFolder)
-	abstract Void newFolder(File containingFolder)
+	
+	** Opens a dialogue for the file name before creating an empty file.
+	** File name defaults to 'NewFile.txt'.	
+	abstract Void newFile(File containingFolder, Str? defFileName := null)
+	
+	** Opens a dialogue for the folder name before creating an empty folder.
+	** Folder name defaults to 'NewFolder'.
+	abstract Void newFolder(File containingFolder, Str? defFolderName := null)
+
 	abstract Void openFileInSystem(File file)
 	abstract Image fileToIcon(File f)
 	abstract Image urlToIcon(Uri url)
+
 	abstract ExplorerPrefs preferences()
 }
 	
@@ -73,16 +81,16 @@ internal class ExplorerImpl : Explorer {
 		reflux.refresh
 	}
 	
-	override Void newFile(File containingFolder) {
-		fileName := dialogues.openPromptStr("New File", "NewFile.txt")
+	override Void newFile(File containingFolder, Str? defFileName := null) {
+		fileName := dialogues.openPromptStr("New File", defFileName ?: "NewFile.txt")
 		if (fileName != null) {
 			containingFolder.createFile(fileName)
 			reflux.refresh
 		}
 	}
 
-	override Void newFolder(File containingFolder) {
-		dirName := dialogues.openPromptStr("New Folder", "NewFolder")
+	override Void newFolder(File containingFolder, Str? defFolderName := null) {
+		dirName := dialogues.openPromptStr("New Folder", defFolderName ?: "NewFolder")
 		if (dirName != null) {
 			containingFolder.createDir(dirName)
 			reflux.refresh
@@ -101,6 +109,54 @@ internal class ExplorerImpl : Explorer {
 			osRoots	:= File.osRoots.map { it.normalize }		
 			name := osRoots.contains(f) ? "icoFolderRoot" : "icoFolder"
 			return hidden ? icons.getFaded(name) : icons.get(name)
+		}
+		
+		// if the image is small enough ~5k, return a thumbnail as the icon
+		// .svg files and the like cause ugly stack traces as FWT logs the Err before returning null... Grrr!!
+		if ("bmp jpg jpeg gif png".split.contains(f.ext) && f.size < (5 * 1024)) {
+			if (images.contains(f.uri))
+				return hidden ? images.getFaded(f.uri) : images.get(f.uri)
+
+			icon := images.load(f.uri, false)
+			if (icon != null) {
+				if (icon.size == Size(16, 16)) {
+					images[f.uri] = icon
+					return icon
+				}
+
+				// note we have to return a 16x16 image else SWT scales it for us
+				if (icon.size.w <= 16 && icon.size.h <= 16) {
+					newIcon := Image(Size(16, 16)) |Graphics g| {
+						g.drawImage(icon, (16 - icon.size.w) / 2, (16 - icon.size.h) / 2)
+					}
+					images[f.uri] = newIcon
+					return newIcon
+				}
+
+				if (icon.size.w >= icon.size.h) {
+					newH := icon.size.h * 16 / icon.size.w
+					newIcon := icon.resize(Size(16, newH))
+					if (newH < 16) {
+						newIcon = Image(Size(16, 16)) |Graphics g| {
+							g.drawImage(newIcon, 0, (16 - newH) / 2)
+						}
+					}
+					images[f.uri] = newIcon
+					return newIcon
+				}
+
+				if (icon.size.w <= icon.size.h) {
+					newW := icon.size.w * 16 / icon.size.h
+					newIcon := icon.resize(Size(newW, 16))
+					if (newW < 16) {
+						newIcon = Image(Size(16, 16)) |Graphics g| {
+							g.drawImage(newIcon, (16 - newW) / 2, 0)
+						}
+					}
+					images[f.uri] = newIcon
+					return newIcon
+				}				
+			}
 		}
 		
 		// look for explicit match based off ext
