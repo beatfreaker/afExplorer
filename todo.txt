@@ -3,9 +3,7 @@ Hustlers'n'Harcore
 
 Bugs:
 =====
-del shortcut
-ask close on shutdown
-Cut / Copy / Paste should be global
+Cut / Copy / Paste should be global, to edit files
 
 
 Features:

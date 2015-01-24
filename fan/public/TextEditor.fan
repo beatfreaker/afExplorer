@@ -51,31 +51,31 @@ class TextEditor : View {
 	
 	@NoDoc
 	override Void onActivate() {
-		globalCommands["afExplorer.cmdFind"				].addInvoker("afReflux.textEditor", |Event? e|	{ find.showFind } )
-		globalCommands["afExplorer.cmdFind"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afExplorer.cmdFindNext"			].addInvoker("afReflux.textEditor", |Event? e|	{ find.next } )
-		globalCommands["afExplorer.cmdFindNext"			].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afExplorer.cmdFindPrev"			].addInvoker("afReflux.textEditor", |Event? e|	{ find.prev } )
-		globalCommands["afExplorer.cmdFindPrev"			].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afExplorer.cmdReplace"			].addInvoker("afReflux.textEditor", |Event? e|	{ find.showFindReplace } )
-		globalCommands["afExplorer.cmdReplace"			].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
-		globalCommands["afExplorer.cmdGoto"				].addInvoker("afReflux.textEditor", |Event? e|	{ controller?.onGoto(e) } )
-		globalCommands["afExplorer.cmdGoto"				].addEnabler("afReflux.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdFind"				].addInvoker("afExplorer.textEditor", |Event? e|	{ find.showFind } )
+		globalCommands["afExplorer.cmdFind"				].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdFindNext"			].addInvoker("afExplorer.textEditor", |Event? e|	{ find.next } )
+		globalCommands["afExplorer.cmdFindNext"			].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdFindPrev"			].addInvoker("afExplorer.textEditor", |Event? e|	{ find.prev } )
+		globalCommands["afExplorer.cmdFindPrev"			].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdReplace"			].addInvoker("afExplorer.textEditor", |Event? e|	{ find.showFindReplace } )
+		globalCommands["afExplorer.cmdReplace"			].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afExplorer.cmdGoto"				].addInvoker("afExplorer.textEditor", |Event? e|	{ controller?.onGoto(e) } )
+		globalCommands["afExplorer.cmdGoto"				].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
 		restorePrefs
 	}
 	
 	@NoDoc
 	override Void onDeactivate() {
-		globalCommands["afExplorer.cmdFind"				].removeInvoker("afReflux.textEditor")
-		globalCommands["afExplorer.cmdFind"				].removeEnabler("afReflux.textEditor")
-		globalCommands["afExplorer.cmdFindNext"			].removeInvoker("afReflux.textEditor")
-		globalCommands["afExplorer.cmdFindNext"			].removeEnabler("afReflux.textEditor")
-		globalCommands["afExplorer.cmdFindPrev"			].removeInvoker("afReflux.textEditor")
-		globalCommands["afExplorer.cmdFindPrev"			].removeEnabler("afReflux.textEditor")
-		globalCommands["afExplorer.cmdReplace"			].removeInvoker("afReflux.textEditor")
-		globalCommands["afExplorer.cmdReplace"			].removeEnabler("afReflux.textEditor")
-		globalCommands["afExplorer.cmdGoto"				].removeInvoker("afReflux.textEditor")
-		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afReflux.textEditor")
+		globalCommands["afExplorer.cmdFind"				].removeInvoker("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdFind"				].removeEnabler("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdFindNext"			].removeInvoker("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdFindNext"			].removeEnabler("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdFindPrev"			].removeInvoker("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdFindPrev"			].removeEnabler("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdReplace"			].removeInvoker("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdReplace"			].removeEnabler("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdGoto"				].removeInvoker("afExplorer.textEditor")
+		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afExplorer.textEditor")
 		
 		// onBlur doesn't always fire!?
 		globalCommands["afExplorer.cmdSelectAll"		].removeInvoker("afExplorer.textEditor")

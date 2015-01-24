@@ -235,7 +235,6 @@ internal class ExplorerImpl : Explorer {
 	}
 	
 	override Image urlToIcon(Uri url) {
-
 		// look for explicit match based off ext
 		if (url.ext != null) {
 			icon := fileIcon("file${url.ext.capitalize}.png", false)

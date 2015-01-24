@@ -9,9 +9,7 @@ internal class RenameFileCommand : GlobalCommand {
 		set { &fileFetcher = it; update }
 	}
 	
-	new make(|This|in) : super("afExplorer.cmdRenameFile", in) {
-		addEnabler("afExplorer.cmdRenameFile") |->Bool| { fileFetcher?.call() != null }
-	}
+	new make(|This|in) : super("afExplorer.cmdRenameFile", in) { }
 	
 	override Void doInvoke(Event? e) {
 		file := fileFetcher?.call()

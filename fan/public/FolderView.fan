@@ -32,11 +32,12 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	override Bool reuseView(Resource resource) { true }
 	
 	override Void onActivate() {
-		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afExplorer.folderView", |->Bool| { true } )
+		globalCommands["afExplorer.cmdShowHiddenFiles"	].addEnabler("afExplorer.folderView", |->Bool| { true } )
 	}
 	
 	override Void onDeactivate() {
-		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afExplorer.folderView")
+		onBlur	// onBlur doesn't always fire when we switch tabs
+		globalCommands["afExplorer.cmdShowHiddenFiles"	].removeEnabler("afExplorer.folderView")
 	}
 
 	override Void refresh(Resource? resource := null) {
@@ -67,6 +68,8 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	}
 
 	private Void onFocus() {
+		globalCommands["afExplorer.cmdRenameFile"].addEnabler("afExplorer.folderView", |->Bool| { !table.selected.isEmpty } )
+		globalCommands["afExplorer.cmdDeleteFile"].addEnabler("afExplorer.folderView", |->Bool| { !table.selected.isEmpty } )
 		fileFetcher := |->File?| { 
 			table.selected.isEmpty ? null : model.fileRes[table.selected.first].file 
 		}
@@ -77,10 +80,8 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	}
 
 	private Void onBlur() {
-		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
-		cmdR.fileFetcher = null
-		cmdD := (DeleteFileCommand) globalCommands["afExplorer.cmdDeleteFile"]
-		cmdD.fileFetcher = null
+		globalCommands["afExplorer.cmdRenameFile"].removeEnabler("afExplorer.folderView")
+		globalCommands["afExplorer.cmdDeleteFile"].removeEnabler("afExplorer.folderView")
 	}
 
 	private Void onPopup(Event event) {

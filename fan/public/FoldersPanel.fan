@@ -56,7 +56,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 
 	override Void onActivate() {
-		globalCommands["afExplorer.cmdShowHiddenFiles"].addEnabler("afExplorer.folderPanel", |->Bool| { true } )
+		globalCommands["afExplorer.cmdShowHiddenFiles"	].addEnabler("afExplorer.folderPanel", |->Bool| { true } )
 	}
 	
 	override Void onDeactivate() {
@@ -75,6 +75,8 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 
 	private Void onFocus() {
+		globalCommands["afExplorer.cmdRenameFile"].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
+		globalCommands["afExplorer.cmdDeleteFile"].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
 		fileFetcher := |->File?| {
 			tree.selected.isEmpty ? null : ((FileNode) tree.selected.first).file
 		}
@@ -85,10 +87,8 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 
 	private Void onBlur() {
-		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
-		cmdR.fileFetcher = null
-		cmdD := (DeleteFileCommand) globalCommands["afExplorer.cmdDeleteFile"]
-		cmdD.fileFetcher = null
+		globalCommands["afExplorer.cmdRenameFile"].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afExplorer.cmdDeleteFile"].removeEnabler("afExplorer.folderPanel")
 	}
 
 	private Void onComboModify(Event event)	{
