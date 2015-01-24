@@ -74,13 +74,15 @@ v0.0.4 [#v0.0.4]
 ================
  - New: Explorer Plugins!
  - New: Compress to .zip command.
- - New: Edit preferences commands.
+ - New: Added Edit preferences commands.
  - New: Added a 'Select All' global command, enabled in the Text Editor.
  - New: Ctrl+Select in Folder Panel will open folder in new tab.
  - New: Small images use a thumbnail preview as their icon.
+ - New: Added configurable 'FilePopupMenu' and 'FolderPopupMenu' services.
  - Chg: All dialogs are routed through the new Reflux Dialogues class.
  - Chg: Folder sort in Folder view is reset when displaying new folder.
- - Chg: ImageViewer uses the resource's icon as its icon. 
+ - Chg: ImageViewer uses the resource's icon as its icon.
+ - Chg: Single file copy / paste handle duplicate names. 
  - Bug: Show / hide hidden file command now shows and hides hidden files in the Folders Panel (again!)  
  - Bug: Folders Panel favourites combo was displayed squashed when panel re-shown. 
  - Bug: Folders Panel did not pick up folder deletes / renames. 

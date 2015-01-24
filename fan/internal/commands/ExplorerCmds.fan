@@ -36,7 +36,7 @@ internal class ExplorerCmds {
 	}
 
 	Command newFileCmd(File file) {
-		command("NewFile...") {
+		command("NewFile...", "cmdNewFile") {
 			it.onInvoke.add {
 				explorer.newFile(file)
 			}
@@ -44,7 +44,7 @@ internal class ExplorerCmds {
 	}
 
 	Command newFolderCmd(File file) {
-		command("NewFolder...") {
+		command("NewFolder...", "cmdNewFolder") {
 			it.onInvoke.add {
 				explorer.newFolder(file)
 			}
@@ -72,7 +72,7 @@ internal class ExplorerCmds {
 	Command pasteFileCmd(File file) {
 		command("PasteFile") {
 			it.name = "Paste"
-			it.enabled = file.isDir
+			it.enabled = file.isDir && explorer.pasteEnabled
 			it.onInvoke.add {
 				explorer.paste(file)
 			}
@@ -88,7 +88,7 @@ internal class ExplorerCmds {
 	}
 
 	Command copyFilePathCmd(File file) {
-		command("CopyFilePath") {
+		command("CopyOSPath") {
 			it.onInvoke.add {
 				reflux.copyToClipboard(file.osPath)
 			}
@@ -96,7 +96,7 @@ internal class ExplorerCmds {
 	}
 
 	Command copyFileUriCmd(File file) {
-		command("CopyFileUri") {
+		command("CopyURI") {
 			it.onInvoke.add {
 				reflux.copyToClipboard(file.uri.toStr)
 			}

@@ -12,6 +12,9 @@ class ExplorerModule {
 		defs.add(FileViewers#)
 		defs.add(AppStash#)
 		defs.add(IframeBlocker#)
+		defs.add(ObjCache#)
+		defs.add(FilePopupMenu#)
+		defs.add(FolderPopupMenu#)
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
@@ -85,6 +88,20 @@ class ExplorerModule {
 		}
 	}
 
+	@Contribute { serviceType=FilePopupMenu# }
+	static Void contributeFilePopupMenu(Configuration config) {
+		config["fileLaunchers"]	= PopupCommands#addFileLaunchers
+		config["fileStandard"]	= PopupCommands#addStandardFileCommands
+		config["copyPaste"]		= PopupCommands#addCopyPasteCommands
+	}
+	
+	@Contribute { serviceType=FolderPopupMenu# }
+	static Void contributeFolderPopupMenu(Configuration config) {
+		config["folderLaunchers"]	= PopupCommands#addFolderLaunchers
+		config["copyPaste"]			= PopupCommands#addCopyPasteCommands		
+		config["newFile"]			= PopupCommands#addFolderNewCommands		
+	}
+	
 	@Contribute { serviceType=IframeBlocker# }
 	static Void contributeIframeBlocker(Configuration config) {
 		config.add("^https?://.*\\.addthis\\.com/.*\$")

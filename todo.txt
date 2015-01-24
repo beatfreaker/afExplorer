@@ -7,10 +7,8 @@ Hustlers'n'Harcore
 
 Bugs:
 =====
- - Folder 
-   - add to zip comand
- 
- drag and drop?
+Cut / Copy / Paste should be global
+
 
 Features:
 =========

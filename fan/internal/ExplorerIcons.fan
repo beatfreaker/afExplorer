@@ -32,8 +32,8 @@ internal class ExplorerIcons {
 		"cmdNewFile"			: `new_untitled_text_file.gif`,
 		"cmdNewFolder"			: `newfolder_wiz.gif`,
 		"cmdCopyFileName"		: ``,
-		"cmdCopyFilePath"		: ``,
-		"cmdCopyFileUri"		: ``,
+		"CopyOSPath"			: ``,
+		"cmdCopyURI"			: ``,
 		"cmdEditText"			: `fan://afExplorer/res/icons-file/fileText.png`,
 		"cmdCompressToZip"		: `fan://afExplorer/res/icons-file/fileZip.png`,
 

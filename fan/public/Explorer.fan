@@ -28,6 +28,9 @@ mixin Explorer {
 	abstract Image urlToIcon(Uri url)
 
 	abstract ExplorerPrefs preferences()
+
+	@NoDoc	// a small hack until we make paste a global command
+	abstract Bool pasteEnabled()
 }
 	
 internal class ExplorerImpl : Explorer {
@@ -40,8 +43,8 @@ internal class ExplorerImpl : Explorer {
 	@Inject private Dialogues	dialogues
 					Uri			fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
 
-	private File? copiedFile
-	private File? cutFile
+	internal File? copiedFile
+	internal File? cutFile
 
 	new make(|This| in) { in(this) }
 
@@ -78,8 +81,26 @@ internal class ExplorerImpl : Explorer {
 			cutFile = null
 		}
 		if (copiedFile != null) {
-			copiedFile.copyInto(destDir)
-			copiedFile = null
+			if (!copiedFile.isDir) {
+				// handle name conflicts when duplicating (copy->paste) files
+				fileIndex := 0
+				destName := copiedFile.name.toUri
+				destFile := destDir + destName
+				while (destFile.exists) {
+					fileIndex++
+					if (copiedFile.ext == null)
+						destName = `${copiedFile.name}($fileIndex)`
+					else
+						destName = `${copiedFile.name[0..<-copiedFile.ext.size-1]}($fileIndex).${copiedFile.ext}`
+					destFile = destDir + destName
+				}
+				copiedFile.copyTo(destFile)
+				
+			} else
+				copiedFile.copyInto(destDir)
+			
+			// once copied, allow multiple pastes
+//			copiedFile = null
 		}
 		reflux := (Reflux) registry.serviceById(Reflux#.qname)
 		reflux.refresh
@@ -145,7 +166,7 @@ internal class ExplorerImpl : Explorer {
 		
 		// if the image is small enough ~5k, return a thumbnail as the icon
 		// .svg files and the like cause ugly stack traces as FWT logs the Err before returning null... Grrr!!
-		if ("bmp jpg jpeg gif png".split.contains(f.ext) && f.size < (5 * 1024)) {
+		if ("bmp jpg jpeg gif png".split.contains(f.ext ?: "") && f.size < (5 * 1024)) {
 			if (images.contains(f.uri))
 				return hidden ? images.getFaded(f.uri) : images.get(f.uri)
 
@@ -240,5 +261,9 @@ internal class ExplorerImpl : Explorer {
 	private Image? fileIcon(Str fileName, Bool hidden) {
 		uri := fileIconsRoot.plusName(fileName)
 		return hidden ?	images.getFaded(uri, false) : images.get(uri, false)
+	}
+	
+	override Bool pasteEnabled() {
+		copiedFile != null || cutFile != null
 	}
 }
