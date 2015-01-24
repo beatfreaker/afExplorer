@@ -6,11 +6,11 @@ using fwt
 **
 ** FindBar finds text in the current TextEditor.
 **
-internal class FindBar : ContentPane, TextEditorSupport {
+internal class FindBar : ContentPane {
 
 	@Inject	private Session session
 	
-	override TextEditor editor { private set }
+	private TextEditor editor
 	private Int caretPos
 
 	private Widget findPane
@@ -113,6 +113,9 @@ internal class FindBar : ContentPane, TextEditorSupport {
 		visible = displayFind
 		replacePane.visible = displayReplace
 	}
+
+	RichText	richText()	{ editor.richText }
+	TextDoc 	doc() 		{ editor.doc }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods

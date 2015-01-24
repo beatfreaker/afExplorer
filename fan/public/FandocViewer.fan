@@ -39,12 +39,14 @@ class FandocViewer : HtmlViewer {
 		throw Err("Unknown resource: $resource")
 	}
 	
-	override Void refresh() {
-		// the browser doesn't like refreshing a string, so we regenerate the HTML 
-		if (resource is FileResource || resource is FandocResource) {
-			super.load(resource)
-		} else
-			super.refresh
+	override Void refresh(Resource? resource := null) {
+		if (resource == null || resource == this.resource) {
+			// the browser doesn't like refreshing a string, so we regenerate the HTML 
+			if (this.resource is FileResource || this.resource is FandocResource) {
+				super.load(this.resource)
+			} else
+				super.refresh(null)
+		}
 	}
 	
 	private static Str fandocToHtml(Str fandoc, Uri? base := null) {

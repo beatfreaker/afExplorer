@@ -90,16 +90,16 @@ class ExplorerModule {
 
 	@Contribute { serviceType=FilePopupMenu# }
 	static Void contributeFilePopupMenu(Configuration config) {
-		config["fileLaunchers"]	= PopupCommands#addFileLaunchers
-		config["fileStandard"]	= PopupCommands#addStandardFileCommands
-		config["copyPaste"]		= PopupCommands#addCopyPasteCommands
+		config["afExplorer.launchers"]	= PopupCommands#addFileLaunchers
+		config["afExplorer.standard"]	= PopupCommands#addStandardFileCommands
+		config["afExplorer.copyPaste"]	= PopupCommands#addCopyPasteCommands
 	}
 	
 	@Contribute { serviceType=FolderPopupMenu# }
 	static Void contributeFolderPopupMenu(Configuration config) {
-		config["folderLaunchers"]	= PopupCommands#addFolderLaunchers
-		config["copyPaste"]			= PopupCommands#addCopyPasteCommands		
-		config["newFile"]			= PopupCommands#addFolderNewCommands		
+		config["afExplorer.launchers"]	= PopupCommands#addFolderLaunchers
+		config["afExplorer.copyPaste"]	= PopupCommands#addCopyPasteCommands		
+		config["afExplorer.new"]		= PopupCommands#addFolderNewCommands		
 	}
 	
 	@Contribute { serviceType=IframeBlocker# }

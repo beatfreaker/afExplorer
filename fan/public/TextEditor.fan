@@ -13,13 +13,14 @@ class TextEditor : View {
 	@Inject private AppStash		stash
 	@Inject private GlobalCommands	globalCommands
 	@Inject private Dialogues		dialogues
+	@Inject private Preferences		preferences
 			private	EdgePane		edgePane
 	
 	
 	** The 'File' being edited.
 			File? 				file
-	internal TextEditorPrefs	options := TextEditorPrefs.load
-	internal Charset 			charset := options.charset
+	internal TextEditorPrefs?	options
+	internal Charset? 			charset
 	internal SyntaxRules? 		rules
 	internal RichText? 			richText
 	internal TextDoc? 			doc
@@ -86,10 +87,15 @@ class TextEditor : View {
 	@NoDoc
 	override Void load(Resource resource) {
 		super.load(resource)
+		file = ((FileResource) resource).file
 
-		file = (resource as FileResource).file
-
-		// load the document into memory
+		prefsFileName
+			:= preferences.findFile("fluxText-${file.ext}.fog").exists
+			?  "fluxText-${file.ext}.fog"
+			:  "fluxText.fog"
+		options = preferences.loadPrefs(TextEditorPrefs#, prefsFileName)
+		charset = options.charset
+		
 		loadDoc
 		charsetField.text = charset.toStr
 
@@ -224,13 +230,5 @@ class TextEditor : View {
 			it.add(caretField)
 			it.add(charsetField)
 		}
-	}
-	
-	static Void main() {
-		prefs:=RefluxPrefs()
-		prefs.panelPrefAligns[FoldersPanel#] = Halign.left
-		s:=StrBuf()
-		s.out.writeObj(prefs)
-		echo(s)
 	}
 }

@@ -5,13 +5,13 @@ using fwt
 **
 ** TextEditorController manages user events on the text editor.
 **
-internal class TextEditorController : TextEditorSupport {
+internal class TextEditorController {
 	@Inject private Reflux			reflux
 	@Inject private Errors			errors
 	@Inject private Dialogues		dialogues
 	@Inject private GlobalCommands	globalCommands
 
-	override TextEditor editor { private set }
+	TextEditor editor
 	Int		caretLine
 	Int		caretCol
 	Bool	inUndo := false
@@ -22,6 +22,9 @@ internal class TextEditorController : TextEditorSupport {
 		in(this)
 		this.editor = editor
 	}
+
+	RichText	richText()	{ editor.richText }
+	TextDoc 	doc() 		{ editor.doc }
 
 //////////////////////////////////////////////////////////////////////////
 // Eventing
@@ -228,7 +231,7 @@ internal class TextEditorController : TextEditorSupport {
 		col := offset-lineOffset-1
 		if (lineOffset >= event.offset) return
 		ch := doc.line(lineIndex)[col]
-		if (!rules.brackets.containsChar(ch)) return
+		if (!editor.rules.brackets.containsChar(ch)) return
 
 		// attempt to find match
 		matchOffset := doc.matchBracket(offset-1)

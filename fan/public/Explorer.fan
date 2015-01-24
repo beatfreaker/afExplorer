@@ -52,15 +52,17 @@ internal class ExplorerImpl : Explorer {
 		newName := dialogues.openPromptStr("Rename", file.name)
 		if (newName != null) {
 			file.rename(newName)
-			reflux.refresh
+			if (file.parent != null)
+				reflux.refresh(reflux.resolve(file.parent.uri.toStr))
 		}
 	}
 
 	override Void delete(File file) {
-		okay := dialogues.openQuestion("Delete ${file.osPath}?", null, dialogues.yesNo)
+		okay := dialogues.openQuestion("Delete ${file.name}?\n\n${file.osPath}", null, dialogues.yesNo)
 		if (okay == dialogues.yes) {
 			file.delete
-			reflux.refresh
+			if (file.parent != null)
+				reflux.refresh(reflux.resolve(file.parent.uri.toStr))
 		}
 	}
 
@@ -103,14 +105,14 @@ internal class ExplorerImpl : Explorer {
 //			copiedFile = null
 		}
 		reflux := (Reflux) registry.serviceById(Reflux#.qname)
-		reflux.refresh
+		reflux.refresh(reflux.resolve(destDir.uri.toStr))
 	}
 	
 	override Void newFile(File containingFolder, Str? defFileName := null) {
 		fileName := dialogues.openPromptStr("New File", defFileName ?: "NewFile.txt")
 		if (fileName != null) {
 			containingFolder.createFile(fileName)
-			reflux.refresh
+			reflux.refresh(reflux.resolve(containingFolder.uri.toStr))
 		}
 	}
 
@@ -118,7 +120,7 @@ internal class ExplorerImpl : Explorer {
 		dirName := dialogues.openPromptStr("New Folder", defFolderName ?: "NewFolder")
 		if (dirName != null) {
 			containingFolder.createDir(dirName)
-			reflux.refresh
+			reflux.refresh(reflux.resolve(containingFolder.uri.toStr))
 		}
 	}
 	
@@ -255,7 +257,7 @@ internal class ExplorerImpl : Explorer {
 	}
 
 	override once ExplorerPrefs preferences() {
-		prefs.loadPrefs(ExplorerPrefs#)
+		prefs.loadPrefs(ExplorerPrefs#, "afExplorer.fog")
 	}
 
 	private Image? fileIcon(Str fileName, Bool hidden) {

@@ -54,9 +54,11 @@ class Main : AbstractMain {
 				panels.panelTypes.each { reflux.hidePanel(it) }
 			}
 
-			if (uri == null)
-				reflux.load(reflux.preferences.homeUri.toStr)
-			else
+			if (uri == null) {
+				history := (History) reflux.registry.serviceById(History#.qname)
+				startUri := history.history.find { it is FolderResource }?.uri ?: reflux.preferences.homeUri  
+				reflux.load(startUri.toStr)
+			} else
 				uri.each { reflux.load(it) }
 		}
 		return 0

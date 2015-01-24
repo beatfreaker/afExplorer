@@ -1,12 +1,10 @@
 
-TinyPNG API key:
-uLIl4pepCXk0rnxhHdbaAfo8IxtHnHsq
-https://tinypng.com/developers/reference
-
 Hustlers'n'Harcore
 
 Bugs:
 =====
+del shortcut
+ask close on shutdown
 Cut / Copy / Paste should be global
 
 
@@ -22,7 +20,7 @@ Features:
    - sort by ext
  - Folder Panel
    - Sync command
- - .zip Viewer with Panel 
+ - .zip file viewer with Panel 
  - Console Viewer
 
 Other:

@@ -74,8 +74,9 @@ class HtmlViewer : View {
 	}
 
 	@NoDoc
-	override Void refresh() {
-		browser.refresh
+	override Void refresh(Resource? resource := null) {
+		if (resource == null || resource == this.resource)
+			browser.refresh
 	}
 	
 	** Hook for subclasses to convert the resource into either a URI or a Str.

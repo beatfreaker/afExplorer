@@ -31,6 +31,8 @@ class EditPrefsCmd : RefluxCommand {
 			template := ((File) fogTemplate.get).readAllStr
 			prefsFile.out.writeChars(template).close
 			reflux.load(prefsFile.uri.toStr)
-		}		
+			if (prefsFile.parent != null)
+				reflux.refresh(reflux.resolve(prefsFile.parent.uri.toStr))
+		}
 	}
 }

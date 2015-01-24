@@ -66,7 +66,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 
 	override Void onShowHiddenFiles(Bool show) {
 		if (!isShowing) return
-		refresh
+		refresh(null)
 	}
 
 	private Void onSelect() {
@@ -130,12 +130,25 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		fileResource = resource
 
 		if (!isShowing) return
-		showFile(fileResource.uri)
+		Desktop.callLater(50ms) |->| {
+			if (fileResource != null)
+				showFile(fileResource.uri)
+		}
 	}
 
-	override Void refresh()	{
-		model.refresh
-		tree.refreshAll
+	override Void refresh(Resource? resource := null) {
+		if (resource == null) {
+			model.refreshAll
+			tree.refreshAll
+
+		} else {
+			node := findNode(resource.uri)
+			if (node != null) {
+				node.parent.children = null
+				tree.refreshNode(node.parent)
+			}
+		}
+
 		Desktop.callLater(50ms) |->| {
 			if (fileResource != null)
 				showFile(fileResource.uri)
@@ -143,6 +156,15 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	}
 	
 	private Void showFile(Uri uri) {
+		node := findNode(uri)
+		
+		if (node != null) {
+			tree.select(node)
+			tree.show(node)
+		}
+	}
+
+	private FileNode? findNode(Uri uri) {
 		// it may be ugly, but if it aint broke - don't fix it!
 		file	:= (FileNode?) null
 		files	:= model.roots
@@ -161,11 +183,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 			}
 			return found == true ? null : false
 		}
-		
-		if (file != null) {
-			tree.select(file)
-			tree.show(file)
-		}		
+		return file
 	}
 }
 
@@ -176,12 +194,12 @@ internal class FoldersTreeModel : TreeModel {
 
 	new make(|This|in) {
 		in(this)
-		this.roots = FileNode.map(explorer, File.osRoots.map { it.normalize })
+		this.roots = FileNode.map(explorer, null, File.osRoots.map { it.normalize })
 		this.hiddenColour = Desktop.sysListFg.lighter(0.5f)
 	}
 	
-	Void refresh() {
-		this.roots = FileNode.map(explorer, File.osRoots.map { it.normalize })
+	Void refreshAll() {
+		this.roots = FileNode.map(explorer, null, File.osRoots.map { it.normalize })
 	}
 	override Str	text(Obj node)			{ n(node).name		}
 	override Image?	image(Obj node)			{ explorer.fileToIcon(n(node).file) }
@@ -193,14 +211,15 @@ internal class FoldersTreeModel : TreeModel {
 
 internal class FileNode {
 	Explorer fe
+	FileNode? parent
 	File file
-	new make(Explorer fe, File file) { this.fe = fe; this.file = file }
+	new make(Explorer fe, FileNode? parent, File file) { this.fe = fe; this.parent = parent; this.file = file }
 	Str name() { file.name }
 	Bool hasChildren() { !children.isEmpty }
 	FileNode[]? children {
 		get {
 			if (&children == null)
-				&children = map(fe, file.listDirs.sort |f1, f2->Int| { f1.name <=> f2.name }. exclude { fe.preferences.shouldHide(it) })
+				&children = map(fe, this, file.listDirs.sort |f1, f2->Int| { f1.name <=> f2.name }. exclude { fe.preferences.shouldHide(it) })
 			return &children
 		}
 	}
@@ -208,7 +227,7 @@ internal class FileNode {
 		children = null
 	}
 	override Str toStr() { return file.toStr }
-	static FileNode[] map(Explorer fe, File[] files) {
-		files.map { FileNode(fe, it) }
+	static FileNode[] map(Explorer fe, FileNode? parent, File[] files) {
+		files.map { FileNode(fe, parent, it) }
 	}
 }

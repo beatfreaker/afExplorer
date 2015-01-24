@@ -1,20 +1,20 @@
 Overview [#overview]
 ********************
-'Explorer' is a file explorer application based on the [Reflux]`pod:afReflux` framework. More than just an application, Explorer also provides Views and 
+'Explorer' is a file explorer application based on the [Reflux]`pod:afReflux` framework. More than just an application, Explorer also provides Views and
 
 Current features:
- - System file explorer 
+ - System file explorer
  - Fantom documentation viewer
  - A better web browser / html viewer
  - Fandoc file viewer
- - Text editor (borrowed from [fluxText]`pod:fluxText`) 
+ - Text editor (borrowed from [fluxText]`pod:fluxText`)
  - Syntax highlighting (uses [syntax]`pod:syntax`)
 
 The small things that make me use it:
  - Quick view / edit toggling with F12
  - Easily show / hide hidden files
  - Text editor word wrapping (optional)
- - Address bar accepts pod names, e.g. 'afIoc' 
+ - Address bar accepts pod names, e.g. 'afIoc'
 
 
 
@@ -61,7 +61,7 @@ Explorer may optionally be started with a list of URIs to be opened up in tabs:
 pre>
   C:\> fan afExplorer C:\Temp
 
-  C:\> fan afExplorer http://www.fantomfactory.org/ 
+  C:\> fan afExplorer http://www.fantomfactory.org/
 
   C:\> fan afExplorer afIoc::Registry
 <pre
@@ -79,13 +79,15 @@ v0.0.4 [#v0.0.4]
  - New: Ctrl+Select in Folder Panel will open folder in new tab.
  - New: Small images use a thumbnail preview as their icon.
  - New: Added configurable 'FilePopupMenu' and 'FolderPopupMenu' services.
+ - New: Allow multiple TextEditor preferences, one per file extension.
  - Chg: All dialogs are routed through the new Reflux Dialogues class.
  - Chg: Folder sort in Folder view is reset when displaying new folder.
  - Chg: ImageViewer uses the resource's icon as its icon.
- - Chg: Single file copy / paste handle duplicate names. 
- - Bug: Show / hide hidden file command now shows and hides hidden files in the Folders Panel (again!)  
- - Bug: Folders Panel favourites combo was displayed squashed when panel re-shown. 
- - Bug: Folders Panel did not pick up folder deletes / renames. 
+ - Chg: Single file copy / paste handle duplicate names.
+ - Bug: Show / hide hidden file command now shows and hides hidden files in the Folders Panel (again!)
+ - Bug: Folders Panel favourites combo was displayed squashed when panel re-shown.
+ - Bug: Folders Panel did not pick up folder deletes / renames.
+ - Bug: Explorer was not picking up the correct preferences file.
 
 v0.0.2 [#v0.0.2]
 ================

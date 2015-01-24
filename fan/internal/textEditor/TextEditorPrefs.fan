@@ -20,7 +20,7 @@ const class TextEditorPrefs {
 	** If true, then trailing whitespace on each text line is stripped on save.
 	** 	
 	** Default is 'false'.
-	const Bool stripTrailingWhitespace := false
+	const Bool stripTrailingWhitespace := true
 
 	** Number of spaces to use for a tab.
 	** 
@@ -29,7 +29,7 @@ const class TextEditorPrefs {
 
 	** If true, then all tabs to converted to space characters
 	** based on the configured `tabSpacing`.  The default is true.
-	const Bool convertTabsToSpaces := true
+	const Bool convertTabsToSpaces := false
 	
 	** Default char encoding to use when load/saving
 	** text files.	Defaults to utf8.
@@ -44,14 +44,5 @@ const class TextEditorPrefs {
 	const RichTextStyle literal			:= RichTextStyle { fg = Color(0x00_77_77) }
 	const RichTextStyle comment			:= RichTextStyle { fg = Color(0x00_77_00) }
 
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-	internal static TextEditorPrefs load() {
-		// FIXME: prefs
-//		return Flux.loadOptions(TextEditorOptions#.pod, "text-editor", TextEditorOptions#)
-		TextEditorPrefs()
-	}
 }
 

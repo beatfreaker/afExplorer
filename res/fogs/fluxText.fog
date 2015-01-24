@@ -1,30 +1,35 @@
-using sys
-using gfx
+using afExplorer
 using fwt
-using fluxText
+using gfx
 
 ** Preferences for Text Editor.
 ** 
 ** Note that if you change the settings, they are not picked 
 ** up until you restart the application. 
-TextEditorOptions {
+afExplorer::TextEditorPrefs {
 
 	** Default line end delimiter to use when saving text files.
 	** Note that loading text files will accept any combination
 	** of "\n", "\r", or "\r\n" - but that if the doc is saved
-	** then this line ending is applied.	Default is "\n".
+	** then this line ending is applied.
+	** 
+	** Default is "\n".
 	lineDelimiter = "\n"
 
 	** If true, then trailing whitespace on each text
-	** line is strip on save.	Default is true.
+	** line is strip on save.
+	** 
+	** Default is 'true'.
 	stripTrailingWhitespace = true
 
-	** Number of spaces to use for a tab.	Default is 2.
-	tabSpacing = 2
+	** Number of spaces to use for a tab.	Default is '4'.
+	tabSpacing = 4
 
 	** If true, then all tabs to converted to space characters
-	** based on the configured `tabSpacing`.	The default is true.
-	convertTabsToSpaces = true
+	** based on the configured `tabSpacing`.
+	** 
+	** The default is 'false'.
+	convertTabsToSpaces = false
 
 	** Default char encoding to use when load/saving
 	** text files.	Defaults to utf8.
