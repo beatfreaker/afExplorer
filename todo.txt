@@ -20,6 +20,7 @@ Features:
    - Sync command
  - .zip file viewer with Panel 
  - Console Viewer
+ - Handle Env Vars in address bar
 
 Other:
 ======

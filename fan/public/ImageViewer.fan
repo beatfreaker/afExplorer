@@ -50,6 +50,7 @@ class ImageViewer : View {
 
 		// dunno why super.load(resource) doesn't do this!?
 		this.icon = resource.icon
+		this.name = resource.name
 	}
 	
 	** Expands or shrinks the image to fit the view.

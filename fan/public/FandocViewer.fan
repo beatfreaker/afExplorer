@@ -49,6 +49,21 @@ class FandocViewer : HtmlViewer {
 		}
 	}
 	
+	override protected Void onLoad(Event event) {
+		id := resource.uri.path.getSafe(2)
+		if (id != null)
+			scrollToId(id)
+		else
+			super.onLoad(event)
+	}
+
+	override protected Uri normaliseBrowserUrl(Uri resourceUri, Uri url) {
+		if (resourceUri.path.size > 2)
+			resourceUri = `fandoc:/` + resourceUri.path[0..<2].join("/").toUri
+		return super.normaliseBrowserUrl(resourceUri, url)
+	}
+
+	
 	private static Str fandocToHtml(Str fandoc, Uri? base := null) {
 		writer	:= FandocWriter(base)
 		doc 	:= FandocParser().parseStr(fandoc)

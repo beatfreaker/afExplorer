@@ -34,9 +34,12 @@ internal class FandocResolver : UriResolver {
 		return null
 	}	
 
-	private Resource fandocResource(Uri fandocUri) {
+	private Resource? fandocResource(Uri fandocUri) {
 		uri := normalise(fandocUri)
-		// the URI / resource may or may not exist
+		
+		if (uri == null)
+			return null
+		
 		return registry.autobuild(FandocResource#, null, [
 			FandocResource#uri	: uri,
 			FandocResource#name	: uri.name,
@@ -44,7 +47,7 @@ internal class FandocResolver : UriResolver {
 		])		
 	}
 
-	Uri normalise(Uri uri) {
+	Uri? normalise(Uri uri) {
 		// expand 'fandoc:/afFancom' to 'fandoc:/afFancom/index' 
 		if (uri.path.size == 1)
 			uri = uri.plusSlash.plusName("index")
@@ -53,6 +56,16 @@ internal class FandocResolver : UriResolver {
 		if (!uri.isPathAbs)
 			uri = root.toUri + uri.pathOnly
 
+		if (uri.path.size > 3)
+			uri = root.toUri + uri.path[0..<3].join("/").toUri
+
+		// check case insensitive
+		meth := uri.path.getSafe(2)
+		uri = toType(uri.path[0], uri.path.getSafe(1))
+		
+		if (meth != null)
+			uri = uri.plusSlash.plusName(meth)
+		
 		return uri
 	}
 
@@ -90,10 +103,18 @@ internal class FandocResolver : UriResolver {
 		if (typeName == null)
 			return `${root}${podNameQ}`
 
-		typeNameQ := Pod.find(podNameQ).types.find { it.name.equalsIgnoreCase(typeName) }
-		if (typeNameQ == null)
-			return null
+		typeNameQ := Pod.find(podNameQ).types.find { it.name.equalsIgnoreCase(typeName) }?.name
+		if (typeNameQ == null) {
+			// if no type, look for a pod doc or source file
+			podFile := Env.cur.findPodFile(podName)
+			docPod 	:= compilerDoc::DocPod.load(podFile)
+			doc 	:= docPod.doc(typeName, false)
+			typeNameQ = doc.docName
+			
+			if (typeNameQ == null)
+				return null
+		}
 		
-		return `${root}${podNameQ}/${typeNameQ.name}`
+		return `${root}${podNameQ}/${typeNameQ}`
 	}
 }
