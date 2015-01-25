@@ -51,7 +51,7 @@ class FandocViewer : HtmlViewer {
 	
 	override protected Void onLoad(Event event) {
 		id := resource.uri.path.getSafe(2)
-		if (id != null)
+		if (resource is FandocResource && id != null)
 			scrollToId(id)
 		else
 			super.onLoad(event)

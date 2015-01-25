@@ -1,7 +1,7 @@
-#Explorer v0.0.4
+#Explorer v0.0.6
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.0.4](http://img.shields.io/badge/pod-v0.0.4-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
+[![pod: v0.0.6](http://img.shields.io/badge/pod-v0.0.6-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -117,9 +117,11 @@ Explorer can view all the Fantom documentation held in the current Fantom instal
     
     fandoc:/afReflux/View/onLoad
 
-Or for a quick reference, you may just type the pod name into the address bar. The pod name is case insensitive:
+The address bar also accepts simple fandoc notation (case insensitive):
 
     afReflux
+    
+    afReflux::View
 
 ![Fandoc Viewer](http://static.alienfactory.co.uk/fantom-docs/afExplorer.fandocViewer.png)
 

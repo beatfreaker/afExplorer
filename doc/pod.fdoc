@@ -121,9 +121,11 @@ Explorer can view all the Fantom documentation held in the current Fantom instal
 
   fandoc:/afReflux/View/onLoad
 
-Or for a quick reference, you may just type the pod name into the address bar. The pod name is case insensitive:
+The address bar also accepts simple fandoc notation (case insensitive):
 
   afReflux
+
+  afReflux::View
 
 ![Fandoc Viewer]`http://static.alienfactory.co.uk/fantom-docs/afExplorer.fandocViewer.png`
 
@@ -145,6 +147,10 @@ On startup, Explorer scans the current Fantom installation for these pods and au
 
 Release Notes [#releaseNotes]
 *****************************
+v0.0.6 [#v0.0.6]
+================
+ - Bug: Empty 'fandoc:/' URI did not resolve.
+
 v0.0.4 [#v0.0.4]
 ================
  - New: Explorer Plugins!
