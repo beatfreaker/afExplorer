@@ -18,17 +18,15 @@ internal class FandocResolver : UriResolver {
 	
 	override Resource? resolve(Str str) {
 		try {
-			try {
-				uri := str.toUri
-				if (uri.scheme == "fandoc")
-					return fandocResource(uri)
-			} catch { }
-			
-			try {
-				uri := fromFandocStr(str)
-				if (uri != null)
-					return fandocResource(uri)
-			} catch { }
+			uri := str.toUri
+			if (uri.scheme == "fandoc")
+				return fandocResource(uri)
+		} catch { }
+		
+		try {
+			uri := fromFandocStr(str)
+			if (uri != null)
+				return fandocResource(uri)
 		} catch { }
 		
 		return null
@@ -47,6 +45,9 @@ internal class FandocResolver : UriResolver {
 		])		
 	}
 
+	// Yeah, I know all this is messy. It was cut'n'paste from FandocViewer, shoehorned in and messed with.
+	// It needs a good tidy up. - But currently it works, the tests pass and I've got a girl to satisfy...
+	
 	Uri? normalise(Uri uri) {
 		// expand 'fandoc:/afFancom' to 'fandoc:/afFancom/index' 
 		if (uri.path.size == 1)
@@ -59,14 +60,17 @@ internal class FandocResolver : UriResolver {
 		if (uri.path.size > 3)
 			uri = root.toUri + uri.path[0..<3].join("/").toUri
 
+		if (uri.path.isEmpty)
+			return root.toUri
+
 		// check case insensitive
 		meth := uri.path.getSafe(2)
-		uri = toType(uri.path[0], uri.path.getSafe(1))
+		u := toType(uri.path[0], uri.path.getSafe(1))
 		
-		if (meth != null)
-			uri = uri.plusSlash.plusName(meth)
+		if (u != null && meth != null)
+			u = u.plusSlash.plusName(meth)
 		
-		return uri
+		return u
 	}
 
 
@@ -87,9 +91,23 @@ internal class FandocResolver : UriResolver {
 			// FIXME: use # and . for chapter / slot names
 			podName  := str.split(':')[0]
 			typeName := str.split(':')[2]
+			
+			slotName := (Str?) null
+			if (typeName.contains(".")) {	
+				slotName = typeName.split('.').getSafe(1)
+				typeName = typeName.split('.')[0]
+			}
+			if (typeName.contains("#")) {	
+				slotName = typeName.split('#').getSafe(1)
+				typeName = typeName.split('#')[0]
+			}
+			
 			typeUri   = toType(podName, typeName)
-			if (typeUri != null)
+			if (typeUri != null) {
+				if (slotName != null)
+					typeUri = typeUri.plusSlash.plusName(slotName)
 				return typeUri
+			}
 		}
 		
 		return null
@@ -109,7 +127,7 @@ internal class FandocResolver : UriResolver {
 			podFile := Env.cur.findPodFile(podName)
 			docPod 	:= compilerDoc::DocPod.load(podFile)
 			doc 	:= docPod.doc(typeName, false)
-			typeNameQ = doc.docName
+			typeNameQ = doc?.docName
 			
 			if (typeNameQ == null)
 				return null
