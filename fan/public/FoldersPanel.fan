@@ -14,7 +14,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	@Inject 	private GlobalCommands		globalCommands
 	@Autobuild	private FoldersTreeModel	model
 	
-	private Combo	combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) } }
+	private Combo	combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) }; it.dropDown=false; }
 	private Str:Str	favourites
 	private Int		lastComboIndex
 	private Tree	tree
@@ -144,9 +144,14 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		} else {
 			node := findNode(resource.uri)
 			if (node != null) {
-				node.parent.children = null
-				tree.refreshNode(node.parent)
-			}
+				if (node.parent != null) {
+					node.parent.children = null
+					tree.refreshNode(node.parent)
+				} else {
+					model.refreshAll
+					tree.refreshAll					
+				}
+			} 
 		}
 
 		Desktop.callLater(50ms) |->| {

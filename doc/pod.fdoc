@@ -147,6 +147,10 @@ On startup, Explorer scans the current Fantom installation for these pods and au
 
 Release Notes [#releaseNotes]
 *****************************
+v0.0.8 [#v0.0.8]
+================
+ - Refreshing a root folder caused a 'NullErr'.
+
 v0.0.6 [#v0.0.6]
 ================
  - Bug: Empty 'fandoc:/' URI did not resolve.
