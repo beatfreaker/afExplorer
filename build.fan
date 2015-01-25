@@ -6,14 +6,14 @@ class Build : BuildPod {
 	new make() {
 		podName = "afExplorer"
 		summary = "A Reflux file explorer application with reusable editors and viewers"
-		version = Version("0.0.4")
+		version = Version("0.0.5")
 
 		meta = [
 			"proj.name"		: "Explorer",
 			"afIoc.module"	: "afReflux::RefluxModule",
 			"internal"		: "true",
 			"tags"			: "app",
-			"repo.private"	: "false"
+			"repo.private"	: "true"
 		]
 
 		depends = [	
