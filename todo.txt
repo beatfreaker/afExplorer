@@ -5,6 +5,9 @@ Bugs:
 =====
 Cut / Copy / Paste should be global, to edit files
 
+When F12, keep the undo / redo stack
+
+Action -> Show pref folder, ensure FOlderPanel is shown
 
 Features:
 =========

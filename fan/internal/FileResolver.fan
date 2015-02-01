@@ -11,12 +11,10 @@ internal class FileResolver : UriResolver {
 		file := (File?) null
 
 		// check for some special cases
-		if (str == "\${Env.cur.homeDir}")
-			file = Env.cur.homeDir.normalize
-		if (str == "\${Env.cur.workDir}")
-			file = Env.cur.workDir.normalize
-		if (str == "\${Env.cur.tempDir}")
-			file = Env.cur.tempDir.normalize
+		str = str.replace("\${Env.cur.homeDir}",	Env.cur.homeDir.normalize.osPath)
+		str = str.replace("\${Env.cur.workDir}",	Env.cur.workDir.normalize.osPath)
+		str = str.replace("\${Env.cur.tempDir}",	Env.cur.tempDir.normalize.osPath)
+		str = str.replace("\${Env.cur.user}", 		Env.cur.user)
 		
 		// check for os specific paths
 		if (file == null)

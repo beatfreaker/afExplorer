@@ -14,7 +14,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	@Inject 	private GlobalCommands		globalCommands
 	@Autobuild	private FoldersTreeModel	model
 	
-	private Combo	combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) }; it.dropDown=false; }
+	private Combo	combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) }; it.dropDown=true; }
 	private Str:Str	favourites
 	private Int		lastComboIndex
 	private Tree	tree
