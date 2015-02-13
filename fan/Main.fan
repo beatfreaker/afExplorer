@@ -63,6 +63,5 @@ class Main : AbstractMain {
 		}
 		return 0
 	}
-	
-	
 }
+

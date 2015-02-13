@@ -164,11 +164,4 @@ class HtmlViewer : View {
 
 		return url
 	}
-	
-	private static Str fandocToHtml(Str fandoc, Uri? base := null) {
-		writer	:= FandocWriter(base)
-		doc 	:= FandocParser().parseStr(fandoc)
-		doc.write(writer)
-		return writer.toHtml
-	}
 }

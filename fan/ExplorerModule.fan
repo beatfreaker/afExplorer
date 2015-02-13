@@ -28,7 +28,7 @@ class ExplorerModule {
 	internal static Void contributeUriResolvers(Configuration config) {
 		config["file"]		= config.autobuild(FileResolver#)
 		config["http"]		= config.autobuild(HttpResolver#)
-		config["fandoc"]	= config.autobuild(FandocResolver#)
+		config["fandoc"]	= config.autobuild(FandocResolver#)		
 	}
 
 	@Contribute { serviceType=Panels# }
@@ -163,7 +163,7 @@ class ExplorerModule {
 //	static Void contributeToolBar(Configuration config, GlobalCommands globalCmds) {
 //		config["afExplorer.cmdFandocIndex"]		= toolBarCommand(globalCmds["afExplorer.cmdFandocIndex"].command)
 //	}
-	
+
     private static Button toolBarCommand(Command command) {
         button  := Button.makeCommand(command)
         if (command.icon != null)
