@@ -3,6 +3,8 @@ Hustlers'n'Harcore
 
 Bugs:
 =====
+modal when zipping files
+FolderView line 144 - when deleting a dir
 Cut / Copy / Paste should be global, to edit files
 
 When F12, keep the undo / redo stack
@@ -16,12 +18,12 @@ Features:
    - Sidebar viewer
    - search bar
  - Find in files
- - Folder View 
+ - Folder View
    - handle multiple selections
    - sort by ext
  - Folder Panel
    - Sync command
- - .zip file viewer with Panel 
+ - .zip file viewer with Panel
  - Console Viewer
  - Handle Env Vars in address bar
 
