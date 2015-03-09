@@ -1,0 +1,16 @@
+using syntax
+
+** FluxText syntax rules for Fandoc files.
+** 
+** @see http://www.fantomfactory.org/pods/afFandocViewer
+SyntaxRules {
+	brackets = "[]#*>"
+	comments = ["##", "**", "==", "--"]
+	blockCommentStart = "pre>"
+	blockCommentEnd   = "<pre"
+	blockCommentsNest = false
+	strs = [
+		SyntaxStr { delimiter = "`"; multiLine = false }
+	]
+	keywords = null
+}

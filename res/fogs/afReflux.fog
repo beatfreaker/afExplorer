@@ -1,0 +1,22 @@
+using gfx
+using afReflux
+using afExplorer
+
+** Preferences for Reflux.
+**
+** Note that if you change the settings, they are not picked 
+** up until you restart the application. 
+afReflux::RefluxPrefs {
+
+	** The URI to be loaded when 'Home' button is pressed.
+	homeUri			= `file:/`
+
+	** Set to 'false' if you prefer tabs on the bottom of the View Pane. 
+	viewTabsOnTop	= true
+
+	** Where you prefer the Panels to be placed.
+	panelPrefAligns = [
+		ErrorsPanel#	: Valign("bottom"),
+		FoldersPanel#	: Halign("left")
+	]
+}

@@ -1,0 +1,183 @@
+Overview [#overview]
+********************
+'Explorer' is a file explorer application based on the [Reflux]`pod:afReflux` framework. More than an application, Explorer also provides reusable Views and Editors. Explorer may also be enhanced through the use of Plugins.
+
+Current features:
+ - System file explorer
+ - Fantom documentation viewer
+ - A better web browser / html viewer
+ - Fandoc file viewer
+ - Text editor (borrowed from [fluxText]`pod:fluxText`)
+ - Syntax highlighting (uses [syntax]`pod:syntax`)
+
+The small things that make me use it:
+ - Quick view / edit toggling with F12
+ - Easily show / hide hidden files
+ - Text editor word wrapping (configurable)
+ - Address bar accepts pod names, e.g. 'afIoc'
+
+
+
+Install [#install]
+******************
+Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::Tool.install` ):
+
+  C:\> fanr install -r http://repo.status302.com/fanr/ @{pod.name}
+
+To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
+
+  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}"]
+
+
+
+Documentation [#documentation]
+******************************
+Full API & fandocs are available on the [Status302 repository]`http://repo.status302.com/doc/@{pod.name}/`.
+
+
+
+Quick Start [#quickStart]
+*************************
+Simply start Explorer from the command line:
+
+pre>
+C:\> fan afExplorer
+
+[afIoc] Adding module definition for afReflux::RefluxModule
+[afIoc] Adding module definition for afExplorer::ExplorerModule
+   ___    __                 _____        _
+  / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
+ / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
+/_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
+                                     Explorer v0.0.4 /___/
+
+IoC Registry built in 216ms and started up in 10ms
+<pre
+
+![Example Screenshot]`http://static.alienfactory.co.uk/fantom-docs/afExplorer.screenshot.png`
+
+Explorer may optionally be started with a list of URIs to be opened up in tabs:
+
+pre>
+  C:\> fan afExplorer C:\Temp
+
+  C:\> fan afExplorer http://www.fantomfactory.org/
+
+  C:\> fan afExplorer afIoc::Registry
+<pre
+
+
+
+Usage [#usage]
+**************
+Following Reflux browser behaviour, entering valid URIs in the address bar will bring up an associated View for that resource.
+
+If there are multiple Views available for the resource, a drop down will appear in the address bar allowing you to toggle between them:
+
+![View Dropdowns]`http://static.alienfactory.co.uk/fantom-docs/afExplorer.viewDropDown.png`
+
+You may also specify the view by adding a query parameter to the URI:
+
+  file:/C:/Projects/Explorer/pod.fdoc?view=afExplorer::TextEditor
+
+You may also specify a URI to be opened in a new tab, regardless of if the view is configured for re-use or not:
+
+  file:/C:/Projects/Explorer/pod.fdoc?newTab=true
+
+
+
+File Explorer [#fileExplorer]
+=============================
+Explorer may be used to explore your file system using the 'file:' scheme. URIs should be absolute and the path should begin with a '/'.
+
+  file:/C:/Projects/Explorer/
+
+You may also enter an OS specific path:
+
+  C:\Projects\Explorer
+
+Files may be opened up in a:
+
+ - Text Editor
+ - HTML Viewer
+ - Fandoc Viewer
+ - Image Viewer
+
+
+
+Web Browser [#webBrowser]
+=========================
+Explorer may also be used as a (basic) web browser by entering a 'http:' scheme:
+
+![Web Browser]`http://static.alienfactory.co.uk/fantom-docs/afExplorer.webBrowser.png`
+
+
+
+Fandoc Viewer [#fandocViewer]
+=============================
+Explorer can view all the Fantom documentation held in the current Fantom installation. This includes all the API docs for all the installed pods. It uses a 'fandoc:' scheme with the following format:
+
+  fandoc:/<pod>/<type>/<slot>
+
+  fandoc:/afReflux/View/onLoad
+
+The address bar also accepts simple fandoc notation (case insensitive):
+
+  afReflux
+
+  afReflux::View
+
+![Fandoc Viewer]`http://static.alienfactory.co.uk/fantom-docs/afExplorer.fandocViewer.png`
+
+TIP: Press 'F1' at anytime to being up the Fandoc index.
+
+
+
+Plugins [#plugins]
+******************
+Exoplorer may be customised though *Plugins*.
+
+A plugin is any Fantom pod that defines an index property of 'afExplorer.module', the value of which should be the qualified type name an IoC 'AppModule'.
+
+  index = [ "afExplorer.module" : "myExplorerPlugin::PluginModule" ]
+
+On startup, Explorer scans the current Fantom installation for these pods and automatically adds them to its IoC module list. These plugin modules may then configure *anything* a reflux application can.
+
+
+
+Release Notes [#releaseNotes]
+*****************************
+v0.0.8 [#v0.0.8]
+================
+ - Chg: Uses Reflux v0.0.6 and 'RefluxBuilder'.
+ - Bug: Refreshing a root folder caused a 'NullErr'.
+
+v0.0.6 [#v0.0.6]
+================
+ - Bug: Empty 'fandoc:/' URI did not resolve.
+
+v0.0.4 [#v0.0.4]
+================
+ - New: Explorer Plugins!
+ - New: Compress to .zip command.
+ - New: Added Edit preferences commands.
+ - New: Added a 'Select All' global command, enabled in the Text Editor.
+ - New: Ctrl+Select in Folder Panel will open folder in new tab.
+ - New: Small images use a thumbnail preview as their icon.
+ - New: Added configurable 'FilePopupMenu' and 'FolderPopupMenu' services.
+ - New: Allow multiple TextEditor preferences, one per file extension.
+ - Chg: All dialogs are routed through the new Reflux Dialogues class.
+ - Chg: Folder sort in Folder view is reset when displaying new folder.
+ - Chg: ImageViewer uses the resource's icon as its icon.
+ - Chg: Single file copy / paste handle duplicate names.
+ - Chg: Better fandoc URI resolving, checks for type existance.
+ - Bug: Show / hide hidden file command now shows and hides hidden files in the Folders Panel (again!)
+ - Bug: Folders Panel favourites combo was displayed squashed when panel re-shown.
+ - Bug: Folders Panel did not pick up folder deletes / renames.
+ - Bug: Explorer was not picking up the correct preferences file.
+ - Bug: Delete button didn't always work in TextEditors - a global command thing.
+
+v0.0.2 [#v0.0.2]
+================
+ - New: Initial release.
+

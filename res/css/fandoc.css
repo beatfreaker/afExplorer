@@ -1,0 +1,369 @@
+
+/* ------------ Full Fantom Fandoc Stylin' ------------ */
+/* ---------- For styling pod documentation ----------- */
+/* - http://www.fantomfactory.org/pods/afFandocViewer - */
+
+body {
+	font: 				10pt Arial,sans-serif;
+	margin: 			0 0 3em;
+	padding: 			0;
+	background-color: 	#FFFFFF;
+}
+
+h1 { color: #2f5381; }
+h2 { color: #ad4e00; }
+h3 { color: #25272a; }
+a  { color: #185098; }
+
+input {
+	font: 10pt Arial,sans-serif;
+}
+code, pre, textarea {
+	font: 9pt Monaco,'Courier New',monospace;
+}
+pre {
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+blockquote {
+	border-left: 1px solid #CCCCCC;
+	color: #AA00AA;
+	margin: 1em 0;
+	padding-left: 1em;
+}
+code {
+	color: #008800;
+}
+p.sig code a {
+	color: #008800;
+}
+pre {
+	background: none repeat scroll 0 0 #F7F7ED;
+	border: 1px solid #DFE0CD;
+	border-radius: 5px 5px 5px 5px;
+	color: #333333;
+	padding: 10px;
+}
+table {
+	border-collapse: collapse;
+	border-top: 1px solid #D0DAE5;
+}
+table tr {
+	border-bottom: 1px solid #D0DAE5;
+}
+table tr:nth-child(2n+1) {
+	background: none repeat scroll 0 0 #F2F6F8;
+}
+table td {
+	padding: 5px;
+}
+table td div {
+	font-size: 9pt;
+}
+
+/*************************************************************************
+ * Header
+ ************************************************************************/
+ 
+div.header {
+	background-color: rgb(20, 37, 60);
+	border-bottom: 5px solid #2F5381;
+	color: #FFFFFF;
+}
+div.header > div {
+	height: 37px;	/* height of image */
+	padding: 1em;
+}
+div.header img {
+	border: 0;
+}
+
+/*************************************************************************
+ * SubHeader -> BreadCrumbs
+ ************************************************************************/
+
+div.subHeader {
+	background-color: rgb(215, 215, 201);
+	border-bottom: 1px solid #BEBEA8;
+	border-top: 1px solid #1E3554;
+}
+div.subHeader ul {
+	list-style: none outside none;
+	margin: 0;
+	padding: 10px;
+	white-space: nowrap;
+}
+div.subHeader li {
+	color: #9D9A7B;
+	display: inline-block;
+	font: 10pt 'Arial Narrow',Arial;
+}
+div.subHeader li a {
+	color: #4E4D3A;
+	font: 10pt Arial;
+}
+div.subHeader li:after {
+	content: ">";
+	margin: 0 0.5em;
+}
+div.subHeader li:last-child:after {
+	content: "";
+}
+
+/*************************************************************************
+ * Content
+ ************************************************************************/
+
+div.src {
+	padding: 1.5em;
+}
+
+div.index {
+	padding: 1.5em;
+}
+
+div.manual {
+	padding: 1.5em;
+}
+
+div.mainSidebar {
+	font-size: 11pt;
+	padding: 1.5em;
+	padding-right: 220px;
+	position: relative;
+}
+div.mainSidebar table, div.mainSidebar div.sidebar {
+	font-size: 10pt;
+}
+div.mainSidebar + div.mainSidebar {
+	border-top: 1px solid #CCCCCC;
+	margin-top: 2em;
+}
+div.chapter + div.sidebar {
+	margin-top: 2em;
+}
+div.sidebar {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 200px;
+	padding-top: 1.5em;
+}
+div.sidebar > p {
+	font-weight: bold;
+}
+div.sidebar > p:first-child {
+	margin-top: 3em;
+}
+div.sidebar ul {
+	line-height: 1.3em;
+	margin: 0 0 0 1.5em;
+	padding: 0;
+}
+div.sidebar ul ul {
+	padding-left: 1.2em;
+}
+div.sidebar li {
+	margin: 3px 3px 3px 0;
+}
+div.sidebar > ol {
+	color: #777777;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0 0 0 2em;
+}
+div.sidebar > ol > li > ol {
+	counter-reset: section;
+	list-style: none outside none;
+	padding-left: 0;
+}
+div.sidebar > ol > li > ol li:before {
+	content: counter(chapter, decimal) "." counter(section, decimal) ". ";
+	counter-increment: section;
+}
+div.sidebar ol ol ol {
+	list-style: none outside none;
+	padding-left: 1em;
+}
+div.sidebar ol ol ol li:first-child {
+	counter-increment: heading;
+}
+div.sidebar ol ol ol li:before {
+	content: counter(chapter, decimal) "." counter(section, decimal) "." counter(heading, decimal) ". ";
+	counter-increment: heading;
+}
+div.pod-doc + div.sidebar {
+	margin-top: 1em;
+}
+div.chapter + div.sidebar h3 {
+	counter-reset: part;
+	margin-bottom: 1.75em;
+}
+div.chapter + div.sidebar h4:before {
+	color: #777777;
+	content: counter(part, upper-roman) ". ";
+	counter-increment: part;
+}
+div.chapter + div.sidebar h3 a {
+	background: none repeat scroll 0 0 #F7F7ED;
+	border: 1px solid #DFE0CD;
+	border-radius: 5px 5px 5px 5px;
+	color: #4E4D3A;
+	font-size: 10pt;
+	padding: 10px 12px;
+}
+dl {
+	margin: 2em 0 1em;
+}
+dl dt {
+	background: none repeat scroll 0 0 #F2F6F8;
+	border-top: 1px solid #D0DAE5;
+	font-weight: bold;
+	padding: 5px;
+}
+dl dd {
+	margin: 1em 0 2em 2em;
+	position: relative;
+}
+dl dd p.src a {
+	color: #7AA3C0;
+	font-size: 8pt;
+	position: absolute;
+	right: 5px;
+	top: -36px;
+}
+div.type table {
+	width: 100%;
+}
+div.type table td:last-child {
+	width: 100%;
+}
+div.type h1 > span:first-child {
+	display: block;
+	font-size: 60%;
+}
+div.type > p.src {
+	display: none;
+}
+div.type + div.sidebar > ul {
+	list-style: none outside none;
+}
+div.type table td {
+	padding: 0.4em 0.5em;
+}
+div.type table td:last-child p {
+	margin: 0;
+}
+div.toc {
+	counter-reset: part;
+}
+div.toc h2:before {
+	content: counter(part, upper-roman) ". ";
+	counter-increment: part;
+}
+div.toc ol li {
+	margin-bottom: 1em;
+}
+div.toc ol li p {
+	margin: 1px 0 1px 1em;
+}
+div.toc ol li p:last-child {
+	font-size: 9pt;
+}
+ul.chapter-nav {
+	font-size: 10pt;
+	list-style: none outside none;
+	margin: 1em 0;
+	padding: 0;
+	position: relative;
+}
+ul.chapter-nav li {
+	color: #999999;
+	display: block;
+}
+ul.chapter-nav li.next {
+	text-align: right;
+}
+ul.chapter-nav li + li.next {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+ul.chapter-nav li.prev:before {
+	content: "«";
+}
+ul.chapter-nav li.next:after {
+	content: " »";
+	margin: 0;
+}
+div.index > div.float {
+	float: left;
+	padding-right: 2em;
+	width: 48%;
+}
+div.index div.manuals > h2 {
+	margin-top: 0;
+}
+div.index div.manuals table td {
+	padding: 0.5em 1em;
+}
+div.index div.manuals table td:last-child {
+	padding-right: 2em;
+}
+div.index div.manuals table td:first-child {
+	padding-left: 5px;
+	vertical-align: top;
+}
+div.index div.examples table {
+	margin-right: 2em;
+}
+div.index div.apis {
+	padding-left: 1em;
+}
+div.ex-index table {
+	width: 630px;
+}
+div.ex-index table td:first-child {
+	padding-right: 2em;
+}
+div.ex-index table td:last-child {
+	width: 100%;
+}
+div.src pre {
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+	color: #000000;
+	margin: 1em 0;
+	padding: 0;
+}
+div.src pre b {
+	color: #FF0000;
+	font-weight: normal;
+}
+div.src pre i {
+	color: #0000FF;
+	font-style: normal;
+}
+div.src pre em {
+	color: #007777;
+	font-style: normal;
+}
+div.src pre q {
+	color: #007700;
+	font-style: normal;
+}
+div.src pre q:before, div.src pre q:after {
+	content: "";
+}
+
+/*************************************************************************
+ * Footer
+ ************************************************************************/
+
+div.footer {
+	color: #999999;
+	font-size: 8pt;
+	/*margin: 3em auto 1em;*/
+	text-align: right;
+	padding-right: 1.5em;
+}
