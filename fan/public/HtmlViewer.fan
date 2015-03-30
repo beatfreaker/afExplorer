@@ -48,7 +48,7 @@ class HtmlViewer : View {
 			if (stash["${resource?.uri}.htmlViewer.clear"] == true)
 				stash.remove("${resource.uri}.htmlViewer.clear")
 			else {
-				scrollTop := browser.evaluate("return document.documentElement.scrollTop;")
+				scrollTop := browser.evaluate("return document.documentElement ? document.documentElement.scrollTop : 0;")
 				stash["${resource?.uri}.htmlViewer.scrollTop"] = scrollTop
 			}
 			
@@ -84,7 +84,10 @@ class HtmlViewer : View {
 
 	@NoDoc
 	override Void refresh(Resource? resource := null) {
-		if (resource == null || resource == this.resource)
+		res := resource ?: this.resource
+		if (res != null)
+			load(res)
+		else
 			browser.refresh
 	}
 	

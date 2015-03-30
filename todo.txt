@@ -3,8 +3,8 @@ Hustlers'n'Harcore
 
 Bugs:
 =====
+
 modal when zipping files
-FolderView line 144 - when deleting a dir
 Cut / Copy / Paste should be global, to edit files
 
 When F12, keep the undo / redo stack
