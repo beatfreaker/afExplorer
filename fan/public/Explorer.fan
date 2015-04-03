@@ -12,6 +12,9 @@ mixin Explorer {
 	abstract Void copy(File file)
 	abstract Void paste(File destDir)
 	
+	** Returns a unique file that (currently) does not exist on the file system.
+	abstract File uniqueFile(File destFile)
+	
 	** Opens a dialogue for the file name before creating an empty file.
 	** File name defaults to 'NewFile.txt'.	
 	abstract Void newFile(File containingFolder, Str? defFileName := null)
@@ -34,6 +37,7 @@ mixin Explorer {
 }
 	
 internal class ExplorerImpl : Explorer {
+
 	@Inject private Registry	registry
 	@Inject private RefluxIcons	icons
 	@Inject private Images		images
@@ -41,10 +45,12 @@ internal class ExplorerImpl : Explorer {
 	@Inject private Reflux		reflux
 	@Inject private Errors		errors
 	@Inject private Dialogues	dialogues
-					Uri			fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
+	static	const	Uri			fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
+	static 	const	Int 		bufferSize 		:= 16 * 1024
 
 	internal File? copiedFile
 	internal File? cutFile
+	
 
 	new make(|This| in) { in(this) }
 
@@ -85,17 +91,8 @@ internal class ExplorerImpl : Explorer {
 		if (copiedFile != null) {
 			if (!copiedFile.isDir) {
 				// handle name conflicts when duplicating (copy->paste) files
-				fileIndex := 0
 				destName := copiedFile.name.toUri
-				destFile := destDir + destName
-				while (destFile.exists) {
-					fileIndex++
-					if (copiedFile.ext == null)
-						destName = `${copiedFile.name}($fileIndex)`
-					else
-						destName = `${copiedFile.name[0..<-copiedFile.ext.size-1]}($fileIndex).${copiedFile.ext}`
-					destFile = destDir + destName
-				}
+				destFile := uniqueFile(destDir + destName)
 				copiedFile.copyTo(destFile)
 				
 			} else
@@ -108,6 +105,21 @@ internal class ExplorerImpl : Explorer {
 		reflux.refresh(reflux.resolve(destDir.uri.toStr))
 	}
 	
+	override File uniqueFile(File file) {
+		destFile := file
+		destName := destFile.name.toUri
+		fileIndex := 0
+		while (destFile.exists) {
+			fileIndex++
+			if (destFile.ext == null)
+				destName = `${file.name}($fileIndex)`
+			else
+				destName = `${file.name[0..<-file.ext.size-1]}($fileIndex).${file.ext}`
+			destFile = destFile.parent + destName
+		}
+		return destFile
+	}
+
 	override Void newFile(File containingFolder, Str? defFileName := null) {
 		fileName := dialogues.openPromptStr("New File", defFileName ?: "NewFile.txt")
 		if (fileName != null) {
@@ -129,31 +141,74 @@ internal class ExplorerImpl : Explorer {
 	}
 	
 	override Void compressToZip(File toCompress, File dst) {
-		if (dst.isDir || dst.exists)
+		if (dst.isDir)
 			throw ArgErr("Cannot write to $dst")
 		
-		try {
-			// TODO: Pop up progress monitor for long running zip tasks
+		registry := registry
+		pd := (ProgressDialogue) registry.autobuild(ProgressDialogue#)
+		pd.title = "Compress to .zip"
+		pd.image = Image(`fan://afExplorer/res/images/zip.x48.png`)
+		pd.open(reflux.window) |ProgressWorker worker| {
+			locale		:= (LocaleFormat) registry.serviceById(LocaleFormat#.qname)
+			explorer	:= (Explorer) registry.serviceById(Explorer#.qname)
+
+			worker.update(0, 0, "Zipping ${toCompress.normalize.osPath}")
+			worker.update(0, 0, "Inspecting source files...")
+
+			noOfFiles := 0
+			noOfBytes := 0
+			toCompress.walk |src| {
+				if (!src.isDir) {
+					noOfFiles++
+					noOfBytes += src.size
+				}
+			}
+			worker.update(0, 0, "Found $noOfFiles files with a sum total of ${locale.formatFileSize(noOfBytes)}")
+
+			dest := explorer.uniqueFile(dst)
+			zip  := Zip.write(dest.out)
+			buf	 := Buf(bufferSize)
 			parentUri := toCompress.parent.uri
-			zip := Zip.write(dst.out)
 			try {
+				bytesWritten := 0
 				toCompress.walk |src| {
 					if (src.isDir) return
 
 					path := src.uri.relTo(parentUri)
+					worker.update(bytesWritten, noOfBytes, "Compressing ${path}")
+
 					out := zip.writeNext(path)
 					try {
-						src.in(16 * 1024).pipe(out)
+						// this is the easy way to compress the file - but we do it the hard way
+						// so we can show progress when zipping large files
+//						src.in(bufferSize).pipe(out)
+						
+						in := src.in
+						piping := true
+						while (piping) {
+							bytesRead := in.readBuf(buf.clear, bufferSize)
+							if (bytesRead == null)
+								piping = false
+							else {
+								out.writeBuf(buf.flip)
+								bytesWritten += bytesRead
+								worker.update(bytesWritten, noOfBytes)
+							}
+						}
 					} finally
 						out.close
 				}
 			} finally
 				zip.close
 
-		} catch (Err err)
-			errors.add(err)
+			worker.update(100, 100, "Written ${dest.normalize.osPath} (${locale.formatFileSize(dest.size)})")
+			worker.update(100, 100, "Done.")
 
-		reflux.refresh
+			Desktop.callAsync |->| {
+				reflux := (Reflux) registry.serviceById(Reflux#.qname)
+				reflux.refresh
+			}
+		}
 	}
 	
 	override Image fileToIcon(File f) {

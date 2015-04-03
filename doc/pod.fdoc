@@ -149,6 +149,7 @@ Release Notes [#releaseNotes]
 *****************************
 v0.0.10 [#v0.0.10]
 ==================
+ - Chg: Zipping a directory now displays a progress dialogue - which is updated with bytes compressed.
  - Bug: 'HTMLViewer' sometimes displayed a blank page when switching views.
 
 v0.0.8 [#v0.0.8]
