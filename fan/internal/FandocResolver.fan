@@ -18,13 +18,13 @@ internal class FandocResolver : UriResolver {
 	
 	override Resource? resolve(Str str) {
 		try {
-			uri := str.toUri
+			uri := str.trim.toUri
 			if (uri.scheme == "fandoc")
 				return fandocResource(uri)
 		} catch { }
 		
 		try {
-			uri := fromFandocStr(str)
+			uri := fromFandocStr(str.trim)
 			if (uri != null)
 				return fandocResource(uri)
 		} catch { }
