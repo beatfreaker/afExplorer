@@ -25,10 +25,6 @@ internal class HttpResolver : UriResolver {
 		if (url == null)
 			return null
 		
-		return registry.autobuild(HttpResource#, null, [
-			HttpResource#uri	: url,
-			HttpResource#name	: url.name,
-			HttpResource#icon	: explorer.urlToIcon(url)
-		])
+		return registry.autobuild(HttpResource#, [url])
 	}	
 }

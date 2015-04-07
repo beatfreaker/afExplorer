@@ -10,7 +10,12 @@ class HttpResource : Resource {
 	override Image?	icon
 
 	@NoDoc
-	new make(|This|in) { in(this) }
+	internal new make(Uri url, Explorer explorer, |This|in) {
+		in(this)
+		this.uri	= url
+		this.name	= url.name
+		this.icon	= explorer.urlToIcon(url)
+	}
 	
 	override Type[] viewTypes() {
 		[HtmlViewer#]

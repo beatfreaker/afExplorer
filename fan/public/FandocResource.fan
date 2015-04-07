@@ -10,7 +10,12 @@ class FandocResource : Resource {
 	override Image?	icon
 
 	@NoDoc
-	new make(|This|in) { in(this) }
+	internal new make(Uri uri, |This|in) {
+		in(this)
+		this.uri	= uri
+		this.name	= uri.name
+		this.icon	= Image(`fan://afExplorer/res/icons-file/fileFandoc.png`)
+	}
 	
 	override Type[] viewTypes() {
 		[FandocViewer#]

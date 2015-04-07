@@ -38,11 +38,7 @@ internal class FandocResolver : UriResolver {
 		if (uri == null)
 			return null
 		
-		return registry.autobuild(FandocResource#, null, [
-			FandocResource#uri	: uri,
-			FandocResource#name	: uri.name,
-			FandocResource#icon	: Image(`fan://afExplorer/res/icons-file/fileFandoc.png`)
-		])		
+		return registry.autobuild(FandocResource#, [uri])
 	}
 
 	// Yeah, I know all this is messy. It was cut'n'paste from FandocViewer, shoehorned in and messed with.

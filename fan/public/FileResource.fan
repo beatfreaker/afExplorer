@@ -15,9 +15,13 @@ class FileResource : Resource {
 	override Str	displayName
 			 File	file
 
-	internal new make(|This|in) {
+	internal new make(File file, Explorer explorer, |This|in) {
 		in(this)
-		displayName = file.osPath ?: file.toStr	// fan: schemes don't have osPaths
+		this.file			= file
+		this.uri			= file.uri
+		this.name			= file.uri.name
+		this.icon			= explorer.fileToIcon(file)
+		this.displayName	= file.osPath ?: file.toStr	// fan: schemes don't have osPaths
 	}
 
 	** Delegates to `FilePopupMenu`.

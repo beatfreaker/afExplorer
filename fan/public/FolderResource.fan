@@ -8,7 +8,7 @@ using fwt
 class FolderResource : FileResource {
 	@Inject private FolderPopupMenu	_folderPopupMenu
 
-	internal new make(|This|in) : super.make(in) { }
+	internal new make(File file, Explorer explorer, |This|in) : super.make(file, explorer, in) { }
 	
 	** Delegates to `FolderPopupMenu`.
 	override Menu populatePopup(Menu m) {

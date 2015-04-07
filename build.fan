@@ -10,7 +10,7 @@ class Build : BuildPod {
 
 		meta = [
 			"proj.name"		: "Explorer",
-			"afIoc.module"	: "afReflux::RefluxModule",
+			"afIoc.module"	: "afExplorer::ExplorerModule",
 			"internal"		: "true",
 			"tags"			: "app",
 			"repo.private"	: "true"
@@ -35,7 +35,7 @@ class Build : BuildPod {
 			"afReflux     0.0.6+"
 		]
 
-		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/textEditor/`, `fan/internal/commands/`]
+		srcDirs = [`test/`, `fan/`, `fan/todo/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/textEditor/`, `fan/internal/commands/`]
 		resDirs = [`locale/`, `res/css/`, `res/fogs/`, `res/icons-file/`, `res/images/`, `res/syntax/`]
 	}
 }

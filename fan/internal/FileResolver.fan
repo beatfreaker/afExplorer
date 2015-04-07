@@ -15,7 +15,7 @@ internal class FileResolver : UriResolver {
 		str = str.replace("\${Env.cur.workDir}",	Env.cur.workDir.normalize.osPath)
 		str = str.replace("\${Env.cur.tempDir}",	Env.cur.tempDir.normalize.osPath)
 		str = str.replace("\${Env.cur.user}", 		Env.cur.user)
-		
+
 		// check for os specific paths
 		if (file == null)
 			try {
@@ -35,11 +35,6 @@ internal class FileResolver : UriResolver {
 		if (file == null || !file.exists)
 			return null
 
-		return registry.autobuild(file.isDir ? FolderResource# : FileResource#, null, [
-			FileResource#uri	: file.uri,
-			FileResource#name	: file.uri.name,
-			FileResource#file	: file,
-			FileResource#icon	: explorer.fileToIcon(file)
-		])
+		return registry.autobuild(file.isDir ? FolderResource# : FileResource#, [file])
 	}	
 }
