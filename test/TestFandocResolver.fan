@@ -36,6 +36,10 @@ internal class TestFandocResolver : Test {
 	
 	@Autobuild FandocResolver? resolver
 	
+	Void testCaseSensitiveBug() {
+		verifyEq(resolveUri("fandoc:/afMongo/index"),		`fandoc:/afMongo/index`)
+	}
+
 	Void testResolvedUris() {
 		// index URIs
 		verifyEq(resolveUri("fandoc:"),						`fandoc:/`)

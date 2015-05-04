@@ -43,7 +43,6 @@ internal class FandocResolver : UriResolver {
 
 	// Yeah, I know all this is messy. It was cut'n'paste from FandocViewer, shoehorned in and messed with.
 	// It needs a good tidy up. - But currently it works, the tests pass and I've got a girl to satisfy...
-	
 	Uri? normalise(Uri uri) {
 		// expand 'fandoc:/afFancom' to 'fandoc:/afFancom/index' 
 		if (uri.path.size == 1)
@@ -60,8 +59,9 @@ internal class FandocResolver : UriResolver {
 			return root.toUri
 
 		// check case insensitive
+		type := uri.path.getSafe(1)
 		meth := uri.path.getSafe(2)
-		u := toType(uri.path[0], uri.path.getSafe(1))
+		u := toType(uri.path[0], type)
 		
 		if (u != null && meth != null)
 			u = u.plusSlash.plusName(meth)
@@ -118,7 +118,7 @@ internal class FandocResolver : UriResolver {
 			return `${root}${podNameQ}`
 
 		typeNameQ := Pod.find(podNameQ).types.find { it.name.equalsIgnoreCase(typeName) }?.name
-		if (typeNameQ == null) {
+		if (typeNameQ == null || typeName == "index") {
 			// if no type, look for a pod doc or source file
 			podFile := Env.cur.findPodFile(podName)
 			docPod 	:= compilerDoc::DocPod.load(podFile)
