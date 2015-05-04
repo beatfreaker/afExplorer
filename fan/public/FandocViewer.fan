@@ -21,7 +21,7 @@ class FandocViewer : HtmlViewer {
 		// open new tabs for different types of resources
 		this.resource?.typeof == resource.typeof
 	}
-	
+
 	** Hook for subclasses to convert the resource into either a URI or a Str.
 	** Returns 'resource.uri' by default.
 	override Obj resolveResource(Resource resource) {
@@ -39,17 +39,7 @@ class FandocViewer : HtmlViewer {
 		throw Err("Unknown resource: $resource")
 	}
 	
-	override Void refresh(Resource? resource := null) {
-		if (resource == null || resource == this.resource) {
-			// the browser doesn't like refreshing a string, so we regenerate the HTML 
-			if (this.resource is FileResource || this.resource is FandocResource) {
-				super.load(this.resource)
-			} else
-				super.refresh(null)
-		}
-	}
-	
-	override protected Void onLoad(Event event) {
+	override Void onLoad(Event event) {
 		id := resource.uri.path.getSafe(2)
 		if (resource is FandocResource && id != null)
 			scrollToId(id)
@@ -57,7 +47,7 @@ class FandocViewer : HtmlViewer {
 			super.onLoad(event)
 	}
 
-	override protected Uri normaliseBrowserUrl(Uri resourceUri, Uri url) {
+	override Uri normaliseBrowserUrl(Uri resourceUri, Uri url) {
 		if (resourceUri.path.size > 2)
 			resourceUri = `fandoc:/` + resourceUri.path[0..<2].join("/").toUri
 		return super.normaliseBrowserUrl(resourceUri, url)

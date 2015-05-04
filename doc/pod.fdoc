@@ -147,6 +147,11 @@ On startup, Explorer scans the current Fantom installation for these pods and au
 
 Release Notes [#releaseNotes]
 *****************************
+v0.0.12 [#v0.0.12]
+==================
+ - Bug: 'FandocViewer' sometimes displayed a blank page when switching views.
+ - Bug: When resolving fandocs, types called 'Index' would override pod documentation.
+
 v0.0.10 [#v0.0.10]
 ==================
  - Chg: Zipping a directory now displays a progress dialogue - which is updated with bytes compressed.

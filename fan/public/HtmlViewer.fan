@@ -71,7 +71,10 @@ class HtmlViewer : View {
 		if (res is Uri)
 			browser.url = res
 		else if (res is Str)
-			browser.html = res
+			// this delay prevents a blank browser when going to or from a single tab pane
+			Desktop.callLater(50ms) |->| {
+				browser.html = res
+			}
 		else
 			throw Err("Resource should resolve to either a URI or a Str, not: $res")
 
@@ -97,14 +100,15 @@ class HtmlViewer : View {
 		resource.uri
 	}
 	
-	** Callback when then page loads.
-	protected virtual Void onLoad(Event event) {
+	** Callback for when the Browser's page loads.
+	virtual Void onLoad(Event event) {
 		scrollTop := stash["${resource?.uri}.htmlViewer.scrollTop"]
 		if (scrollTop != null)
 			browser.execute("window.scrollTo(0, ${scrollTop});")
 	}
 
-	private Void onStatusText(Event event) {
+	** Callback for when the Browser's status text changes.
+	virtual Void onStatusText(Event event) {
 		try {
 			url := event.data.toStr.toUri
 			if (url.scheme == "about") 
@@ -113,7 +117,8 @@ class HtmlViewer : View {
 		statusBar.text = event.data
 	}
 
-	private Void onTitleText(Event event) {
+	** Callback for when the Browser's status text changes.
+	virtual Void onTitleText(Event event) {
 		// don't show useless titles!
 		if (event.data != "about:blank") {
 			// set resource name first so it gets picked up by the window
@@ -122,6 +127,19 @@ class HtmlViewer : View {
 			// this triggers a frame update
 			name = event.data
 		}
+	}
+	
+	** Callback for normalising Browser URIs into Reflux URIs.
+	virtual Uri normaliseBrowserUrl(Uri resourceUri, Uri url) {
+		// anchors on the same page are defined as `about:blank#anchor`
+		if (url.scheme == "about" && url.name == "blank" && url.frag != null)
+			url = (resourceUri.parent ?: resourceUri).plusName(resourceUri.name + "#" + url.frag)
+		
+		// IE gives relative links the scheme 'about' so resolve it relative to the current resource 
+		if (url.scheme == "about")
+			url = Url(resourceUri + url.pathOnly).plusQuery(url.queryStr).plusFrag(url.frag).toUri
+
+		return url
 	}
 	
 	private Void onHyperlink(Event event) {
@@ -154,17 +172,5 @@ class HtmlViewer : View {
 
 		// route the URI through reflux so it gets stored in the history
 		reflux.load(url.toStr)
-	}
-	
-	virtual protected Uri normaliseBrowserUrl(Uri resourceUri, Uri url) {
-		// anchors on the same page are defined as `about:blank#anchor`
-		if (url.scheme == "about" && url.name == "blank" && url.frag != null)
-			url = (resourceUri.parent ?: resourceUri).plusName(resourceUri.name + "#" + url.frag)
-		
-		// IE gives relative links the scheme 'about' so resolve it relative to the current resource 
-		if (url.scheme == "about")
-			url = Url(resourceUri + url.pathOnly).plusQuery(url.queryStr).plusFrag(url.frag).toUri
-
-		return url
 	}
 }
