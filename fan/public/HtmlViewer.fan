@@ -11,6 +11,7 @@ class HtmlViewer : View {
 	@Inject private Reflux			reflux
 			private Browser			browser
 			private Label			statusBar
+			private Obj?			resolvedContent
 
 	@NoDoc
 	protected new make(|This| in) : super(in) {
@@ -41,6 +42,24 @@ class HtmlViewer : View {
 	}
 	
 	@NoDoc
+	override Void onActivate() {
+		// fudge to prevent blank tabs when panel switches to / from a single pane
+		if (resolvedContent != null)
+			Desktop.callLater(50ms) |->| {
+				if (resolvedContent is Str) {
+					browser.html = resolvedContent
+					browser.focus
+				}
+				if (resolvedContent is Uri) {
+					if (browser.url != resolvedContent) {
+						browser.url = resolvedContent
+						browser.focus
+					}
+				}
+			}
+	}
+
+	@NoDoc
 	override Void onDeactivate() {
 		try {
 			// we want to keep the scrollTop when switching between views, 
@@ -67,16 +86,16 @@ class HtmlViewer : View {
 	override Void load(Resource resource) {
 		super.load(resource)
 
-		res := resolveResource(resource)
-		if (res is Uri)
-			browser.url = res
-		else if (res is Str)
+		resolvedContent = resolveResource(resource)
+		if (resolvedContent is Uri)
+			browser.url = resolvedContent
+		else if (resolvedContent is Str)
 			// this delay prevents a blank browser when going to or from a single tab pane
 			Desktop.callLater(50ms) |->| {
-				browser.html = res
+				browser.html = resolvedContent
 			}
 		else
-			throw Err("Resource should resolve to either a URI or a Str, not: $res")
+			throw Err("Resource should resolve to either a URI or a Str, not: $resolvedContent")
 
 		// set focus so browser responds to scroll events
 		// see http://fantom.org/sidewalk/topic/2024#c13355

@@ -40,11 +40,14 @@ class FandocViewer : HtmlViewer {
 	}
 	
 	override Void onLoad(Event event) {
-		id := resource.uri.path.getSafe(2)
-		if (resource is FandocResource && id != null)
-			scrollToId(id)
-		else
-			super.onLoad(event)
+		if (resource is FandocResource) {
+			id := resource.uri.path.getSafe(2)
+			if (id != null) {
+				scrollToId(id)
+				return
+			}
+		}
+		super.onLoad(event)
 	}
 
 	override Uri normaliseBrowserUrl(Uri resourceUri, Uri url) {
