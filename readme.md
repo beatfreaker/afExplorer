@@ -1,7 +1,7 @@
-#Explorer v0.0.10
+#Explorer v0.0.12
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.0.10](http://img.shields.io/badge/pod-v0.0.10-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
+[![pod: v0.0.12](http://img.shields.io/badge/pod-v0.0.12-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
