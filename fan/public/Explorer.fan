@@ -56,7 +56,7 @@ internal class ExplorerImpl : Explorer {
 
 	override Void rename(File file) {
 		newName := dialogues.openPromptStr("Rename", file.name)
-		if (newName != null) {
+		if (newName != null && newName != file.name) {
 			file.rename(newName)
 			if (file.parent != null)
 				reflux.refresh(reflux.resolve(file.parent.uri.toStr))
@@ -168,7 +168,8 @@ internal class ExplorerImpl : Explorer {
 			dest := explorer.uniqueFile(dst)
 			zip  := Zip.write(dest.out)
 			buf	 := Buf(bufferSize)
-			parentUri := toCompress.parent.uri
+			// don't include the name of the containing folder in zip paths
+			parentUri := toCompress.isDir ? toCompress.uri : toCompress.parent.uri
 			try {
 				bytesWritten := 0
 				toCompress.walk |src| {

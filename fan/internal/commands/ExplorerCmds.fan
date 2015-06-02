@@ -114,7 +114,7 @@ internal class ExplorerCmds {
 	}
 
 	Command compressToZip(File file) {
-		name := file.ext != null ? file.name[0..<-(file.ext.size+1)] : file.name
+		name := (!file.isDir && file.ext != null) ? file.name[0..<-(file.ext.size+1)] : file.name
 		name += ".zip"
 		return command("Compress to '${name}'", "cmdCompressToZip") {
 			it.onInvoke.add {
