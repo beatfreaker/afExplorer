@@ -149,6 +149,7 @@ Release Notes [#releaseNotes]
 *****************************
 v0.0.14 [#v0.0.14]
 ==================
+ - Chg: Cut, copy and paste are now global commands with keyboard shortcuts.
  - Bug: Renaming a file to the same name gave an error.
 
 v0.0.12 [#v0.0.12]

@@ -56,5 +56,6 @@ internal class ExplorerIcons {
 
 		// ---- Fandoc Viewer -------------------
 		"icoFandocViewer"		: `fan://afExplorer/res/icons-file/fileFan.png`,
+
 	]
 }

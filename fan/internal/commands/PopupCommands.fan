@@ -58,9 +58,12 @@ internal class PopupCommands {
 		addCmd(menu, globalCommands["afExplorer.cmdDeleteFile"].command)
 
 		menu.addSep
-		addCmd(menu, fileCmds.cutFileCmd(file))
-		addCmd(menu, fileCmds.copyFileCmd(file))
-		addCmd(menu, fileCmds.pasteFileCmd(file))
+//		addCmd(menu, fileCmds.cutFileCmd(file))
+//		addCmd(menu, fileCmds.copyFileCmd(file))
+//		addCmd(menu, fileCmds.pasteFileCmd(file))
+		addCmd(menu, globalCommands["afReflux.cmdCut"].command)
+		addCmd(menu, globalCommands["afReflux.cmdCopy"].command)
+		addCmd(menu, globalCommands["afReflux.cmdPaste"].command)
 
 		menu.addSep
 		addCmd(menu, fileCmds.copyFileNameCmd(file))

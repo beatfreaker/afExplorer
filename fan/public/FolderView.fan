@@ -65,14 +65,25 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	private Void onSelect() {
 		globalCommands["afExplorer.cmdRenameFile"].update
 		globalCommands["afExplorer.cmdDeleteFile"].update
+		globalCommands["afReflux.cmdCut"].update
+		globalCommands["afReflux.cmdCopy"].update
+		globalCommands["afReflux.cmdPaste"].update
 	}
 
 	private Void onFocus() {
-		globalCommands["afExplorer.cmdRenameFile"].addEnabler("afExplorer.folderView", |->Bool| { !table.selected.isEmpty } )
-		globalCommands["afExplorer.cmdDeleteFile"].addEnabler("afExplorer.folderView", |->Bool| { !table.selected.isEmpty } )
 		fileFetcher := |->File?| { 
 			table.selected.isEmpty ? null : model.fileRes[table.selected.first].file 
 		}
+
+		globalCommands["afExplorer.cmdRenameFile"].addEnabler("afExplorer.folderView", |->Bool| { !table.selected.isEmpty } )
+		globalCommands["afExplorer.cmdDeleteFile"].addEnabler("afExplorer.folderView", |->Bool| { !table.selected.isEmpty } )
+		globalCommands["afReflux.cmdCut"		].addEnabler("afExplorer.folderPanel", |->Bool| { !table.selected.isEmpty } )
+		globalCommands["afReflux.cmdCopy"		].addEnabler("afExplorer.folderPanel", |->Bool| { !table.selected.isEmpty } )
+		globalCommands["afReflux.cmdPaste"		].addEnabler("afExplorer.folderPanel", |->Bool| { explorer.pasteEnabled && (fileFetcher() != null || fileResource != null) } )
+		globalCommands["afReflux.cmdCut"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.cut(fileFetcher()) } )
+		globalCommands["afReflux.cmdCopy"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.copy(fileFetcher()) } )
+		globalCommands["afReflux.cmdPaste"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.paste(fileFetcher() ?: fileResource.file) } )
+
 		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
 		cmdR.fileFetcher = fileFetcher
 		cmdD := (DeleteFileCommand) globalCommands["afExplorer.cmdDeleteFile"]
@@ -82,6 +93,12 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	private Void onBlur() {
 		globalCommands["afExplorer.cmdRenameFile"].removeEnabler("afExplorer.folderView")
 		globalCommands["afExplorer.cmdDeleteFile"].removeEnabler("afExplorer.folderView")
+		globalCommands["afReflux.cmdCut"		].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdCopy"		].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdPaste"		].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdCut"		].removeInvoker("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdCopy"		].removeInvoker("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdPaste"		].removeInvoker("afExplorer.folderPanel")
 	}
 
 	private Void onPopup(Event event) {

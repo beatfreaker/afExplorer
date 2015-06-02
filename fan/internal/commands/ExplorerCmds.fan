@@ -51,34 +51,6 @@ internal class ExplorerCmds {
 		}
 	}
 
-	Command cutFileCmd(File file) {
-		command("CutFile") {
-			it.name = "Cut"
-			it.onInvoke.add {
-				explorer.cut(file)
-			}
-		}
-	}
-
-	Command copyFileCmd(File file) {
-		command("CopyFile") {
-			it.name = "Copy"
-			it.onInvoke.add {
-				explorer.copy(file)
-			}
-		}
-	}
-
-	Command pasteFileCmd(File file) {
-		command("PasteFile") {
-			it.name = "Paste"
-			it.enabled = file.isDir && explorer.pasteEnabled
-			it.onInvoke.add {
-				explorer.paste(file)
-			}
-		}
-	}
-
 	Command copyFileNameCmd(File file) {
 		command("CopyFileName") {
 			it.onInvoke.add {
