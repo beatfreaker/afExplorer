@@ -38,7 +38,7 @@ To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan
 
 ## Documentation
 
-Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afExplorer/).
+Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afExplorer/).
 
 ## Quick Start
 
@@ -58,7 +58,7 @@ C:\> fan afExplorer
 IoC Registry built in 216ms and started up in 10ms
 ```
 
-![Example Screenshot](http://static.alienfactory.co.uk/fantom-docs/afExplorer.screenshot.png)
+![Example Screenshot](screenshot.png)
 
 Explorer may optionally be started with a list of URIs to be opened up in tabs:
 
@@ -76,7 +76,7 @@ Following Reflux browser behaviour, entering valid URIs in the address bar will 
 
 If there are multiple Views available for the resource, a drop down will appear in the address bar allowing you to toggle between them:
 
-![View Dropdowns](http://static.alienfactory.co.uk/fantom-docs/afExplorer.viewDropDown.png)
+![View Dropdowns](viewDropDown.png)
 
 You may also specify the view by adding a query parameter to the URI:
 
@@ -107,7 +107,7 @@ Files may be opened up in a:
 
 Explorer may also be used as a (basic) web browser by entering a `http:` scheme:
 
-![Web Browser](http://static.alienfactory.co.uk/fantom-docs/afExplorer.webBrowser.png)
+![Web Browser](webBrowser.png)
 
 ### Fandoc Viewer
 
@@ -123,7 +123,7 @@ The address bar also accepts simple fandoc notation (case insensitive):
     
     afReflux::View
 
-![Fandoc Viewer](http://static.alienfactory.co.uk/fantom-docs/afExplorer.fandocViewer.png)
+![Fandoc Viewer](fandocViewer.png)
 
 TIP: Press `F1` at anytime to being up the Fandoc index.
 

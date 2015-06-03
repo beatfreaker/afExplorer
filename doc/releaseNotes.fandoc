@@ -1,0 +1,52 @@
+Versions
+********
+
+v0.0.14
+=======
+ - Chg: Cut, copy and paste are now global commands with keyboard shortcuts.
+ - Bug: Renaming a file to the same name gave an error.
+
+v0.0.12
+=======
+ - Bug: 'FandocViewer' sometimes displayed a blank page when switching views.
+ - Bug: When resolving fandocs, types called 'Index' would override pod documentation.
+
+v0.0.10
+=======
+ - Chg: Zipping a directory now displays a progress dialogue - which is updated with bytes compressed.
+ - Bug: 'HTMLViewer' sometimes displayed a blank page when switching views.
+
+v0.0.8
+======
+ - Chg: Uses Reflux v0.0.6 and 'RefluxBuilder'.
+ - Bug: Refreshing a root folder caused a 'NullErr'.
+
+v0.0.6
+======
+ - Bug: Empty 'fandoc:/' URI did not resolve.
+
+v0.0.4
+======
+ - New: Explorer Plugins!
+ - New: Compress to .zip command.
+ - New: Added Edit preferences commands.
+ - New: Added a 'Select All' global command, enabled in the Text Editor.
+ - New: Ctrl+Select in Folder Panel will open folder in new tab.
+ - New: Small images use a thumbnail preview as their icon.
+ - New: Added configurable 'FilePopupMenu' and 'FolderPopupMenu' services.
+ - New: Allow multiple TextEditor preferences, one per file extension.
+ - Chg: All dialogs are routed through the new Reflux Dialogues class.
+ - Chg: Folder sort in Folder view is reset when displaying new folder.
+ - Chg: ImageViewer uses the resource's icon as its icon.
+ - Chg: Single file copy / paste handle duplicate names.
+ - Chg: Better fandoc URI resolving, checks for type existance.
+ - Bug: Show / hide hidden file command now shows and hides hidden files in the Folders Panel (again!)
+ - Bug: Folders Panel favourites combo was displayed squashed when panel re-shown.
+ - Bug: Folders Panel did not pick up folder deletes / renames.
+ - Bug: Explorer was not picking up the correct preferences file.
+ - Bug: Delete button didn't always work in TextEditors - a global command thing.
+
+v0.0.2
+======
+ - New: Initial release.
+

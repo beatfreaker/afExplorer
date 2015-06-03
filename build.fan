@@ -6,14 +6,14 @@ class Build : BuildPod {
 	new make() {
 		podName = "afExplorer"
 		summary = "A Reflux file explorer application with reusable editors and viewers"
-		version = Version("0.0.13")
+		version = Version("0.0.12")
 
 		meta = [
 			"proj.name"		: "Explorer",
 			"afIoc.module"	: "afExplorer::ExplorerModule",
-			"internal"		: "true",
-			"tags"			: "app",
-			"repo.private"	: "true"
+			"repo.internal"	: "true",
+			"repo.tags"		: "app",
+			"repo.public"	: "true"
 		]
 
 		depends = [	
@@ -32,10 +32,10 @@ class Build : BuildPod {
 			"afBeanUtils  1.0.4  - 1.0", 
 			"afIoc        2.0.6  - 2.0", 
 			
-			"afReflux     0.0.10+"
+			"afReflux     0.0.11+"
 		]
 
 		srcDirs = [`test/`, `fan/`, `fan/todo/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/textEditor/`, `fan/internal/commands/`]
-		resDirs = [`locale/`, `res/css/`, `res/fogs/`, `res/icons-file/`, `res/images/`, `res/syntax/`]
+		resDirs = [`doc/`, `locale/`, `res/css/`, `res/fogs/`, `res/icons-file/`, `res/images/`, `res/syntax/`]
 	}
 }
