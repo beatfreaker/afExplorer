@@ -1,7 +1,7 @@
-#Explorer v0.0.12
+#Explorer v0.0.10
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.0.12](http://img.shields.io/badge/pod-v0.0.12-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
+[![pod: v0.0.10](http://img.shields.io/badge/pod-v0.0.10-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -58,7 +58,7 @@ C:\> fan afExplorer
 IoC Registry built in 216ms and started up in 10ms
 ```
 
-![Example Screenshot](screenshot.png)
+![Example Screenshot](http://pods.fantomfactory.org/pods/afExplorer/doc/screenshot.png)
 
 Explorer may optionally be started with a list of URIs to be opened up in tabs:
 
@@ -76,7 +76,7 @@ Following Reflux browser behaviour, entering valid URIs in the address bar will 
 
 If there are multiple Views available for the resource, a drop down will appear in the address bar allowing you to toggle between them:
 
-![View Dropdowns](viewDropDown.png)
+![View Dropdowns](http://pods.fantomfactory.org/pods/afExplorer/doc/viewDropDown.png)
 
 You may also specify the view by adding a query parameter to the URI:
 
@@ -107,7 +107,7 @@ Files may be opened up in a:
 
 Explorer may also be used as a (basic) web browser by entering a `http:` scheme:
 
-![Web Browser](webBrowser.png)
+![Web Browser](http://pods.fantomfactory.org/pods/afExplorer/doc/webBrowser.png)
 
 ### Fandoc Viewer
 
@@ -123,7 +123,7 @@ The address bar also accepts simple fandoc notation (case insensitive):
     
     afReflux::View
 
-![Fandoc Viewer](fandocViewer.png)
+![Fandoc Viewer](http://pods.fantomfactory.org/pods/afExplorer/doc/fandocViewer.png)
 
 TIP: Press `F1` at anytime to being up the Fandoc index.
 
