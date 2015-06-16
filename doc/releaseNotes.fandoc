@@ -3,8 +3,10 @@ Versions
 
 v0.0.14
 =======
- - Chg: Cut, copy and paste are now global commands with keyboard shortcuts.
+ - New: Cut, copy and paste are now global commands with keyboard shortcuts.
+ - New: Renaming a file keeps it selected in the folder view.
  - Bug: Renaming a file to the same name gave an error.
+ - Bug: Could not navigate to a directory with really wide or really tall images.
 
 v0.0.12
 =======

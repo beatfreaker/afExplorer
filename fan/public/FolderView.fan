@@ -62,6 +62,13 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 		refresh(null)
 	}
 
+	override Void onRename(File oldFile, File newFile) {
+		resource := reflux.resolve(newFile.osPath)
+		idx := model.fileRes.index(resource)
+		if (idx != null)
+			table.selected = [idx]
+	}
+
 	private Void onSelect() {
 		globalCommands["afExplorer.cmdRenameFile"].update
 		globalCommands["afExplorer.cmdDeleteFile"].update

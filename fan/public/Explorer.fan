@@ -6,7 +6,7 @@ using fwt
 ** (Service) - 
 ** The main service API for Explorer operations.
 mixin Explorer {
-	abstract Void rename(File file)
+	abstract File rename(File file)
 	abstract Void delete(File file)
 	abstract Void cut(File file)
 	abstract Void copy(File file)
@@ -38,15 +38,16 @@ mixin Explorer {
 	
 internal class ExplorerImpl : Explorer {
 
-	@Inject private Registry	registry
-	@Inject private RefluxIcons	icons
-	@Inject private Images		images
-	@Inject private Preferences	prefs
-	@Inject private Reflux		reflux
-	@Inject private Errors		errors
-	@Inject private Dialogues	dialogues
-	static	const	Uri			fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
-	static 	const	Int 		bufferSize 		:= 16 * 1024
+	@Inject private ExplorerEvents	events
+	@Inject private Registry		registry
+	@Inject private RefluxIcons		icons
+	@Inject private Images			images
+	@Inject private Preferences		prefs
+	@Inject private Reflux			reflux
+	@Inject private Errors			errors
+	@Inject private Dialogues		dialogues
+	static	const	Uri				fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
+	static 	const	Int 			bufferSize 		:= 16 * 1024
 
 	internal File? copiedFile
 	internal File? cutFile
@@ -54,13 +55,16 @@ internal class ExplorerImpl : Explorer {
 
 	new make(|This| in) { in(this) }
 
-	override Void rename(File file) {
+	override File rename(File file) {
 		newName := dialogues.openPromptStr("Rename", file.name)
 		if (newName != null && newName != file.name) {
-			file.rename(newName)
+			newFile := file.rename(newName)
 			if (file.parent != null)
 				reflux.refresh(reflux.resolve(file.parent.uri.toStr))
+			events.onRename(file, newFile)
+			return newFile
 		}
+		return file
 	}
 
 	override Void delete(File file) {
@@ -212,6 +216,7 @@ internal class ExplorerImpl : Explorer {
 		}
 	}
 	
+	static const Str[] imageExts := "bmp jpg jpeg gif png".split
 	override Image fileToIcon(File f) {
 		hidden := preferences.isHidden(f)
 
@@ -224,11 +229,11 @@ internal class ExplorerImpl : Explorer {
 		
 		// if the image is small enough ~5k, return a thumbnail as the icon
 		// .svg files and the like cause ugly stack traces as FWT logs the Err before returning null... Grrr!!
-		if ("bmp jpg jpeg gif png".split.contains(f.ext ?: "") && f.size < (5 * 1024)) {
+		if (imageExts.contains(f.ext ?: "") && f.size < (5 * 1024)) {
 			if (images.contains(f.uri))
 				return hidden ? images.getFaded(f.uri) : images.get(f.uri)
 
-			icon := images.load(f.uri, false)
+			icon := (Image?) images.load(f.uri, false)
 			if (icon != null) {
 				if (icon.size == Size(16, 16)) {
 					images[f.uri] = icon
@@ -246,26 +251,30 @@ internal class ExplorerImpl : Explorer {
 
 				if (icon.size.w >= icon.size.h) {
 					newH := icon.size.h * 16 / icon.size.w
-					newIcon := icon.resize(Size(16, newH))
-					if (newH < 16) {
-						newIcon = Image(Size(16, 16)) |Graphics g| {
-							g.drawImage(newIcon, 0, (16 - newH) / 2)
+					if (newH > 0) {	// really wide images don't scale well!
+						newIcon := icon.resize(Size(16, newH))
+						if (newH < 16) {
+							newIcon = Image(Size(16, 16)) |Graphics g| {
+								g.drawImage(newIcon, 0, (16 - newH) / 2)
+							}
 						}
+						images[f.uri] = newIcon
+						return newIcon
 					}
-					images[f.uri] = newIcon
-					return newIcon
 				}
 
 				if (icon.size.w <= icon.size.h) {
 					newW := icon.size.w * 16 / icon.size.h
-					newIcon := icon.resize(Size(newW, 16))
-					if (newW < 16) {
-						newIcon = Image(Size(16, 16)) |Graphics g| {
-							g.drawImage(newIcon, (16 - newW) / 2, 0)
+					if (newW > 0) {	// really tall images don't scale well!
+						newIcon := icon.resize(Size(newW, 16))
+						if (newW < 16) {
+							newIcon = Image(Size(16, 16)) |Graphics g| {
+								g.drawImage(newIcon, (16 - newW) / 2, 0)
+							}
 						}
+						images[f.uri] = newIcon
+						return newIcon
 					}
-					images[f.uri] = newIcon
-					return newIcon
 				}				
 			}
 		}

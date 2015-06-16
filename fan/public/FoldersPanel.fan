@@ -68,7 +68,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		if (!isShowing) return
 		refresh(null)
 	}
-
+	
 	private Void onSelect() {
 		globalCommands["afExplorer.cmdRenameFile"].update
 		globalCommands["afExplorer.cmdDeleteFile"].update
