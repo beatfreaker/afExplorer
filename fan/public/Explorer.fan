@@ -58,7 +58,16 @@ internal class ExplorerImpl : Explorer {
 	override File rename(File file) {
 		newName := dialogues.openPromptStr("Rename", file.name)
 		if (newName != null && newName != file.name) {
+			
+			// can't rename a file to the same (case insensitive) name
+			// so, rename it twice
+			if (newName.equalsIgnoreCase(file.name)) {
+				tmpName := newName + Int.random(0..9999).toStr
+				file = file.rename(tmpName)
+			}
+
 			newFile := file.rename(newName)
+			
 			if (file.parent != null)
 				reflux.refresh(reflux.resolve(file.parent.uri.toStr))
 			events.onRename(file, newFile)

@@ -18,8 +18,10 @@ internal class Installer {
 			try {
 				podFile.copyTo(etcFile)
 				log.info("Installed fandoc syntax file to: ${etcFile}")
-			} catch (Err err)
+			} catch (Err err) {
 				log.warn("Could not copy syntax file to: ${etcFile} - ${err.typeof.qname} - ${err.msg}")
+				return	// abandon installation - if the syntax file doesn't exist, don't update ext.props 
+			}
 		}
 		
 		// update syntax ext.props
