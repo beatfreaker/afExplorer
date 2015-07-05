@@ -61,9 +61,11 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdReplace"			].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
 		globalCommands["afExplorer.cmdGoto"				].addInvoker("afExplorer.textEditor", |Event? e|	{ controller?.onGoto(e) } )
 		globalCommands["afExplorer.cmdGoto"				].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
+		globalCommands["afReflux.cmdSaveAs"				].addInvoker("afExplorer.textEditor", |Event? e|	{ this->onSaveAs() } )
+		globalCommands["afReflux.cmdSaveAs"				].addEnabler("afExplorer.textEditor", |  ->Bool| 	{ true } )
 		restorePrefs
 	}
-	
+
 	@NoDoc
 	override Void onDeactivate() {
 		globalCommands["afExplorer.cmdFind"				].removeInvoker("afExplorer.textEditor")
@@ -76,6 +78,8 @@ class TextEditor : View {
 		globalCommands["afExplorer.cmdReplace"			].removeEnabler("afExplorer.textEditor")
 		globalCommands["afExplorer.cmdGoto"				].removeInvoker("afExplorer.textEditor")
 		globalCommands["afExplorer.cmdGoto"				].removeEnabler("afExplorer.textEditor")
+		globalCommands["afReflux.cmdSaveAs"				].removeEnabler("afExplorer.textEditor")
+		globalCommands["afReflux.cmdSaveAs"				].removeInvoker("afExplorer.textEditor")
 		
 		// onBlur doesn't always fire!?
 		globalCommands["afExplorer.cmdSelectAll"		].removeInvoker("afExplorer.textEditor")
@@ -142,13 +146,41 @@ class TextEditor : View {
 	}
 
 	@NoDoc
-	override Void save() {	
+	override Void save() {
+		doSave(this.file)
+		fileTimeAtLoad = file.modified
+		super.save
+	}
+
+	Void onSaveAs() {	
+		file := (File?) FileDialog {
+			it.mode = FileDialogMode.saveFile
+			if (file != null) {
+				it.dir	= this.file.parent
+				it.name	= this.file.name
+				it.filterExts = ["*.${this.file.ext}", "*.*"]
+			} else
+				it.filterExts = ["*.*"]
+		}.open(reflux.window)
+
+		if (file != null) {
+			doSave(file)
+			fileRes := registry.autobuild(FileResource#, [file])
+			reflux.loadResource(fileRes)
+			
+			isDirty = false	// mark as not dirty so confirmClose() doesn't give a dialog
+			reflux.closeView(this, true)
+
+			// refresh any views on the containing directory
+			dirRes := registry.autobuild(FolderResource#, [file.parent])
+			reflux.refresh(dirRes)
+		}
+	}
+	
+	Void doSave(File file) {
 		out := file.out { it.charset = this.charset }
 		try		doc.save(out)
 		finally	out.close
-		fileTimeAtLoad = file.modified
-
-		super.save
 	}
 	
 	@NoDoc

@@ -17,6 +17,7 @@ class FileResource : Resource {
 
 	internal new make(File file, Explorer explorer, |This|in) {
 		in(this)
+		file				= file.normalize
 		this.file			= file
 		this.uri			= file.uri
 		this.name			= file.uri.name
