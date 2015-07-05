@@ -38,16 +38,17 @@ mixin Explorer {
 	
 internal class ExplorerImpl : Explorer {
 
-	@Inject private ExplorerEvents	events
-	@Inject private Registry		registry
-	@Inject private RefluxIcons		icons
-	@Inject private Images			images
-	@Inject private Preferences		prefs
-	@Inject private Reflux			reflux
-	@Inject private Errors			errors
-	@Inject private Dialogues		dialogues
-	static	const	Uri				fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
-	static 	const	Int 			bufferSize 		:= 16 * 1024
+	@Inject private ExplorerEvents		events
+	@Inject private Registry			registry
+	@Inject private RefluxIcons			icons
+	@Inject private Images				images
+	@Inject private Preferences			prefs
+	@Inject private Reflux				reflux
+	@Inject private Errors				errors
+	@Inject private Dialogues			dialogues
+	@Inject private |->GlobalCommands|	globalCommands
+	static	const	Uri					fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
+	static 	const	Int 				bufferSize 		:= 16 * 1024
 
 	internal File? copiedFile
 	internal File? cutFile
@@ -88,11 +89,13 @@ internal class ExplorerImpl : Explorer {
 	override Void cut(File file) {
 		cutFile		= file
 		copiedFile	= null
+		globalCommands()["afReflux.cmdPaste"].update
 	}
 	
 	override Void copy(File file) {
 		cutFile		= null
 		copiedFile	= file
+		globalCommands()["afReflux.cmdPaste"].update
 	}
 
 	override Void paste(File destDir) {

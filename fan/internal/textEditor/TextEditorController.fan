@@ -257,7 +257,7 @@ internal class TextEditorController {
 		if (!editor.file.exists) {
 			dialogues.openWarn("File has been deleted by another application!\n\n${editor.file.osPath}")
 			editor.fileTimeAtLoad = null
-			editor.isDirty = true	// set dirty flag so user can re-same
+			editor.isDirty = true	// set dirty flag so user can re-save
 			return
 		}
 		

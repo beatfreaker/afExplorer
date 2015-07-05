@@ -8,6 +8,7 @@ v0.0.14
  - New: Renaming a file keeps it selected in the folder view.
  - Bug: Renaming a file to the same name gave an error.
  - Bug: Could not navigate to a directory with really wide or really tall images.
+ - Bug: Paste command was not immediately enabled after a Cut or a Copy.
 
 v0.0.12
 =======
