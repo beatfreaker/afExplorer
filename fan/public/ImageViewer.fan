@@ -18,10 +18,16 @@ class ImageViewer : View {
 	
 	@NoDoc
 	override Void onActivate() {
-		globalCommands["afReflux.cmdSaveAs"].addInvoker("afExplorer.imageViewer", |Event? e| { this->onSaveAs() } )
-		globalCommands["afReflux.cmdSaveAs"].addEnabler("afExplorer.imageViewer", |  ->Bool| { true } )
+		enableCmds
 	}
 
+	private Void enableCmds() {
+		if (resource != null) {
+			globalCommands["afReflux.cmdSaveAs"].addInvoker("afExplorer.imageViewer", |Event? e| { this->onSaveAs() } )
+			globalCommands["afReflux.cmdSaveAs"].addEnabler("afExplorer.imageViewer", |  ->Bool| { true } )
+		}		
+	}
+	
 	@NoDoc
 	override Void onDeactivate() {
 		globalCommands["afReflux.cmdSaveAs"].removeEnabler("afExplorer.imageViewer")
@@ -31,6 +37,7 @@ class ImageViewer : View {
 	** Displays the given 'FileResource' as an image.
 	override Void load(Resource resource) {
 		super.load(resource)
+		enableCmds
 		fileResource := (FileResource) resource
 		image := images.load(resource.uri) 
 
@@ -77,7 +84,9 @@ class ImageViewer : View {
 		imageWidget?.doFullSize
 	}
 	
-	Void onSaveAs() {	
+	** Callback for when the 'afReflux.cmdSaveAs' 'GlobalCommand' is activated.
+	** Default implementation is to perform the *save as*.
+	virtual Void onSaveAs() {	
 		fileResource := (FileResource) resource
 		file := (File?) FileDialog {
 			it.mode 		= FileDialogMode.saveFile

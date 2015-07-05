@@ -8,6 +8,8 @@ using fandoc
 class HtmlViewer : View {
 	@Inject private IframeBlocker	iframeBlocker
 	@Inject private AppStash		stash
+	@Inject private GlobalCommands	globalCommands
+	@Inject private Registry		registry
 	@Inject private Reflux			reflux
 			private Browser			browser
 			private Label			statusBar
@@ -40,9 +42,11 @@ class HtmlViewer : View {
 	Void scrollToId(Str id) {
 		browser.execute("var ele = document.getElementById(${id.toCode}); if (ele) window.scrollTo(ele.offsetLeft, ele.offsetTop);")
 	}
-	
+
 	@NoDoc
 	override Void onActivate() {
+		enableCmds
+
 		// fudge to prevent blank tabs when panel switches to / from a single pane
 		if (resolvedContent != null)
 			Desktop.callLater(50ms) |->| {
@@ -59,8 +63,18 @@ class HtmlViewer : View {
 			}
 	}
 
+	private Void enableCmds() {
+		if (resource is FileResource) {
+			globalCommands["afReflux.cmdSaveAs"].addInvoker("afExplorer.imageViewer", |Event? e| { this->onSaveAs() } )
+			globalCommands["afReflux.cmdSaveAs"].addEnabler("afExplorer.imageViewer", |  ->Bool| { true } )
+		}		
+	}
+
 	@NoDoc
 	override Void onDeactivate() {
+		globalCommands["afReflux.cmdSaveAs"].removeEnabler("afExplorer.htmlViewer")
+		globalCommands["afReflux.cmdSaveAs"].removeInvoker("afExplorer.htmlViewer")
+
 		try {
 			// we want to keep the scrollTop when switching between views, 
 			// but clear it when closing the tab - so when re-opened, we're at the top again!
@@ -85,6 +99,7 @@ class HtmlViewer : View {
 	@NoDoc
 	override Void load(Resource resource) {
 		super.load(resource)
+		enableCmds
 
 		resolvedContent = resolveResource(resource)
 		if (resolvedContent is Uri)
@@ -148,6 +163,32 @@ class HtmlViewer : View {
 		}
 	}
 	
+	** Callback for when the 'afReflux.cmdSaveAs' 'GlobalCommand' is activated.
+	** Default implementation is to perform the *save as*.
+	virtual Void onSaveAs() {	
+		fileResource := (FileResource) resource
+		file := (File?) FileDialog {
+			it.mode 		= FileDialogMode.saveFile
+			it.dir			= fileResource.file.parent
+			it.name			= fileResource.file.name
+			it.filterExts	= ["*.${fileResource.file.ext}", "*.*"]
+		}.open(reflux.window)
+
+		if (file != null) {
+			fileResource.file.copyTo(file)
+
+			fileRes := registry.autobuild(FileResource#, [file])
+			reflux.loadResource(fileRes)
+			
+			isDirty = false	// mark as not dirty so confirmClose() doesn't give a dialog
+			reflux.closeView(this, true)
+
+			// refresh any views on the containing directory
+			dirRes := registry.autobuild(FolderResource#, [file.parent])
+			reflux.refresh(dirRes)
+		}
+	}
+
 	** Callback for normalising Browser URIs into Reflux URIs.
 	virtual Uri normaliseBrowserUrl(Uri resourceUri, Uri url) {
 		// anchors on the same page are defined as `about:blank#anchor`

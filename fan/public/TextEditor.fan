@@ -152,7 +152,9 @@ class TextEditor : View {
 		super.save
 	}
 
-	Void onSaveAs() {	
+	** Callback for when the 'afReflux.cmdSaveAs' 'GlobalCommand' is activated.
+	** Default implementation is to perform the *save as*.
+	virtual Void onSaveAs() {	
 		file := (File?) FileDialog {
 			it.mode = FileDialogMode.saveFile
 			if (file != null) {
