@@ -9,11 +9,25 @@ class ImageViewer : View {
 	@Inject private Images				images
 	@Inject private RefluxIcons 		icons
 	@Inject private Registry			registry
+	@Inject private Reflux				reflux
+	@Inject private GlobalCommands		globalCommands
 			private ImageViewWidget?	imageWidget
 
 	@NoDoc	// Boring!
 	protected new make(|This| in) : super(in) { }
 	
+	@NoDoc
+	override Void onActivate() {
+		globalCommands["afReflux.cmdSaveAs"].addInvoker("afExplorer.imageViewer", |Event? e| { this->onSaveAs() } )
+		globalCommands["afReflux.cmdSaveAs"].addEnabler("afExplorer.imageViewer", |  ->Bool| { true } )
+	}
+
+	@NoDoc
+	override Void onDeactivate() {
+		globalCommands["afReflux.cmdSaveAs"].removeEnabler("afExplorer.imageViewer")
+		globalCommands["afReflux.cmdSaveAs"].removeInvoker("afExplorer.imageViewer")
+	}
+
 	** Displays the given 'FileResource' as an image.
 	override Void load(Resource resource) {
 		super.load(resource)
@@ -63,6 +77,30 @@ class ImageViewer : View {
 		imageWidget?.doFullSize
 	}
 	
+	Void onSaveAs() {	
+		fileResource := (FileResource) resource
+		file := (File?) FileDialog {
+			it.mode 		= FileDialogMode.saveFile
+			it.dir			= fileResource.file.parent
+			it.name			= fileResource.file.name
+			it.filterExts	= ["*.${fileResource.file.ext}", "*.*"]
+		}.open(reflux.window)
+
+		if (file != null) {
+			fileResource.file.copyTo(file)
+
+			fileRes := registry.autobuild(FileResource#, [file])
+			reflux.loadResource(fileRes)
+			
+			isDirty = false	// mark as not dirty so confirmClose() doesn't give a dialog
+			reflux.closeView(this, true)
+
+			// refresh any views on the containing directory
+			dirRes := registry.autobuild(FolderResource#, [file.parent])
+			reflux.refresh(dirRes)
+		}
+	}
+
 	private Button toolBarCommand(Type cmdType, Obj[] args) {
 		command	:= (Command) registry.autobuild(cmdType, args)
 	    button  := Button.makeCommand(command)
@@ -70,7 +108,6 @@ class ImageViewer : View {
 	    	button.text = ""
 		return button
 	}
-
 }
 
 internal class ImageViewWidget : Canvas {
