@@ -165,6 +165,7 @@ class HtmlViewer : View {
 	
 	** Callback for when the 'afReflux.cmdSaveAs' 'GlobalCommand' is activated.
 	** Default implementation is to perform the *save as*.
+	@NoDoc
 	virtual Void onSaveAs() {	
 		fileResource := (FileResource) resource
 		file := (File?) FileDialog {

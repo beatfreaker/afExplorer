@@ -57,11 +57,15 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 
 	override Void onActivate() {
 		globalCommands["afExplorer.cmdShowHiddenFiles"	].addEnabler("afExplorer.folderPanel", |->Bool| { true } )
+		globalCommands["afReflux.cmdNew"			].addInvoker("afExplorer.folderPanel", |Event? e|	{ this->onNew() } )
+		globalCommands["afReflux.cmdNew"			].addEnabler("afExplorer.folderPanel", |  ->Bool| 	{ true } )
 	}
 	
 	override Void onDeactivate() {
 		onBlur	// onBlur doesn't always fire when we switch tabs
 		globalCommands["afExplorer.cmdShowHiddenFiles"].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdNew"		].removeInvoker("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdNew"		].removeEnabler("afExplorer.folderPanel")
 	}
 
 	override Void onShowHiddenFiles(Bool show) {
@@ -82,14 +86,14 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 			tree.selected.isEmpty ? null : ((FileNode) tree.selected.first).file
 		}
 
-		globalCommands["afExplorer.cmdRenameFile"].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
-		globalCommands["afExplorer.cmdDeleteFile"].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
-		globalCommands["afReflux.cmdCut"		].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
-		globalCommands["afReflux.cmdCopy"		].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
-		globalCommands["afReflux.cmdPaste"		].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty && fileFetcher().isDir && explorer.pasteEnabled} )
-		globalCommands["afReflux.cmdCut"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.cut(fileFetcher()) } )
-		globalCommands["afReflux.cmdCopy"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.copy(fileFetcher()) } )
-		globalCommands["afReflux.cmdPaste"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.paste(fileFetcher()) } )
+		globalCommands["afExplorer.cmdRenameFile"	].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
+		globalCommands["afExplorer.cmdDeleteFile"	].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
+		globalCommands["afReflux.cmdCut"			].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
+		globalCommands["afReflux.cmdCopy"			].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
+		globalCommands["afReflux.cmdPaste"			].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty && fileFetcher().isDir && explorer.pasteEnabled} )
+		globalCommands["afReflux.cmdCut"			].addInvoker("afExplorer.folderPanel", |->|		{ explorer.cut(fileFetcher()) } )
+		globalCommands["afReflux.cmdCopy"			].addInvoker("afExplorer.folderPanel", |->|		{ explorer.copy(fileFetcher()) } )
+		globalCommands["afReflux.cmdPaste"			].addInvoker("afExplorer.folderPanel", |->|		{ explorer.paste(fileFetcher()) } )
 		
 		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]
 		cmdR.fileFetcher = fileFetcher
@@ -174,6 +178,14 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		Desktop.callLater(50ms) |->| {
 			if (fileResource != null)
 				showFile(fileResource.uri)
+		}
+	}
+	
+	private Void onNew() {
+		if (fileResource?.file != null) {
+			newFile := explorer.newFile(fileResource.file)
+			if (newFile != null)
+				reflux.load(newFile.uri.toStr)
 		}
 	}
 	

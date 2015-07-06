@@ -73,7 +73,7 @@ class ImageViewer : View {
 		this.icon = resource.icon
 		this.name = resource.name
 	}
-	
+
 	** Expands or shrinks the image to fit the view.
 	Void fitToWindow() {
 		imageWidget?.doFitToWindow
@@ -86,6 +86,7 @@ class ImageViewer : View {
 	
 	** Callback for when the 'afReflux.cmdSaveAs' 'GlobalCommand' is activated.
 	** Default implementation is to perform the *save as*.
+	@NoDoc
 	virtual Void onSaveAs() {	
 		fileResource := (FileResource) resource
 		file := (File?) FileDialog {

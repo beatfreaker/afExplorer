@@ -94,8 +94,8 @@ class TextEditor : View {
 		file = ((FileResource) resource).file
 
 		prefsFileName
-			:= preferences.findFile("fluxText-${file.ext}.fog").exists
-			?  "fluxText-${file.ext}.fog"
+			:= preferences.findFile("fluxText-${file?.ext}.fog").exists
+			?  "fluxText-${file?.ext}.fog"
 			:  "fluxText.fog"
 		options = preferences.loadPrefs(TextEditorPrefs#, prefsFileName)
 		charset = options.charset
@@ -154,6 +154,7 @@ class TextEditor : View {
 
 	** Callback for when the 'afReflux.cmdSaveAs' 'GlobalCommand' is activated.
 	** Default implementation is to perform the *save as*.
+	@NoDoc
 	virtual Void onSaveAs() {	
 		file := (File?) FileDialog {
 			it.mode = FileDialogMode.saveFile
@@ -179,7 +180,7 @@ class TextEditor : View {
 		}
 	}
 	
-	Void doSave(File file) {
+	private Void doSave(File file) {
 		out := file.out { it.charset = this.charset }
 		try		doc.save(out)
 		finally	out.close

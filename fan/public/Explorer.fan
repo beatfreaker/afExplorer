@@ -16,8 +16,10 @@ mixin Explorer {
 	abstract File uniqueFile(File destFile)
 	
 	** Opens a dialogue for the file name before creating an empty file.
-	** File name defaults to 'NewFile.txt'.	
-	abstract Void newFile(File containingFolder, Str? defFileName := null)
+	** File name defaults to 'NewFile.txt'.
+	** 
+	** Returns 'null' if dialogue was cancelled.	
+	abstract File? newFile(File containingFolder, Str? defFileName := null)
 	
 	** Opens a dialogue for the folder name before creating an empty folder.
 	** Folder name defaults to 'NewFolder'.
@@ -32,7 +34,7 @@ mixin Explorer {
 
 	abstract ExplorerPrefs preferences()
 
-	@NoDoc	// a small hack until we make paste a global command
+	@NoDoc	// is there a way around having this method?
 	abstract Bool pasteEnabled()
 }
 	
@@ -136,12 +138,14 @@ internal class ExplorerImpl : Explorer {
 		return destFile
 	}
 
-	override Void newFile(File containingFolder, Str? defFileName := null) {
+	override File? newFile(File containingFolder, Str? defFileName := null) {
 		fileName := dialogues.openPromptStr("New File", defFileName ?: "NewFile.txt")
 		if (fileName != null) {
-			containingFolder.createFile(fileName)
+			newFile := containingFolder.createFile(fileName)
 			reflux.refresh(reflux.resolve(containingFolder.uri.toStr))
+			return newFile
 		}
+		return null
 	}
 
 	override Void newFolder(File containingFolder, Str? defFolderName := null) {

@@ -48,6 +48,7 @@ internal class PopupCommands {
 	Void addStandardFileCommands(Menu menu, FileResource resource) {
 		menu.addSep
 		addCmd(menu, fileCmds.compressToZip(resource.file))
+		// let the user edit the file, wotever the extension
 		addCmd(menu, fileCmds.openInTextEditor(resource))
 	}
 

@@ -125,9 +125,9 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.fileMenu" }
 	static Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {
-		config.set("separator.02",				MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.cmdDeleteFile").before("afReflux.cmdExit")
-		config.set("afExplorer.cmdRenameFile", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command)).after("separator.01").before("afExplorer.cmdDeleteFile")
-		config.set("afExplorer.cmdDeleteFile",	MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command)).after("afExplorer.cmdRenameFile").before("separator.02")
+		config.set("separator.03",				MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.cmdDeleteFile").before("afReflux.cmdExit")
+		config.set("afExplorer.cmdRenameFile", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command)).after("separator.02").before("afExplorer.cmdDeleteFile")
+		config.set("afExplorer.cmdDeleteFile",	MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command)).after("afExplorer.cmdRenameFile").before("separator.03")
 	}
 
 	@Contribute { serviceId="afReflux.editMenu" }
