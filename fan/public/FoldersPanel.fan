@@ -7,30 +7,33 @@ using afBeanUtils
 @NoDoc
 class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	
-	@Inject		private Registry			registry
-	@Inject		private Reflux				reflux
-	@Inject		private RefluxIcons			icons
-	@Inject		private Explorer			explorer
-	@Inject 	private GlobalCommands		globalCommands
-	@Autobuild	private FoldersTreeModel	model
+	@Inject		private Reflux					reflux
+	@Inject		private RefluxIcons				icons
+	@Inject		private Explorer				explorer
+	@Inject 	private GlobalCommands			globalCommands
+	@Inject 	private |File->FileResource|	fileResourceFactory
+	@Autobuild	private FoldersTreeModel		model
 	
-	private Combo	combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) }; it.dropDown=true; }
-	private Str:Str	favourites
-	private Int		lastComboIndex
-	private Tree	tree
+	private Combo			combo	:= Combo() { it.onModify.add |e| { this->onComboModify(e) }; it.dropDown=true; }
+	private Str:Str			favourites
+	private Int				lastComboIndex
+	private ResourceTree	tree
 	private FolderResource? fileResource
 	
 	protected new make(|This| in) : super(in) {
 		prefAlign	= Halign.left
 		
-		tree = Tree {
+		tree = ResourceTree(reflux) {
+			it.tree = Tree {
+				it.border = false
+				it.onMouseDown.add	|e| { this->onMouseDown	(e) }
+				it.onFocus.add		|e| { this->onFocus		( ) }
+				it.onBlur.add		|e| { this->onBlur		( ) }				
+			}
+			it.roots = File.osRoots.map { fileResourceFactory(it.normalize) } 
 			it.model = this.model
-			it.border = false
-			it.onMouseDown.add	|e| { this->onMouseDown	(e) }
-			it.onPopup.add		|e| { this->onPopup		(e) }
-			it.onSelect.add		|e| { this->onSelect	(e) }
-			it.onFocus.add		|e| { this->onFocus		( ) }
-			it.onBlur.add		|e| { this->onBlur		( ) }
+			it.onPopup.add	|e| { this->onPopup	(e) }
+			it.onSelect.add	|e| { this->onSelect(e) }
 		}
 		
 		favourites = explorer.preferences.favourites		
@@ -39,7 +42,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		content = EdgePane {
 			top = InsetPane(2, 0, 2, 2) { it.add(combo) }
 			center = BorderPane {
-				it.content	= tree
+				it.content	= tree.tree
 				it.border	= Border("1, 1, 0, 0 $Desktop.sysNormShadow")
 			}
 		}
@@ -83,7 +86,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 
 	private Void onFocus() {
 		fileFetcher := |->File?| {
-			tree.selected.isEmpty ? null : ((FileNode) tree.selected.first).file
+			tree.selected.first?->file
 		}
 
 		globalCommands["afExplorer.cmdRenameFile"	].addEnabler("afExplorer.folderPanel", |->Bool| { !tree.selected.isEmpty } )
@@ -126,7 +129,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	private Void onMouseDown(Event event) {
 		if (event.button != 1 || event.button != 1)
 			return
-		node := (FileNode?) tree.nodeAt(event.pos)
+		node := (FileResource?) tree.nodeAt(event.pos)
 		if (node == null)
 			return
 		ctx := (event.key != null && event.key.isCtrl) ? LoadCtx() { it.newTab = true } : LoadCtx()
@@ -135,7 +138,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 
 	private Void onPopup(Event event) {
 		if (event.data == null) return
-		file := ((FileNode) event.data).file
+		file := ((FileResource) event.data).file
 		res	 := reflux.resolve(file.normalize.uri.toStr)
 		event.popup = res.populatePopup(Menu())
 	}
@@ -153,31 +156,22 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		if (!isShowing) return
 		Desktop.callLater(50ms) |->| {
 			if (fileResource != null)
-				showFile(fileResource.uri)
+				tree.showNode(fileResource.uri.toStr)
 		}
 	}
 
 	override Void refresh(Resource? resource := null) {
 		if (resource == null) {
-			model.refreshAll
+			tree.roots = File.osRoots.map { fileResourceFactory(it.normalize) }
 			tree.refreshAll
 
 		} else {
-			node := findNode(resource.uri)
-			if (node != null) {
-				if (node.parent != null) {
-					node.parent.children = null
-					tree.refreshNode(node.parent)
-				} else {
-					model.refreshAll
-					tree.refreshAll					
-				}
-			} 
+			tree.refreshNode(resource.uri.toStr)
 		}
 
 		Desktop.callLater(50ms) |->| {
 			if (fileResource != null)
-				showFile(fileResource.uri)
+				tree.showNode(fileResource.uri.toStr)
 		}
 	}
 	
@@ -188,80 +182,22 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 				reflux.load(newFile.uri.toStr)
 		}
 	}
-	
-	private Void showFile(Uri uri) {
-		node := findNode(uri)
-		
-		if (node != null) {
-			tree.select(node)
-			tree.show(node)
-		}
-	}
-
-	private FileNode? findNode(Uri uri) {
-		// it may be ugly, but if it aint broke - don't fix it!
-		file	:= (FileNode?) null
-		files	:= model.roots
-		path	:= uri.path
-		path.eachWhile |Str s, Int i->Obj?| {
-			found := files.eachWhile |FileNode f->Obj?| {
-				if (f.name == s) {
-					file = f
-					files = model.children(f)
-					if (i+1 < path.size) {
-						tree.setExpanded(f, true)
-					}
-					return true
-				}
-				return null
-			}
-			return found == true ? null : false
-		}
-		return file
-	}
 }
 
-internal class FoldersTreeModel : TreeModel {
+internal class FoldersTreeModel : ResourceTreeModel {
 	@Inject	private  Explorer		explorer
-			override FileNode[]		roots
 			private	 Color			hiddenColour
 
 	new make(|This|in) {
 		in(this)
-		this.roots = FileNode.map(explorer, null, File.osRoots.map { it.normalize })
 		this.hiddenColour = Desktop.sysListFg.lighter(0.5f)
 	}
 	
-	Void refreshAll() {
-		this.roots = FileNode.map(explorer, null, File.osRoots.map { it.normalize })
-	}
-	override Str	text(Obj node)			{ n(node).name		}
-	override Image?	image(Obj node)			{ explorer.fileToIcon(n(node).file) }
-	override Bool 	hasChildren(Obj node)	{ n(node).hasChildren	}
-	override FileNode[]	children(Obj node)	{ n(node).children	}
-	override Color? fg(Obj node)			{ explorer.preferences.isHidden(n(node).file) ? hiddenColour : null  }
-	private  FileNode n(FileNode node)		{ node }
-}
-
-internal class FileNode {
-	Explorer fe
-	FileNode? parent
-	File file
-	new make(Explorer fe, FileNode? parent, File file) { this.fe = fe; this.parent = parent; this.file = file }
-	Str name() { file.name }
-	Bool hasChildren() { !children.isEmpty }
-	FileNode[]? children {
-		get {
-			if (&children == null)
-				&children = map(fe, this, file.listDirs.sort |f1, f2->Int| { f1.name <=> f2.name }. exclude { fe.preferences.shouldHide(it) })
-			return &children
-		}
-	}
-	Void refresh() {
-		children = null
-	}
-	override Str toStr() { return file.toStr }
-	static FileNode[] map(Explorer fe, FileNode? parent, File[] files) {
-		files.map { FileNode(fe, parent, it) }
-	}
+//	override Str text(Resource resource)		{ resource.name }
+//	override Image? image(Resource resource)	{ resource.icon }
+//	override Font? font(Resource resource)		{ null }
+	override Color? fg(Resource resource)		{ explorer.preferences.isHidden(resource->file) ? hiddenColour : null }
+//	override Color? bg(Resource resource)		{ null }
+//	override Bool hasChildren(Resource resource){ resource.hasChildren }
+//	override Str[] children(Resource resource) 	{ resource.children }
 }
