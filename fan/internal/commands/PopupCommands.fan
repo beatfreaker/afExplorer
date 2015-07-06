@@ -9,7 +9,6 @@ internal class PopupCommands {
 	@Inject private	ExplorerCmds	fileCmds
 	@Inject private FileViewers		fileViewers
 	@Inject private GlobalCommands	globalCommands
-			private	File[]			osRoots		:= File.osRoots.map { it.normalize }
 
 	internal new make(|This|in) { in(this) }
 	
@@ -39,7 +38,7 @@ internal class PopupCommands {
 		addCmd(menu, fileCmds.openDirInNewTab(file))
 		addCmd(menu, fileCmds.openFileInSystemCmd(file))
 		
-		if (!osRoots.contains(file)) {
+		if (!explorer.osRoots.contains(file)) {
 			menu.addSep
 			addCmd(menu, fileCmds.compressToZip(file))
 		}

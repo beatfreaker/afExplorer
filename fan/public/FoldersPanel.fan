@@ -30,7 +30,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 				it.onFocus.add		|e| { this->onFocus		( ) }
 				it.onBlur.add		|e| { this->onBlur		( ) }				
 			}
-			it.roots = File.osRoots.map { fileResourceFactory(it.normalize) } 
+			it.roots = explorer.osRoots.map { fileResourceFactory(it.normalize) } 
 			it.model = this.model
 			it.onPopup.add	|e| { this->onPopup	(e) }
 			it.onSelect.add	|e| { this->onSelect(e) }
@@ -129,7 +129,7 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	private Void onMouseDown(Event event) {
 		if (event.button != 1 || event.button != 1)
 			return
-		node := (FileResource?) tree.nodeAt(event.pos)
+		node := (FileResource?) tree.resourceAt(event.pos)
 		if (node == null)
 			return
 		ctx := (event.key != null && event.key.isCtrl) ? LoadCtx() { it.newTab = true } : LoadCtx()
@@ -156,22 +156,22 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		if (!isShowing) return
 		Desktop.callLater(50ms) |->| {
 			if (fileResource != null)
-				tree.showNode(fileResource.uri.toStr)
+				tree.showResource(fileResource)
 		}
 	}
 
 	override Void refresh(Resource? resource := null) {
 		if (resource == null) {
-			tree.roots = File.osRoots.map { fileResourceFactory(it.normalize) }
+			tree.roots = explorer.osRoots.map { fileResourceFactory(it.normalize) }
 			tree.refreshAll
 
 		} else {
-			tree.refreshNode(resource.uri.toStr)
+			tree.refreshResource(resource)
 		}
 
 		Desktop.callLater(50ms) |->| {
 			if (fileResource != null)
-				tree.showNode(fileResource.uri.toStr)
+				tree.showResource(fileResource)
 		}
 	}
 	

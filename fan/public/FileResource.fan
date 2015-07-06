@@ -6,9 +6,10 @@ using fwt
 ** (Resource) - 
 ** Represents a file on the file system or a pod resource.
 class FileResource : Resource {
-	@Inject private Explorer		_explorer
-	@Inject private FileViewers		_fileViewers
-	@Inject private FilePopupMenu	_filePopupMenu
+	@Inject private Explorer				_explorer
+	@Inject private FileViewers				_fileViewers
+	@Inject private FilePopupMenu			_filePopupMenu
+	@Inject private |File->FileResource|	_fileFactory
 
 	override Uri 	uri
 	override Str 	name
@@ -26,19 +27,15 @@ class FileResource : Resource {
 		this.displayName	= file.osPath ?: file.toStr	// fan: schemes don't have osPaths
 	}
 
-	override Str[] children() {
-		_children.map { it.uri.toStr }
+	override Uri[] children() {
+		_children.keys
 	}
 
 	override Bool hasChildren() {
 		_children.size > 0
 	}
 	
-//	override Resource? resolveChild(Str childUri) {
-//		_children.find { it.uri == childUri }
-//	}
-	
-	override Str? parent() { _parent?.uri?.toStr }
+	override Uri? parent() { _parent?.uri }
 	
 	** Delegates to `FilePopupMenu`.
 	override Menu populatePopup(Menu m) {
@@ -49,11 +46,16 @@ class FileResource : Resource {
 		_fileViewers.getTypes(file.ext)
 	}
 	
-	private once File[]	_children() {
-		file.listDirs.sort |f1, f2->Int| { f1.name <=> f2.name }. exclude { _explorer.preferences.shouldHide(it) }
+	override once Resource? resolveParent() {
+		_parent == null ? null : _fileFactory(_parent)
+	}
+	
+	private once Uri:FileResource _children() {
+		files := (FileResource[]) file.listDirs.sort |f1, f2->Int| { f1.name <=> f2.name }.exclude { _explorer.preferences.shouldHide(it) }.map { _fileFactory(it) }
+		return Uri:FileResource[:] { ordered = true }.addList(files) { it.uri }
 	}
 
 	private once File? _parent() {
-		File.osRoots.any { it.normalize == file } ? null : file.parent?.normalize
+		_explorer.osRoots.any { it.normalize == file } ? null : file.parent?.normalize
 	}
 }

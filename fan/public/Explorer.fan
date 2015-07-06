@@ -34,6 +34,9 @@ mixin Explorer {
 
 	abstract ExplorerPrefs preferences()
 
+	** Returns a cached version of 'File.osRoots' that is updated every second *at most*.
+	abstract File[] osRoots()
+
 	@NoDoc	// is there a way around having this method?
 	abstract Bool pasteEnabled()
 }
@@ -49,6 +52,8 @@ internal class ExplorerImpl : Explorer {
 	@Inject private Errors				errors
 	@Inject private Dialogues			dialogues
 	@Inject private |->GlobalCommands|	globalCommands
+			private Duration			osRootsLastUpdated
+			private File[]				osRootsCached
 	static	const	Uri					fileIconsRoot	:= `fan://afExplorer/res/icons-file/`
 	static 	const	Int 				bufferSize 		:= 16 * 1024
 
@@ -56,7 +61,11 @@ internal class ExplorerImpl : Explorer {
 	internal File? cutFile
 	
 
-	new make(|This| in) { in(this) }
+	new make(|This| in) {
+		in(this)
+		osRootsCached 		= File.osRoots.map { it.normalize }
+		osRootsLastUpdated	= Duration.now
+	}
 
 	override File rename(File file) {
 		newName := dialogues.openPromptStr("Rename", file.name)
@@ -238,7 +247,6 @@ internal class ExplorerImpl : Explorer {
 
 		if (f.isDir) {
 			// can't cache osRoots 'cos it changes with flash drives et al
-			osRoots	:= File.osRoots.map { it.normalize }		
 			name := osRoots.contains(f) ? "icoFolderRoot" : "icoFolder"
 			return hidden ? icons.getFaded(name) : icons.get(name)
 		}
@@ -338,6 +346,14 @@ internal class ExplorerImpl : Explorer {
 
 	override once ExplorerPrefs preferences() {
 		prefs.loadPrefs(ExplorerPrefs#, "afExplorer.fog")
+	}
+	
+	override File[] osRoots() {
+		if (Duration.now - osRootsLastUpdated > 2sec) {
+			this.osRootsCached = File.osRoots.map { it.normalize }		
+			this.osRootsLastUpdated = Duration.now
+		}
+		return osRootsCached
 	}
 
 	private Image? fileIcon(Str fileName, Bool hidden) {
