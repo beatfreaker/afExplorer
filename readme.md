@@ -1,7 +1,7 @@
-#Explorer v0.0.10
+#Explorer v0.0.14
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.0.10](http://img.shields.io/badge/pod-v0.0.10-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
+[![pod: v0.0.14](http://img.shields.io/badge/pod-v0.0.14-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -10,16 +10,17 @@
 
 `Explorer` is a file explorer application based on the [Reflux](http://pods.fantomfactory.org/pods/afReflux) framework. More than an application, Explorer also provides reusable Views and Editors. Explorer may also be enhanced through the use of Plugins.
 
-Current features:
+Features:
 
 - System file explorer
 - Fantom documentation viewer
 - A better web browser / html viewer
 - Fandoc file viewer
+- Resource Tree
 - Text editor (borrowed from [fluxText](http://fantom.org/doc/fluxText/index.html))
 - Syntax highlighting (uses [syntax](http://fantom.org/doc/syntax/index.html))
 
-The small things that make me use it:
+Small things that make me use it:
 
 - Quick view / edit toggling with F12
 - Easily show / hide hidden files

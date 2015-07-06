@@ -2,15 +2,16 @@ Overview
 ********
 'Explorer' is a file explorer application based on the [Reflux]`pod:afReflux` framework. More than an application, Explorer also provides reusable Views and Editors. Explorer may also be enhanced through the use of Plugins.
 
-Current features:
+Features:
  - System file explorer
  - Fantom documentation viewer
  - A better web browser / html viewer
  - Fandoc file viewer
+ - Resource Tree
  - Text editor (borrowed from [fluxText]`pod:fluxText`)
  - Syntax highlighting (uses [syntax]`pod:syntax`)
 
-The small things that make me use it:
+Small things that make me use it:
  - Quick view / edit toggling with F12
  - Easily show / hide hidden files
  - Text editor word wrapping (configurable)
