@@ -75,12 +75,12 @@ internal class ExplorerCmds {
 		}
 	}
 
-	Command actionFileCmd(File file, FileAction action, FileLauncher laucher) {
+	Command actionFileCmd(File file, FileAction action, FileLauncher launcher) {
 		command("ActionFile", "") {
-			it.name = "${action.verb} with ${laucher.name}"
-			it.icon = refluxIcons.fromUri(laucher.iconUri, false)
+			it.name = "${action.verb} with ${launcher.name}"
+			it.icon = refluxIcons.fromUri(launcher.iconUri, false)
 			it.onInvoke.add {
-				Process([laucher.programUri.toFile.osPath, file.osPath], file.parent).run
+				Process([launcher.programUri.toFile.osPath, file.osPath], file.parent).run
 			}
 		}
 	}
