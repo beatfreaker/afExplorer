@@ -166,7 +166,8 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 			tree.refreshAll
 
 		} else {
-			tree.refreshResource(resource)
+			if (resource is FolderResource)
+				tree.refreshResource(resource)
 		}
 
 		Desktop.callLater(50ms) |->| {
