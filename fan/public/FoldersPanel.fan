@@ -51,6 +51,9 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	Void gotoFavourite(Str favourite) {
 		uri := explorer.preferences.favourites[favourite] ?: throw ArgNotFoundErr("Favourite does not exist: ${favourite}", explorer.preferences.favourites.keys)
 		combo.selected = favourite
+		if (isActive.not) {
+			reflux.load(uri)
+		}
 	}
 	
 	override Void onShow() {
