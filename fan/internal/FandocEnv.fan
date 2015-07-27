@@ -38,8 +38,6 @@ internal const class FandocEnv : DefaultDocEnv {
 	}
 	
 	override DocLink? link(Doc from, Str link, Bool checked := true) {
-		if (link.startsWith("http"))
-			echo(link)
 		return super.link(from, link, checked)
 	}
 	
