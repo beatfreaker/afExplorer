@@ -6,6 +6,8 @@ using afReflux
 @NoDoc
 class FolderView : View, RefluxEvents, ExplorerEvents {
 	
+	static 	const private	|File,File->Int|	byName	 := |File f1, File f2 -> Int| { f1.name.compareIgnoreCase(f2.name) }
+
 	@Inject private Registry		registry
 	@Inject private Reflux			reflux
 	@Inject private RefluxIcons		icons
@@ -30,11 +32,11 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	}
 	
 	override Bool reuseView(Resource resource) { true }
-	
+
 	override Void onActivate() {
 		globalCommands["afExplorer.cmdShowHiddenFiles"	].addEnabler("afExplorer.folderView", |->Bool| { true } )
 	}
-	
+
 	override Void onDeactivate() {
 		onBlur	// onBlur doesn't always fire when we switch tabs
 		globalCommands["afExplorer.cmdShowHiddenFiles"	].removeEnabler("afExplorer.folderView")
@@ -43,7 +45,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	override Void refresh(Resource? resource := null) {
 		if (resource == this.resource || ((resource as FileResource)?.file?.parent == this.fileResource?.file) ||  resource == null) {
 			super.load(this.resource)	// update tab details
-			model.fileRes = fileResource.file.listDirs.addAll(fileResource.file.listFiles).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri.toStr) }
+			model.fileRes = fileResource.file.listDirs.sort(byName).addAll(fileResource.file.listFiles.sort(byName)).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri.toStr) }
 			try table.refreshAll
 			catch {}	// supurius FWT errors - see http://fantom.org/forum/topic/2390
 		}

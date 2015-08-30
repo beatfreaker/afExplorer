@@ -31,7 +31,7 @@ Small things that make me use it:
 
 Install `Explorer` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
-    C:\> fanr install -r http://repo.status302.com/fanr/ afExplorer
+    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afExplorer
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
