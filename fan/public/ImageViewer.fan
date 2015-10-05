@@ -8,7 +8,7 @@ class ImageViewer : View {
 
 	@Inject private Images				images
 	@Inject private RefluxIcons 		icons
-	@Inject private Registry			registry
+	@Inject private Scope				scope
 	@Inject private Reflux				reflux
 	@Inject private GlobalCommands		globalCommands
 			private ImageViewWidget?	imageWidget
@@ -43,8 +43,8 @@ class ImageViewer : View {
 
 		imageWidget = ImageViewWidget(image ?: icons["icoImageNotFound"])
 		toolBar := ToolBar {
-			it.addCommand(registry.autobuild(ImageFullSizeCommand#, [this]))
-			it.addCommand(registry.autobuild(ImageFitToWindowCommand#, [this]))
+			it.addCommand(scope.build(ImageFullSizeCommand#, [this]))
+			it.addCommand(scope.build(ImageFitToWindowCommand#, [this]))
 		}
 
 	    content = EdgePane {
@@ -99,20 +99,20 @@ class ImageViewer : View {
 		if (file != null) {
 			fileResource.file.copyTo(file)
 
-			fileRes := registry.autobuild(FileResource#, [file])
+			fileRes := scope.build(FileResource#, [file])
 			reflux.loadResource(fileRes)
 			
 			isDirty = false	// mark as not dirty so confirmClose() doesn't give a dialog
 			reflux.closeView(this, true)
 
 			// refresh any views on the containing directory
-			dirRes := registry.autobuild(FolderResource#, [file.parent])
+			dirRes := scope.build(FolderResource#, [file.parent])
 			reflux.refresh(dirRes)
 		}
 	}
 
 	private Button toolBarCommand(Type cmdType, Obj[] args) {
-		command	:= (Command) registry.autobuild(cmdType, args)
+		command	:= (Command) scope.build(cmdType, args)
 	    button  := Button.makeCommand(command)
 	    if (command.icon != null)
 	    	button.text = ""

@@ -2,7 +2,7 @@ using afIoc
 using afReflux
 
 internal class FileResolver : UriResolver {
-	@Inject private Registry	registry
+	@Inject private Scope		scope
 	@Inject private Explorer	explorer
 
 	new make(|This|in) { in(this) }	
@@ -35,6 +35,6 @@ internal class FileResolver : UriResolver {
 		if (file == null || !file.exists)
 			return null
 
-		return registry.autobuild(file.isDir ? FolderResource# : FileResource#, [file])
+		return scope.build(file.isDir ? FolderResource# : FileResource#, [file])
 	}	
 }

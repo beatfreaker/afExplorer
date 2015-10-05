@@ -7,7 +7,7 @@ using fwt
 ** (View) - 
 ** A text editor with syntax highlighting. Borrowed from [fluxtext]`pod:fluxText`.
 class TextEditor : View {
-	@Inject private Registry		registry
+	@Inject private Scope			scope
 	@Inject private Explorer		explorer
 	@Inject private Reflux			reflux
 	@Inject private AppStash		stash
@@ -41,7 +41,7 @@ class TextEditor : View {
 	}
 
 	protected new make(GlobalCommands globCmds, |This| in) : super(in) {
-		find = registry.autobuild(FindBar#, [this])
+		find = scope.build(FindBar#, [this])
 		content = edgePane = EdgePane {
 			it.top = buildToolBar
 			it.bottom = buildStatusBar
@@ -114,7 +114,7 @@ class TextEditor : View {
 		richText.tabSpacing = options.tabSpacing
 
 		// initialize controller
-		controller = registry.autobuild(TextEditorController#, [this])
+		controller = scope.build(TextEditorController#, [this])
 		controller.register
 		controller.updateCaretStatus
 
@@ -168,14 +168,14 @@ class TextEditor : View {
 
 		if (file != null) {
 			doSave(file)
-			fileRes := registry.autobuild(FileResource#, [file])
+			fileRes := scope.build(FileResource#, [file])
 			reflux.loadResource(fileRes)
 			
 			isDirty = false	// mark as not dirty so confirmClose() doesn't give a dialog
 			reflux.closeView(this, true)
 
 			// refresh any views on the containing directory
-			dirRes := registry.autobuild(FolderResource#, [file.parent])
+			dirRes := scope.build(FolderResource#, [file.parent])
 			reflux.refresh(dirRes)
 		}
 	}

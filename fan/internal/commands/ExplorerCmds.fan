@@ -4,7 +4,7 @@ using gfx
 using fwt
 
 internal class ExplorerCmds {
-	@Inject private Registry		registry
+	@Inject private Scope			scope
 	@Inject private Reflux			reflux
 	@Inject private RefluxIcons		refluxIcons
 	@Inject	private Explorer		explorer
@@ -104,7 +104,7 @@ internal class ExplorerCmds {
 	}
 
 	private RefluxCommand command(Str baseName, Str? iconName := null) {
-		((RefluxCommand) registry.autobuild(RefluxCommand#, [null, null, null])) {
+		((RefluxCommand) scope.build(RefluxCommand#, [null, null, null])) {
 			if (baseName.containsChar(' '))
 				it.name = baseName
 			else

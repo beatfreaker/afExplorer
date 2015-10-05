@@ -5,7 +5,7 @@ using gfx
 internal class FandocResolver : UriResolver {
 	private static const Str 	root	:= "fandoc:/" 
 	
-	@Inject private Registry	registry
+	@Inject private Scope		scope
 	@Inject private Explorer	explorer
 			private Str[]		podNames
 
@@ -38,7 +38,7 @@ internal class FandocResolver : UriResolver {
 		if (uri == null)
 			return null
 		
-		return registry.autobuild(FandocResource#, [uri])
+		return scope.build(FandocResource#, [uri])
 	}
 
 	// Yeah, I know all this is messy. It was cut'n'paste from FandocViewer, shoehorned in and messed with.

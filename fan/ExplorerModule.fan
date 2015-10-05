@@ -4,17 +4,17 @@ using gfx
 using fwt
 
 @NoDoc
-class ExplorerModule {
+const class ExplorerModule {
 
-	static Void defineServices(ServiceDefinitions defs) {		
-		defs.add(Explorer#)
-		defs.add(ExplorerCmds#)
-		defs.add(FileViewers#)
-		defs.add(AppStash#)
-		defs.add(IframeBlocker#)
-		defs.add(ObjCache#)
-		defs.add(FilePopupMenu#)
-		defs.add(FolderPopupMenu#)
+	static Void defineServices(RegistryBuilder defs) {		
+		defs.addService(Explorer#)			.withScope("uiThread")
+		defs.addService(ExplorerCmds#)		.withScope("uiThread")
+		defs.addService(FileViewers#)		.withScope("uiThread")
+		defs.addService(AppStash#)			.withScope("uiThread")
+		defs.addService(IframeBlocker#)		.withScope("uiThread")
+		defs.addService(ObjCache#)			.withScope("uiThread")
+		defs.addService(FilePopupMenu#)		.withScope("uiThread")
+		defs.addService(FolderPopupMenu#)	.withScope("uiThread")
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
@@ -26,14 +26,14 @@ class ExplorerModule {
 
 	@Contribute { serviceType=UriResolvers# }
 	internal static Void contributeUriResolvers(Configuration config) {
-		config["file"]		= config.autobuild(FileResolver#)
-		config["http"]		= config.autobuild(HttpResolver#)
-		config["fandoc"]	= config.autobuild(FandocResolver#)		
+		config["file"]		= config.build(FileResolver#)
+		config["http"]		= config.build(HttpResolver#)
+		config["fandoc"]	= config.build(FandocResolver#)		
 	}
 
 	@Contribute { serviceType=Panels# }
 	static Void contributePanels(Configuration config) {
-		config.add(config.autobuild(FoldersPanel#))
+		config.add(config.build(FoldersPanel#))
 	}
 	
 	@Contribute { serviceType=EventTypes# }
@@ -43,20 +43,20 @@ class ExplorerModule {
 	
 	@Contribute { serviceType=GlobalCommands# }
 	static Void contributeGlobalCommands(Configuration config) {
-		config["afExplorer.cmdRenameFile"]		= config.autobuild(RenameFileCommand#)
-		config["afExplorer.cmdDeleteFile"]		= config.autobuild(DeleteFileCommand#)
+		config["afExplorer.cmdRenameFile"]		= config.build(RenameFileCommand#)
+		config["afExplorer.cmdDeleteFile"]		= config.build(DeleteFileCommand#)
 
-		config["afExplorer.cmdFind"]			= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdFind"])
-		config["afExplorer.cmdFindNext"]		= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdFindNext"])
-		config["afExplorer.cmdFindPrev"]		= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdFindPrev"])
-		config["afExplorer.cmdReplace"]			= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdReplace"])
-		config["afExplorer.cmdGoto"]			= config.autobuild(GlobalExplorerCommand#, ["afExplorer.cmdGoto"])
+		config["afExplorer.cmdFind"]			= config.build(GlobalExplorerCommand#, ["afExplorer.cmdFind"])
+		config["afExplorer.cmdFindNext"]		= config.build(GlobalExplorerCommand#, ["afExplorer.cmdFindNext"])
+		config["afExplorer.cmdFindPrev"]		= config.build(GlobalExplorerCommand#, ["afExplorer.cmdFindPrev"])
+		config["afExplorer.cmdReplace"]			= config.build(GlobalExplorerCommand#, ["afExplorer.cmdReplace"])
+		config["afExplorer.cmdGoto"]			= config.build(GlobalExplorerCommand#, ["afExplorer.cmdGoto"])
 
-		config["afExplorer.cmdShowHiddenFiles"]	= config.autobuild(ShowHiddenFilesCommand#)
-		config["afExplorer.cmdSelectAll"]		= config.autobuild(SelectAllCommand#)
-		config["afExplorer.cmdWordWrap"]		= config.autobuild(WordWrapCommand#)
+		config["afExplorer.cmdShowHiddenFiles"]	= config.build(ShowHiddenFilesCommand#)
+		config["afExplorer.cmdSelectAll"]		= config.build(SelectAllCommand#)
+		config["afExplorer.cmdWordWrap"]		= config.build(WordWrapCommand#)
 
-		config["afExplorer.cmdFandocIndex"]		= config.autobuild(FandocIndexCommand#)		
+		config["afExplorer.cmdFandocIndex"]		= config.build(FandocIndexCommand#)		
 	}
 
 	@Contribute { serviceType=FileViewers# }
@@ -109,15 +109,18 @@ class ExplorerModule {
 		config.add("^https?://api\\.flattr\\.com/.*\$")
 	}
 
-	@Contribute { serviceType=RegistryStartup# }
-	static Void contributeRegistryStartup(Configuration config, Log log) {
-		config.remove("afIoc.logServices")
-		
-		config["afExplorer.installer"] = |->| {
-			installer := (Installer) config.autobuild(Installer#)
-			try installer.installFandocSyntaxFile
-			catch (Err err)
-				log.err("Could not install fandoc syntax file", err)
+	Void defineRegistryStartup(RegistryBuilder bob) {
+		bob.onRegistryStartup |config| {
+			log := this.typeof.pod.log
+			
+			config.remove("afIoc.logServices")
+
+			config["afExplorer.installer"] = |->| {
+				installer := (Installer) config.build(Installer#)
+				try installer.installFandocSyntaxFile
+				catch (Err err)
+					log.err("Could not install fandoc syntax file", err)
+			}
 		}
 	}
 
@@ -145,9 +148,9 @@ class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.PrefsMenu" }
 	static Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
-		config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [RefluxPrefs#, `fan://afExplorer/res/fogs/afReflux.fog`]))
-		config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [ExplorerPrefs#, `fan://afExplorer/res/fogs/afExplorer.fog`]))
-		config["afExplorer.cmdTextEditorPrefs"]	= MenuItem.makeCommand(config.autobuild(EditPrefsCmd#, [TextEditorPrefs#, `fan://afExplorer/res/fogs/fluxText.fog`]))
+		config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.build(EditPrefsCmd#, [RefluxPrefs#, `fan://afExplorer/res/fogs/afReflux.fog`]))
+		config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.build(EditPrefsCmd#, [ExplorerPrefs#, `fan://afExplorer/res/fogs/afExplorer.fog`]))
+		config["afExplorer.cmdTextEditorPrefs"]	= MenuItem.makeCommand(config.build(EditPrefsCmd#, [TextEditorPrefs#, `fan://afExplorer/res/fogs/fluxText.fog`]))
 		config["separator.01"]					= MenuItem { it.mode = MenuItemMode.sep }
 		config["afExplorer.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
 		config["afExplorer.cmdWordWrap"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdWordWrap"].command)

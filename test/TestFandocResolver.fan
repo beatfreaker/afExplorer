@@ -2,15 +2,9 @@ using afIoc
 
 internal class TestFandocResolver : Test {
 	
-	private Registry? reg
-	
 	override Void setup() {
-		reg = RegistryBuilder().addModule(ExplorerModule#).addModulesFromPod("afExplorer").set("afReflux.appName", "wotever").build.startup
-		reg.injectIntoFields(this)
-	}
-	
-	override Void teardown() {
-		reg?.shutdown
+		reg := RegistryBuilder().addModule(ExplorerModule#).addModulesFromPod("afExplorer").setOption("afReflux.appName", "wotever").build
+		reg.rootScope.inject(this)
 	}
 
 	// From compilerDoc::DocLink

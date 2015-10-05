@@ -4,10 +4,7 @@ using gfx
 using fwt
 
 internal class WordWrapCommand : GlobalCommand, RefluxEvents {
-	private Reflux reflux() {
-		registry.serviceById(Reflux#.qname)
-	}
-	@Inject private Registry	registry
+	@Inject private Reflux		reflux
 	@Inject private Explorer	explorer
 
 	new make(|This|in) : super.make("cmdWordWrap", in) {

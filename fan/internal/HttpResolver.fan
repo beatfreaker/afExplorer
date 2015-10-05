@@ -3,7 +3,7 @@ using afReflux
 
 internal class HttpResolver : UriResolver {
 	
-	@Inject private Registry	registry
+	@Inject private Scope		scope
 	@Inject private Explorer	explorer
 
 	new make(|This|in) { in(this) }	
@@ -25,6 +25,6 @@ internal class HttpResolver : UriResolver {
 		if (url == null)
 			return null
 		
-		return registry.autobuild(HttpResource#, [url])
+		return scope.build(HttpResource#, [url])
 	}	
 }

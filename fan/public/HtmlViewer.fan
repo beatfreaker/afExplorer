@@ -9,7 +9,7 @@ class HtmlViewer : View {
 	@Inject private IframeBlocker	iframeBlocker
 	@Inject private AppStash		stash
 	@Inject private GlobalCommands	globalCommands
-	@Inject private Registry		registry
+	@Inject private Scope			scope
 	@Inject private Reflux			reflux
 			private Browser			browser
 			private Label			statusBar
@@ -178,14 +178,14 @@ class HtmlViewer : View {
 		if (file != null) {
 			fileResource.file.copyTo(file)
 
-			fileRes := registry.autobuild(FileResource#, [file])
+			fileRes := scope.build(FileResource#, [file])
 			reflux.loadResource(fileRes)
 			
 			isDirty = false	// mark as not dirty so confirmClose() doesn't give a dialog
 			reflux.closeView(this, true)
 
 			// refresh any views on the containing directory
-			dirRes := registry.autobuild(FolderResource#, [file.parent])
+			dirRes := scope.build(FolderResource#, [file.parent])
 			reflux.refresh(dirRes)
 		}
 	}

@@ -1,14 +1,14 @@
 using afIoc
 
 internal class ObjCache {
-	@Inject	private Registry 	registry
+	@Inject	private Scope	 	scope
 			private Type[] 		serviceTypeCache
 			private Type:Obj	constTypeCache		:= Type:Obj[:]
 			private Type[]		autobuildTypeCache	:= Type[,]
 
 	new make(|This|in) {
 		in(this) 
-		this.serviceTypeCache = registry.serviceDefinitions.vals.map { it.serviceType }
+		this.serviceTypeCache = scope.registry.serviceDefs.vals.map { it.type }
 	}
 
 	@Operator
@@ -18,22 +18,22 @@ internal class ObjCache {
 		
 		obj := null
 		if (serviceTypeCache.contains(type))
-			obj = registry.dependencyByType(type)
+			obj = scope.serviceByType(type)
 
 		if (constTypeCache.containsKey(type))
 			obj = constTypeCache[type]
 		
 		if (autobuildTypeCache.contains(type))
-			obj = registry.autobuild(type)
+			obj = scope.build(type)
 		
 		if (obj == null) {
 			if (type.isConst) {
-				obj = registry.autobuild(type)
+				obj = scope.build(type)
 				constTypeCache.set(type, obj)
 				
 			} else {
 				autobuildTypeCache.add(type)
-				obj = registry.autobuild(type)
+				obj = scope.build(type)
 			}
 		}
 

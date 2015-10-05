@@ -50,12 +50,12 @@ class Main : AbstractMain {
 		
 		RefluxBuilder(moduleTypes.unique).start |Reflux reflux, Window window| {
 			if (noPanels) {
-				panels := (Panels) reflux.registry.serviceById(Panels#.qname)
+				panels := (Panels) reflux.scope.serviceById(Panels#.qname)
 				panels.panelTypes.each { reflux.hidePanel(it) }
 			}
 
 			if (uri == null) {
-				history := (History) reflux.registry.serviceById(History#.qname)
+				history := (History) reflux.scope.serviceById(History#.qname)
 				startUri := history.history.find { it is FolderResource }?.uri ?: reflux.preferences.homeUri  
 				reflux.load(startUri.toStr)
 			} else

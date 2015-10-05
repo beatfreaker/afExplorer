@@ -6,7 +6,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afExplorer"
 		summary = "A Reflux file explorer application with reusable editors and viewers"
-		version = Version("0.0.15")
+		version = Version("0.1.0")
 
 		meta = [
 			"proj.name"		: "Explorer",
@@ -29,10 +29,9 @@ class Build : BuildPod {
 			
 			
 			// ---- Core ------------------------
-			"afBeanUtils  1.0.4  - 1.0", 
-			"afIoc        2.0.6  - 2.0", 
-			
-			"afReflux     0.0.12+"
+			"afBeanUtils  1.0.6  - 1.0", 
+			"afIoc        3.0.0  - 3.0", 
+			"afReflux     0.1.0  - 1.0"
 		]
 
 		srcDirs = [`test/`, `fan/`, `fan/todo/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/textEditor/`, `fan/internal/commands/`]

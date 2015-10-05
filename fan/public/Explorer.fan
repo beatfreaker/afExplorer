@@ -44,7 +44,7 @@ mixin Explorer {
 internal class ExplorerImpl : Explorer {
 
 	@Inject private ExplorerEvents		events
-	@Inject private Registry			registry
+	@Inject private Scope				scope
 	@Inject private RefluxIcons			icons
 	@Inject private Images				images
 	@Inject private Preferences			prefs
@@ -128,7 +128,6 @@ internal class ExplorerImpl : Explorer {
 			// once copied, allow multiple pastes
 //			copiedFile = null
 		}
-		reflux := (Reflux) registry.serviceById(Reflux#.qname)
 		reflux.refresh(reflux.resolve(destDir.uri.toStr))
 	}
 	
@@ -173,13 +172,13 @@ internal class ExplorerImpl : Explorer {
 		if (dst.isDir)
 			throw ArgErr("Cannot write to $dst")
 		
-		registry := registry
-		pd := (ProgressDialogue) registry.autobuild(ProgressDialogue#)
+		scope := scope
+		pd := (ProgressDialogue) scope.build(ProgressDialogue#)
 		pd.title = "Compress to .zip"
 		pd.image = Image(`fan://afExplorer/res/images/zip.x48.png`)
 		pd.open(reflux.window) |ProgressWorker worker| {
-			locale		:= (LocaleFormat) registry.serviceById(LocaleFormat#.qname)
-			explorer	:= (Explorer) registry.serviceById(Explorer#.qname)
+			locale		:= (LocaleFormat) scope.serviceById(LocaleFormat#.qname)
+			explorer	:= (Explorer) 	  scope.serviceById(Explorer#.qname)
 
 			worker.update(0, 0, "Zipping ${toCompress.normalize.osPath}")
 			worker.update(0, 0, "Inspecting source files...")
@@ -235,7 +234,7 @@ internal class ExplorerImpl : Explorer {
 			worker.update(100, 100, "Done.")
 
 			Desktop.callAsync |->| {
-				reflux := (Reflux) registry.serviceById(Reflux#.qname)
+				reflux := (Reflux) scope.serviceById(Reflux#.qname)
 				reflux.refresh
 			}
 		}
