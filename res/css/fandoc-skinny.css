@@ -27,6 +27,7 @@ code,
 pre,
 textarea {
 	font:					9pt Monaco, 'Courier New', monospace; 
+	tab-size:				4;
 }
 
 pre {
