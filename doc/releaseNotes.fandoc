@@ -1,8 +1,10 @@
 Versions
 ********
+
 v0.1.0
 ======
  - Chg: Updated to use IoC v3.
+ - Bug: Pod index pages now *always* show the pod-doc. See [Missing pod-docs in pod index pages]`http://fantom.org/forum/topic/2484` for details.
 
 v0.0.16
 =======
