@@ -1,6 +1,7 @@
 using afIoc
 using afReflux
 using gfx
+using compilerDoc
 
 internal class FandocResolver : UriResolver {
 	private static const Str 	root	:= "fandoc:/" 
@@ -8,6 +9,7 @@ internal class FandocResolver : UriResolver {
 	@Inject private Scope		scope
 	@Inject private Explorer	explorer
 			private Str[]		podNames
+			private DocEnv		silentDocEnv := SilentDocEnv()
 
 	new make(|This|in) {
 		in(this)
@@ -121,7 +123,12 @@ internal class FandocResolver : UriResolver {
 		if (typeNameQ == null || typeName == "index") {
 			// if no type, look for a pod doc or source file
 			podFile := Env.cur.findPodFile(podName)
-			docPod 	:= compilerDoc::DocPod.load(podFile)
+			
+			// See http://fantom.org/forum/topic/2489#c1
+			// this line produces a lot of messy output that I can't control
+			// compilerDoc::DocChapter.buildHeadingsTree() reports missing anchor IDs to
+			// compilerDoc::DocPodLoader.err() which just dumps it to echo()
+			docPod 	:= DocPod.load(silentDocEnv, podFile)
 			doc 	:= docPod.doc(typeName, false)
 			typeNameQ = doc?.docName
 			
@@ -131,4 +138,11 @@ internal class FandocResolver : UriResolver {
 		
 		return `${root}${podNameQ}/${typeNameQ}`
 	}
+}
+
+// Suppress msgs like: acme::releaseNotes.fandoc [Line 1]: Heading missing anchor id: v1.0.0
+// see http://fantom.org/forum/topic/2489
+const class SilentDocEnv : DocEnv {
+	override DocSpace? space(Str name, Bool checked := true) { null }
+	override DocErr errReport(DocErr err) { err }
 }

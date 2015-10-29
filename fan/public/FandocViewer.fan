@@ -91,7 +91,7 @@ class FandocViewer : HtmlViewer {
 	private Doc loadFrom(Uri uri) {
 		podFile := Env.cur.findPodFile(uri.path[0])
 		// we get a nice 'Pod file not found err' is pod doesn't exist
-		docPod 	:= MyDocPod(podFile)
+		docPod 	:= DocPod(SilentDocEnv(), podFile)
 		doc 	:= docPod.doc(uri.path[1], false)
 		
 		if (doc == null) {
@@ -101,13 +101,5 @@ class FandocViewer : HtmlViewer {
 		}
 		
 		return doc
-	}
-}
-
-// BugFix for http://fantom.org/forum/topic/2484 - Missing pod-docs in pod index pages
-const class MyDocPod : DocPod {
-	new make(File file) : super.make(file) {
-		if (podDoc == null)
-			podDoc = chapter("pod-doc", false)
 	}
 }

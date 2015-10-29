@@ -2,7 +2,6 @@ using afIoc
 using afReflux
 using gfx
 using fwt
-using fandoc
 
 ** (View) - A HTML viewer for HTTP and file resources. 
 class HtmlViewer : View {

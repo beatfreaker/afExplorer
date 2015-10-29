@@ -1,7 +1,7 @@
-#Explorer v0.0.14
+#Explorer v0.1.0
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.0.14](http://img.shields.io/badge/pod-v0.0.14-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
+[![pod: v0.1.0](http://img.shields.io/badge/pod-v0.1.0-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -35,7 +35,7 @@ Install `Explorer` with the Fantom Repository Manager ( [fanr](http://fantom.org
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afExplorer 0.0"]
+    depends = ["sys 1.0", ..., "afExplorer 0.1"]
 
 ## Documentation
 

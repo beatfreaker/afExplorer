@@ -1,7 +1,4 @@
-using compilerDoc::DefaultDocEnv
-using compilerDoc::DocLink
-using compilerDoc::DocTheme
-using compilerDoc::Doc
+using compilerDoc
 
 internal const class FandocEnv : DefaultDocEnv {
 	override DocTheme theme() { FandocTheme() }
@@ -42,4 +39,8 @@ internal const class FandocEnv : DefaultDocEnv {
 	}
 	
 	override Str? linkUriExt() { Str.defVal }
+	
+	// Suppress msgs like: sys::Err: Broken link: pod:afReflux
+	// see http://fantom.org/forum/topic/2489
+	override DocErr errReport(DocErr err) { err }
 }
