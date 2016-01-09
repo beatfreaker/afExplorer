@@ -1,2 +1,5 @@
 syntax: glob
+bin
 build
+
+syntax: regexp
