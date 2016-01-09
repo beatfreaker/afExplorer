@@ -32,8 +32,8 @@ afExplorer::TextEditorPrefs {
 	convertTabsToSpaces = false
 
 	** Default char encoding to use when load/saving
-	** text files.	Defaults to utf8.
-	charset = Charset("utf8")
+	** text files.	Defaults to UTF-8.
+	charset = Charset("UTF-8")
 
 //////////////////////////////////////////////////////////////////////////
 // Styling
