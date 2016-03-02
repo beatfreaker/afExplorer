@@ -1,3 +1,4 @@
+using sys
 using afExplorer
 using fwt
 using gfx
@@ -6,7 +7,7 @@ using gfx
 ** 
 ** Note that if you change the settings, they are not picked 
 ** up until you restart the application. 
-afExplorer::TextEditorPrefs {
+TextEditorPrefs {
 
 	** Default line end delimiter to use when saving text files.
 	** Note that loading text files will accept any combination
