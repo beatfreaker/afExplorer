@@ -2,9 +2,17 @@ using afIoc
 
 internal class TestFandocResolver : Test {
 	
+	Scope? scope
+	
 	override Void setup() {
 		reg := RegistryBuilder().addModule(ExplorerModule#).addModulesFromPod("afExplorer").setOption("afReflux.appName", "wotever").build
-		reg.rootScope.inject(this)
+		reg.activeScope.createChildScope("uiThread") { this.scope = it.jailBreak }
+		scope.inject(this)
+	}
+	
+	override Void teardown() {
+		scope?.destroy
+		scope?.registry?.shutdown
 	}
 
 	// From compilerDoc::DocLink
@@ -31,7 +39,7 @@ internal class TestFandocResolver : Test {
 	@Autobuild FandocResolver? resolver
 	
 	Void testCaseSensitiveBug() {
-		verifyEq(resolveUri("fandoc:/afMongo/index"),		`fandoc:/afMongo/index`)
+		verifyEq(resolveUri("fandoc:/AFREFLUX"),			`fandoc:/afReflux/index`)
 	}
 
 	Void testResolvedUris() {

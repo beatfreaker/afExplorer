@@ -122,7 +122,7 @@ internal class FandocResolver : UriResolver {
 		typeNameQ := Pod.find(podNameQ).types.find { it.name.equalsIgnoreCase(typeName) }?.name
 		if (typeNameQ == null || typeName == "index") {
 			// if no type, look for a pod doc or source file
-			podFile := Env.cur.findPodFile(podName)
+			podFile := Env.cur.findPodFile(podNameQ)
 			
 			// See http://fantom.org/forum/topic/2489#c1
 			// this line produces a lot of messy output that I can't control
@@ -130,7 +130,7 @@ internal class FandocResolver : UriResolver {
 			// compilerDoc::DocPodLoader.err() which just dumps it to echo()
 			docPod 	:= DocPod.load(silentDocEnv, podFile)
 			doc 	:= docPod.doc(typeName, false)
-			typeNameQ = doc?.docName
+			typeNameQ = doc?.docName				
 			
 			if (typeNameQ == null)
 				return null
