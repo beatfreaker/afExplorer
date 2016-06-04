@@ -1,6 +1,9 @@
 Versions
 ********
-
+v0.1.2
+======
+ - Chg: Zipping handles file read errors.
+ 
 v0.1.0
 ======
  - Chg: Updated to use IoC v3.

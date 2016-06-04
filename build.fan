@@ -27,11 +27,10 @@ class Build : BuildPod {
 			"compilerDoc 1.0.68 - 1.0",
 			"web         1.0.68 - 1.0",
 			
-			
 			// ---- Core ------------------------
 			"afBeanUtils  1.0.8  - 1.0", 
 			"afIoc        3.0.0  - 3.0", 
-			"afReflux     0.1.0  - 1.0"
+			"afReflux     0.1.1  - 1.0"
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/commands/`, `fan/internal/textEditor/`, `fan/public/`, `fan/public/advanced/`, `fan/todo/`, `test/`]

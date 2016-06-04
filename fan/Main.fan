@@ -28,7 +28,7 @@ class Main : AbstractMain {
 	@Opt { help = "Hides all panels on startup"; aliases=["noTabs"] }
 	Bool noPanels
 	
-	@Opt { help = "Hides all panels on startup" }
+	@Opt { help = "Disables all plugins" }
 	Bool noPlugins
 	
 	@Arg { help = "A resource URI, name or file to load" }

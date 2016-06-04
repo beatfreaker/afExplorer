@@ -34,7 +34,7 @@ mixin Explorer {
 
 	abstract ExplorerPrefs preferences()
 
-	** Returns a cached version of 'File.osRoots' that is updated every second *at most*.
+	** Returns a cached version of 'File.osRoots' that is updated every other second *at most*.
 	abstract File[] osRoots()
 
 	@NoDoc	// is there a way around having this method?
@@ -199,12 +199,17 @@ internal class ExplorerImpl : Explorer {
 			// don't include the name of the containing folder in zip paths
 			parentUri := toCompress.isDir ? toCompress.uri : toCompress.parent.uri
 			try {
+				fileList	 := Str[,]
 				bytesWritten := 0
+
+				worker.update(bytesWritten, noOfBytes, "Compressing files...")
 				toCompress.walk |src| {
 					if (src.isDir) return
 
 					path := src.uri.relTo(parentUri)
-					worker.update(bytesWritten, noOfBytes, "Compressing ${path}")
+					// don't append path to detail path, cause Java Heap Space probs with big dirs ~ 24,000 files
+//					worker.update(bytesWritten, noOfBytes, "Compressing ${path}")
+					worker.update(bytesWritten, noOfBytes)
 
 					out := zip.writeNext(path)
 					try {
@@ -212,10 +217,10 @@ internal class ExplorerImpl : Explorer {
 						// so we can show progress when zipping large files
 //						src.in(bufferSize).pipe(out)
 						
-						in := src.in
+						in := src.in 
 						piping := true
 						while (piping) {
-							bytesRead := in.readBuf(buf.clear, bufferSize)
+							bytesRead := readFile(src, in, buf, worker)
 							if (bytesRead == null)
 								piping = false
 							else {
@@ -224,6 +229,7 @@ internal class ExplorerImpl : Explorer {
 								worker.update(bytesWritten, noOfBytes)
 							}
 						}
+						
 					} finally
 						out.close
 				}
@@ -237,6 +243,15 @@ internal class ExplorerImpl : Explorer {
 				reflux := (Reflux) scope.serviceById(Reflux#.qname)
 				reflux.refresh
 			}
+		}
+	}
+	
+	private static Int? readFile(File src, InStream in, Buf buf, ProgressWorker worker) {
+		try {
+			return in.readBuf(buf.clear, bufferSize)
+		} catch (IOErr ioe) {
+			worker.warn("Problems reading: ${src.osPath}\n  ${ioe.msg}\n")
+			return null
 		}
 	}
 	
