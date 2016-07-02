@@ -57,11 +57,20 @@ class ExplorerPrefs {
 
 
 @Serializable @NoDoc
-class FileAction {
-	Str 	verb
-	Str		ext
-	Str		launcherId
-	new make(|This|? f := null) { f?.call(this) }
+const class FileAction {
+	private const Str	ext
+	private const Str[]	exts
+			const Str 	verb
+			const Str	launcherId
+
+	new make(|This|? f := null) {
+		f?.call(this)
+		exts = ext.split
+	}
+	
+	Bool matchesExt(Str that) {
+		exts.any { it == that }
+	}
 }
 
 @Serializable @NoDoc

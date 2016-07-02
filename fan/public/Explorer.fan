@@ -334,7 +334,7 @@ internal class ExplorerImpl : Explorer {
 			if (icon != null) return icon
 		}
 
-		action := preferences.fileActions.find { it.ext == f.ext }
+		action := preferences.fileActions.find { it.matchesExt(f.ext) }
 		if (action != null) {
 			launcher := preferences.fileLaunchers.find { it.id == action.launcherId }
 			if (launcher != null)

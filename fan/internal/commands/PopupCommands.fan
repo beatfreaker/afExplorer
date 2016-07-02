@@ -22,7 +22,7 @@ internal class PopupCommands {
 		
 		fileExt := file.ext?.lower
 		prefs	:= explorer.preferences
-		actions := prefs.fileActions.findAll { it.ext == fileExt }
+		actions := prefs.fileActions.findAll { it.matchesExt(fileExt) }
 		actions.each |action| {
 			launcher := prefs.fileLaunchers.find { it.id == action.launcherId }
 			if (launcher == null)
