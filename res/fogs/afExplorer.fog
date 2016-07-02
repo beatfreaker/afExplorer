@@ -1,18 +1,18 @@
 using afExplorer
 
 ** Preferences for Reflux.
-** 
-** Note that if you change the settings, they are not picked 
-** up until you restart the application. 
-afExplorer::ExplorerPrefs {
+**
+** Note that if you change the settings, they are not picked
+** up until you restart the application.
+ExplorerPrefs {
 
 	** The files / folders shown in the Folders Panel favourites ComboBox.
 	** Note the notation used for special Fantom folders.
 	favourites = [
-		"My Computer",		: "file:/"), 
-		"Fantom Home",		: "\${Env.cur.homeDir}"),	// Fantom's Home Dir
-		"Work Dir",			: "\${Env.cur.workDir}"),	// Fantom's Work Dir
-		"Temp", 			: "\${Env.cur.tempDir}")	// Fantom's Temp Dir
+		"My Computer"	: "file:/",
+		"Fantom Home"	: "\${Env.cur.homeDir}",	// Fantom's Home Dir
+		"Work Dir"		: "\${Env.cur.workDir}",	// Fantom's Work Dir
+		"Temp" 			: "\${Env.cur.tempDir}"		// Fantom's Temp Dir
 	]
 
 	** Regex's applied to file names that specify if it's hidden or not.
@@ -35,18 +35,18 @@ afExplorer::ExplorerPrefs {
 
 //	** File launchers specify external programs that files may be opened with.
 //	fileLaunchers = [
-//		
+//
 //		// Multiple FileLaunchers may be specified
 //		FileLauncher {
 //			// An ID so 'fileActions' may refer back to it
 //			id			= "paintShopPro"
-//			
+//
 //			// The name of the program
 //			name		= "Paint Shop Pro"
-//			
+//
 //			// An icon to display. May be null.
 //			iconUri		= `fan://icons/x16/fileImage.png`
-//			
+//
 //			// The propgram to lanch the file with.
 //			programUri	= `file:/C:/Apps/Paint Shop Pro 5/Psp.exe`
 //		},
@@ -58,7 +58,7 @@ afExplorer::ExplorerPrefs {
 
 //		// Multiple FileActions may be specified
 //		FileAction {
-//			ext			= "bmp"
+//			ext			= "bmp gif jpg jpeg png"
 //			verb		= "Edit"
 //			launcherId	= "paintShopPro"
 //		},
