@@ -51,7 +51,7 @@ class FileResource : Resource {
 	}
 	
 	private once Uri:FileResource _children() {
-		files := (FileResource[]) file.listDirs.sort |f1, f2->Int| { f1.name <=> f2.name }.exclude { _explorer.preferences.shouldHide(it) }.map { _fileFactory(it) }
+		files := (FileResource[]) file.listDirs.sort |f1, f2->Int| { f1.name.compareIgnoreCase(f2.name) }.exclude { _explorer.preferences.shouldHide(it) }.map { _fileFactory(it) }
 		return Uri:FileResource[:] { ordered = true }.addList(files) { it.uri }
 	}
 
