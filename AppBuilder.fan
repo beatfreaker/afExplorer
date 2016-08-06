@@ -1,17 +1,26 @@
 
 class Main {
 	static Void main() {
-		AppBuilder("afExplorer") {
-			it.jarFiles = ["swt.jar"]
+		AppBuilder("afExplorerPlugins") {
+			it.jarFiles  = ["swt.jar"]
+			it.platforms = ["win32-x86_64"]
 		}.build |bob| {
-			bob.copyFile(`fan://afExplorer/licence.txt`.get, `./`)
+			bob.copyPod("icons")
 		}
 	}
 }
 
-** Creates a standalone application installation with the minumum number of files.
+
+
+// ---- Do not edit below this line ---------------------------------------------------------------
+
+** Fantom App Builder v0.0.4
+** =========================
+** Creates a standalone Fantom application installation with the minimum number of files.
 **
-** v0.0.2
+** v0.0.4 - Added 'findPodFile()' to make work with Fantom Pod Manager.
+** v0.0.2 - Initial release.
+**
 const class AppBuilder {
 
 	** The name of the main application pod. 
@@ -31,7 +40,7 @@ const class AppBuilder {
 	** If 'useEnv' is 'false' then all pods and libraries are taken from this location.
 	** Defaults to `sys::Env.homeDir`.
 	** 
-	**   homeDir = File.os(`C:\\Apps\\fantom-1.0.69\\`)
+	**   fantomHomeDir = File.os("C:\\Apps\\fantom-1.0.68\\")
 	const File fantomHomeDir := Env.cur.homeDir
 
 	** Names of pods that should not be included in the distribution.
@@ -151,7 +160,7 @@ const class AppBuilder {
 		podNames.unique.each |pod| {
 			// log versions of non-core pods
 			ver := Pod.find(pod).version == Pod.find("sys").version ? "" : " (v${Pod.find(pod).version})"
-			_copyFile(findFile(`lib/fan/${pod}.pod`, false), `lib/fan/`, false, ver)
+			_copyFile(findPodFile(pod, true), `lib/fan/${pod}.pod`, false, ver)
 		}
 
 		if (copyEtcFiles)
@@ -170,24 +179,6 @@ const class AppBuilder {
 	** If 'destUrl' is a dir, then the file is copied into it.
 	File? copyFile(File? srcFile, Uri destUri, Bool overwrite := false) {
 		_copyFile(srcFile, destUri, overwrite, Str.defVal)
-	}
-
-	private File? _copyFile(File? srcFile, Uri destUri, Bool overwrite, Str append) {
-		if (!destUri.isPathOnly)
-			throw ArgErr(_msg_urlMustBePathOnly("destUri", destUri, `etc/config.props`))
-		if (destUri.isPathAbs)
-			throw ArgErr(_msg_urlMustNotStartWithSlash("destUri", destUri, `etc/config.props`))
-		
-		if (srcFile == null || !srcFile.exists)
-			return null
-		
-		if (destUri.isDir && !srcFile.isDir)
-			destUri = destUri.plusName(srcFile.name)
-
-		dstFile := (_distDir + destUri).normalize
-		srcFile.copyTo(dstFile, ["overwrite": overwrite])
-		log("  - copied " + dstFile.uri.relTo(_distDir.uri).toFile.osPath + append)
-		return dstFile
 	}
 	
 	** Compresses the given file to a .zip file at the destination URL- which is relative to the output folder.
@@ -228,15 +219,25 @@ const class AppBuilder {
 	** Creates basic script files to launch the application.
 	Void createScriptFiles(Str baseFileName, Str scriptArgs) {
 		copyFile(findFile(`bin/fanlaunch`, true), `fanlaunch`)
-		bshScript 	:= "#!/bin/bash\n\n. \"\${0%/*}/fanlaunch\"\nfanlaunch Fan ${scriptArgs} \"\$@\""
+		bshScript 	:= "#!/bin/bash\n\nexport FAN_HOME=.\nunset FAN_ENV\n. \"\${0%/*}/fanlaunch\"\nfanlaunch Fan ${scriptArgs} \"\$@\""
 		bshFile 	:= (_distDir + `${baseFileName}`).normalize.out.writeChars(bshScript).close
 		log("  - copied ${baseFileName}")
-		cmdScript	:= "@set FAN_HOME=.\n@java -cp \"%FAN_HOME%\\lib\\java\\sys.jar\" fanx.tools.Fan ${scriptArgs} %*"
+		cmdScript	:= "@set FAN_HOME=.\n@set FAN_ENV=\n@java -cp \"%FAN_HOME%\\lib\\java\\sys.jar\" fanx.tools.Fan ${scriptArgs} %*"
 		cmdFile 	:= (_distDir + `${baseFileName}.cmd`).normalize.out.writeChars(cmdScript).close
 		log("  - copied ${baseFileName}.cmd")
 	}
 	
 	** Resolves a file based on the given relative URI. 
+	** If 'useEnv' is 'true' then 'Env.cur.findFile(...)' is used to find the file, otherwise it is 
+	** taken to be relative to 'fantomHomeDir'. 
+	File? findPodFile(Str podName, Bool checked := true) {
+		if (useEnv)
+			return Env.cur.findPodFile(podName) ?: (checked ? throw ArgErr("Could not find pod file for ${podName}") : null)
+		file := (fantomHomeDir + `lib/fan/${podName}.pod`).normalize
+		return file.exists ? file : (checked ? throw ArgErr("File not found - ${file}") : null)
+	}
+
+	** Resolves a pod file based on its name. 
 	** If 'useEnv' is 'true' then 'Env.cur.findFile(...)' is used to find the file, otherwise it is 
 	** taken to be relative to 'fantomHomeDir'. 
 	File? findFile(Uri fileUri, Bool checked := true) {
@@ -251,6 +252,28 @@ const class AppBuilder {
 	** Echos the msg.
 	static Void log(Obj? msg := "") {
 		echo(msg?.toStr ?: "null")
+	}
+	
+	private File? _copyFile(File? srcFile, Uri destUri, Bool overwrite, Str append) {
+		if (!destUri.isPathOnly)
+			throw ArgErr(_msg_urlMustBePathOnly("destUri", destUri, `etc/config.props`))
+		if (destUri.isPathAbs)
+			throw ArgErr(_msg_urlMustNotStartWithSlash("destUri", destUri, `etc/config.props`))
+		
+		if (srcFile == null)
+			return null
+		if (!srcFile.exists) {
+			log("Src file does not exist: ${srcFile?.normalize?.osPath}")
+			return null
+		}
+		
+		if (destUri.isDir && !srcFile.isDir)
+			destUri = destUri.plusName(srcFile.name)
+
+		dstFile := (_distDir + destUri).normalize
+		srcFile.copyTo(dstFile, ["overwrite": overwrite])
+		log("  - copied " + dstFile.uri.relTo(_distDir.uri).toFile.osPath + append)
+		return dstFile
 	}
 	
 	private Str[] _findPodDependencies(Str[] podNames, Str podName) {
