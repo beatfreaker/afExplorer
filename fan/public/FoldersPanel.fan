@@ -156,11 +156,11 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 		if (resource isnot FolderResource || !resource.uri.isAbs) return
 		fileResource = resource
 
-		if (!isShowing) return
-		Desktop.callLater(50ms) |->| {
-			if (fileResource != null)
-				tree.showResource(fileResource)
-		}
+		if (isShowing)
+			Desktop.callLater(50ms) |->| {
+				if (fileResource != null)
+					tree.showResource(fileResource)
+			}
 	}
 
 	override Void refresh(Resource? resource := null) {
@@ -173,10 +173,11 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 				tree.refreshResource(resource)
 		}
 
-		Desktop.callLater(50ms) |->| {
-			if (fileResource != null)
-				tree.showResource(fileResource)
-		}
+		if (isShowing)
+			Desktop.callLater(50ms) |->| {
+				if (fileResource != null)
+					tree.showResource(fileResource)
+			}
 	}
 	
 	private Void onNew() {
