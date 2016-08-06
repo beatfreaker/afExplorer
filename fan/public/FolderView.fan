@@ -166,10 +166,11 @@ internal class FolderViewModel : TableModel {
 
 	override Str text(Int col, Int row) {
 		f := fileRes[row]
+		if ((f as Obj) == null) return "???"	// for locked files - expect errors to follow shortly!
 		switch (col) {
 			case 0:	return f.file.name
-			case 1:	return locale.formatFileSize(f.file.size)
-			case 2:	return locale.formatDateTime(f.file.modified)
+			case 1:	return locale.fileSize(f.file.size)
+			case 2:	return locale.dateTime(f.file.modified)
 			default: return "???"
 		}
 	}

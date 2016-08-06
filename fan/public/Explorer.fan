@@ -191,7 +191,7 @@ internal class ExplorerImpl : Explorer {
 					noOfBytes += src.size
 				}
 			}
-			worker.update(0, 0, "Found $noOfFiles files with a sum total of ${locale.formatFileSize(noOfBytes)}")
+			worker.update(0, 0, "Found $noOfFiles files with a sum total of ${locale.fileSize(noOfBytes)}")
 
 			dest := explorer.uniqueFile(dst)
 			zip  := Zip.write(dest.out)
@@ -236,7 +236,7 @@ internal class ExplorerImpl : Explorer {
 			} finally
 				zip.close
 
-			worker.update(100, 100, "Written ${dest.normalize.osPath} (${locale.formatFileSize(dest.size)})")
+			worker.update(100, 100, "Written ${dest.normalize.osPath} (${locale.fileSize(dest.size)})")
 			worker.update(100, 100, "Done.")
 
 			Desktop.callAsync |->| {
