@@ -22,12 +22,14 @@ class Build : BuildPod {
 			"fwt         1.0.68 - 1.0",
 			"syntax      1.0.68 - 1.0",
 			"util        1.0.68 - 1.0",
+			"concurrent  1.0.68 - 1.0",
 			
 			"fandoc      1.0.68 - 1.0",
 			"compilerDoc 1.0.68 - 1.0",
 			"web         1.0.68 - 1.0",
 			
 			// ---- Core ------------------------
+			"afConcurrent 1.0.14 - 1.0", 
 			"afBeanUtils  1.0.8  - 1.0", 
 			"afIoc        3.0.0  - 3.0", 
 			"afReflux     0.1.1  - 1.0"

@@ -93,13 +93,15 @@ const class ExplorerModule {
 		config["afExplorer.launchers"]	= PopupCommands#addFileLaunchers
 		config["afExplorer.standard"]	= PopupCommands#addStandardFileCommands
 		config["afExplorer.copyPaste"]	= PopupCommands#addCopyPasteCommands
+		config["afExplorer.properties"]	= PopupCommands#addPropertiesCommand
 	}
 	
 	@Contribute { serviceType=FolderPopupMenu# }
 	static Void contributeFolderPopupMenu(Configuration config) {
 		config["afExplorer.launchers"]	= PopupCommands#addFolderLaunchers
-		config["afExplorer.copyPaste"]	= PopupCommands#addCopyPasteCommands		
-		config["afExplorer.new"]		= PopupCommands#addFolderNewCommands		
+		config["afExplorer.copyPaste"]	= PopupCommands#addCopyPasteCommands
+		config["afExplorer.new"]		= PopupCommands#addFolderNewCommands
+		config["afExplorer.properties"]	= PopupCommands#addPropertiesCommand
 	}
 	
 	@Contribute { serviceType=IframeBlocker# }

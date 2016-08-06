@@ -69,12 +69,17 @@ internal class PopupCommands {
 		addCmd(menu, fileCmds.copyFileNameCmd(file))
 		addCmd(menu, fileCmds.copyFilePathCmd(file))
 		addCmd(menu, fileCmds.copyFileUriCmd(file))
-	}	
+	}
 
 	Void addFolderNewCommands(Menu menu, FileResource resource) {
 		menu.addSep
 		addCmd(menu, fileCmds.newFileCmd(resource.file))
 		addCmd(menu, fileCmds.newFolderCmd(resource.file))
+	}
+
+	Void addPropertiesCommand(Menu menu, FileResource resource) {
+		menu.addSep
+		addCmd(menu, fileCmds.showFileProperties(resource))
 	}
 
 	private Void addCmd(Menu menu, Command cmd) {

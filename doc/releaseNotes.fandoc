@@ -2,6 +2,7 @@ Versions
 ********
 v0.1.2
 ======
+ - New: File properties dialog, from popup menus.
  - Chg: Zipping handles file read errors.
  - Chg: 'FileActions' may take multiple extensions.
  - Bug: Folder panel linsting weren't case-insensitive.

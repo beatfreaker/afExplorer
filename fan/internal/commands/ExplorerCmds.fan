@@ -103,6 +103,15 @@ internal class ExplorerCmds {
 		}
 	}
 
+	Command showFileProperties(FileResource fileResource) {
+		command("Properties") {
+			it.onInvoke.add {
+				props := (FilePropertiesDialog) scope.build(FilePropertiesDialog#, [fileResource])
+				props.open
+			}
+		}
+	}
+
 	private RefluxCommand command(Str baseName, Str? iconName := null) {
 		((RefluxCommand) scope.build(RefluxCommand#, [null, null, null])) {
 			if (baseName.containsChar(' '))
