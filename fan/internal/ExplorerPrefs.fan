@@ -68,7 +68,7 @@ const class FileAction {
 		exts = ext.split
 	}
 	
-	Bool matchesExt(Str that) {
+	Bool matchesExt(Str? that) {
 		exts.any { it == that }
 	}
 }
