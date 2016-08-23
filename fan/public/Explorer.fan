@@ -28,6 +28,8 @@ mixin Explorer {
 	abstract Void openFileInSystem(File file)
 
 	abstract Void compressToZip(File toCompress, File dst)
+
+	abstract Void compressToGz(File toCompress)
 	
 	abstract Image fileToIcon(File f)
 	abstract Image urlToIcon(Uri url)
@@ -166,6 +168,57 @@ internal class ExplorerImpl : Explorer {
 	
 	override Void openFileInSystem(File file) {
 		Desktop.launchProgram(file.uri)
+	}
+	
+	override Void compressToGz(File toCompress) {
+		if (toCompress.isDir)
+			throw ArgErr("Cannot gzip directories: $toCompress")
+		
+		scope := scope
+		pd := (ProgressDialogue) scope.build(ProgressDialogue#)
+		pd.title = "Compress to .gz"
+		pd.image = Image(`fan://afExplorer/res/images/zip.x48.png`)
+		pd.open(reflux.window) |ProgressWorker worker| {
+			locale		:= (LocaleFormat) scope.serviceById(LocaleFormat#.qname)
+			explorer	:= (Explorer) 	  scope.serviceById(Explorer#.qname)
+
+			worker.update(0, 0, "Zipping ${toCompress.normalize.osPath} (${locale.fileSize(toCompress.size)})")
+			dst		:= toCompress.uri.plusName(toCompress.name + ".gz").toFile
+			dest	:= explorer.uniqueFile(dst)
+			
+			bTotal	:= toCompress.size
+			bRead	:= 0
+			zipIn	:= toCompress.in(bufferSize)
+			zipOut	:= Zip.gzipOutStream(dest.out(false, bufferSize))
+
+			try {
+				buf	 := Buf(bufferSize)
+				piping := true
+				
+				while (piping) {
+					i := zipIn.readBuf(buf.seek(0), bufferSize)
+					if (i == null) {
+						piping = false
+						continue
+					}
+					bRead += i
+					zipOut.writeBuf(buf.seek(0), i)
+					worker.update(bRead, bTotal)
+				}
+				
+			} finally {
+				zipIn.close
+				zipOut.close
+			}
+
+			worker.update(100, 100, "Written ${dest.normalize.osPath} (${locale.fileSize(dest.size)})")
+			worker.update(100, 100, "Done.")
+
+			Desktop.callAsync |->| {
+				reflux := (Reflux) scope.serviceById(Reflux#.qname)
+				reflux.refresh
+			}
+		}
 	}
 	
 	override Void compressToZip(File toCompress, File dst) {

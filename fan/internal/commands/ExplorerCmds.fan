@@ -95,6 +95,15 @@ internal class ExplorerCmds {
 		}
 	}
 
+	Command compressToGz(File file) {
+		name := file.name + ".gz"
+		return command("Compress to '${name}'", "cmdCompressToGz") {
+			it.onInvoke.add {
+				explorer.compressToGz(file)
+			}
+		}
+	}
+
 	Command openInTextEditor(Resource resource) {
 		command("EditText") {
 			it.onInvoke.add {

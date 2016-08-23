@@ -1,5 +1,9 @@
 Versions
 ********
+v0.1.4
+======
+ - New: Added 'compress to .gz' file command.
+
 v0.1.2
 ======
  - New: File properties dialog, from popup menus.

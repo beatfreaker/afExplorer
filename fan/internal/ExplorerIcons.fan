@@ -36,6 +36,7 @@ internal class ExplorerIcons {
 		"cmdCopyURI"			: ``,
 		"cmdEditText"			: `fan://afExplorer/res/icons-file/fileText.png`,
 		"cmdCompressToZip"		: `fan://afExplorer/res/icons-file/fileZip.png`,
+		"cmdCompressToGz"		: `fan://afExplorer/res/icons-file/fileZip.png`,
 		"cmdProperties"			: ``,
 
 		"icoFile"				: `file_obj.gif`,
