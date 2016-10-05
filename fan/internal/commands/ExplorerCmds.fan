@@ -76,10 +76,12 @@ internal class ExplorerCmds {
 	}
 
 	Command actionFileCmd(File file, FileAction action, FileLauncher launcher) {
-		command("ActionFile", "") {
+		return command("ActionFile", "") {
 			it.name = "${action.verb} with ${launcher.name}"
 			it.icon = refluxIcons.fromUri(launcher.iconUri, false)
 			it.onInvoke.add {
+				if (launcher.programUri.toFile.exists.not)
+					throw IOErr("File not found: ${launcher.programUri.toFile.normalize.osPath}")
 				Process([launcher.programUri.toFile.osPath, file.osPath], file.parent).run
 			}
 		}

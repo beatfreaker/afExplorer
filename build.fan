@@ -31,7 +31,7 @@ class Build : BuildPod {
 			// ---- Core ------------------------
 			"afConcurrent 1.0.14 - 1.0", 
 			"afBeanUtils  1.0.8  - 1.0", 
-			"afIoc        3.0.0  - 3.0", 
+			"afIoc        3.0.4  - 3.0", 
 			"afReflux     0.1.1  - 1.0"
 		]
 

@@ -6,7 +6,7 @@ internal class TestFandocResolver : Test {
 	
 	override Void setup() {
 		reg := RegistryBuilder().addModule(ExplorerModule#).addModulesFromPod("afExplorer").setOption("afReflux.appName", "wotever").build
-		reg.activeScope.createChildScope("uiThread") { this.scope = it.jailBreak }
+		reg.activeScope.createChild("uiThread") { this.scope = it.jailBreak }
 		scope.inject(this)
 	}
 	
