@@ -37,7 +37,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	override Bool reuseView(Resource resource) { true }
 
 	override Void onShow() {
-		monitorThread.start(this)
+		monitorThread.start(reflux, this)
 	}
 
 	override Void onHide() {
@@ -217,13 +217,13 @@ internal const class FolderMonitor {
 	@Inject	private const LocalRef		stateRef
 
 	new make(|This| f) { f(this) }
-
 	
-	Void start(FolderView view) {
-		viewRef := Unsafe(view)
+	Void start(Reflux reflux, FolderView view) {
+		viewRef   := Unsafe(view)
+		refluxRef := Unsafe(reflux)
 		monitorThread.async |->| {
 			if (stateRef.val == null)
-				stateRef.val = FolderMonitorState(viewRef, this)
+				stateRef.val = FolderMonitorState(refluxRef, this)
 			state.start
 		}
 	}
@@ -253,15 +253,16 @@ internal const class FolderMonitor {
 }
 
 internal class FolderMonitorState {
-	Unsafe			viewRef
+	Unsafe			refluxRef
 	FolderMonitor	monitor
 	Bool			running
 	File?			folder
 	Int?			checksum
+	Duration?		checksumTs
 	Duration		every		:= 5sec
 	
-	new make(Unsafe viewRef, FolderMonitor monitor) {
-		this.viewRef	= viewRef
+	new make(Unsafe refluxRef, FolderMonitor monitor) {
+		this.refluxRef	= refluxRef
 		this.monitor	= monitor
 	}
 
@@ -276,26 +277,35 @@ internal class FolderMonitorState {
 	
 	Void refresh(File? folder) {
 		this.folder 	= folder ?: this.folder
-		this.checksum	= crc(this.folder)
+		this.checksum	= crc
 	}
 	
 	Void check() {
-		if (!running) return
-
-		crc := crc(folder)
-		if (checksum != crc) {
-			checksum  = crc
-			viewRef  := viewRef
+		if (!running || folder == null) return
+		
+		crc := crc
+		if (checksum  != crc) {
+			checksum   = crc
+			refluxRef := refluxRef
+			folder	  := folder
 			Desktop.callAsync |->| {
-				((View) viewRef.val).refresh
+				reflux := (Reflux) refluxRef.val
+				folderRes := reflux.scope.build(FolderResource#, [folder])
+				reflux.refresh(folderRes)
 			}
 		}
 		monitor.checkIn(every)
 	}
 	
-	private Int? crc(File? folder) {
+	private Int? crc() {
 		if (folder == null)
 			return null
+		
+		now := Duration.now
+		if (checksumTs != null && (now - checksumTs) < 1sec)
+			return checksum
+
+		checksumTs = now
 
 		buf := Buf()
 		folder.list.sort |f1, f2| { f1.name <=> f2.name  }.each |f| {
