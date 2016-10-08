@@ -142,7 +142,7 @@ internal class ExplorerImpl : Explorer {
 			if (destFile.ext == null)
 				destName = `${file.name}($fileIndex)`
 			else
-				destName = `${file.name[0..<-file.ext.size-1]}($fileIndex).${file.ext}`
+				destName = `${file.basename} ($fileIndex).${file.ext}`
 			destFile = destFile.parent + destName
 		}
 		return destFile
