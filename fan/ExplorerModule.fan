@@ -1,12 +1,14 @@
 using afIoc
 using afReflux
+using afConcurrent
+using concurrent
 using gfx
 using fwt
 
 @NoDoc
 const class ExplorerModule {
 
-	static Void defineServices(RegistryBuilder defs) {		
+	Void defineServices(RegistryBuilder defs) {		
 		defs.addService(Explorer#)			.withScope("uiThread")
 		defs.addService(ExplorerCmds#)		.withScope("uiThread")
 		defs.addService(FileViewers#)		.withScope("uiThread")
@@ -18,31 +20,31 @@ const class ExplorerModule {
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
-	static Void contributeRefluxIcons(Configuration config) {
+	Void contributeRefluxIcons(Configuration config) {
 		ExplorerIcons.iconMap.each |uri, id| {
 			config[id] = uri.isAbs || uri.toStr.isEmpty ? uri : `fan://afReflux/res/icons-eclipse/` + uri
 		}
 	}
 
 	@Contribute { serviceType=UriResolvers# }
-	internal static Void contributeUriResolvers(Configuration config) {
+	internal Void contributeUriResolvers(Configuration config) {
 		config["file"]		= config.build(FileResolver#)
 		config["http"]		= config.build(HttpResolver#)
 		config["fandoc"]	= config.build(FandocResolver#)		
 	}
 
 	@Contribute { serviceType=Panels# }
-	static Void contributePanels(Configuration config) {
+	Void contributePanels(Configuration config) {
 		config.add(config.build(FoldersPanel#))
 	}
 	
 	@Contribute { serviceType=EventTypes# }
-	static Void contributeEventHub(Configuration config) {
+	Void contributeEventHub(Configuration config) {
 		config["afReflux.explorer"] = ExplorerEvents#
 	}
 	
 	@Contribute { serviceType=GlobalCommands# }
-	static Void contributeGlobalCommands(Configuration config) {
+	Void contributeGlobalCommands(Configuration config) {
 		config["afExplorer.cmdRenameFile"]		= config.build(RenameFileCommand#)
 		config["afExplorer.cmdDeleteFile"]		= config.build(DeleteFileCommand#)
 
@@ -60,7 +62,7 @@ const class ExplorerModule {
 	}
 
 	@Contribute { serviceType=FileViewers# }
-	static Void contributeFileViewers(Configuration config) {
+	Void contributeFileViewers(Configuration config) {
 		"bmp gif jpg png".split.each {
 			config["imageViewer-${it}"] = FileViewMapping(it, ImageViewer#)
 		}
@@ -89,7 +91,7 @@ const class ExplorerModule {
 	}
 
 	@Contribute { serviceType=FilePopupMenu# }
-	static Void contributeFilePopupMenu(Configuration config) {
+	Void contributeFilePopupMenu(Configuration config) {
 		config["afExplorer.launchers"]	= PopupCommands#addFileLaunchers
 		config["afExplorer.standard"]	= PopupCommands#addStandardFileCommands
 		config["afExplorer.copyPaste"]	= PopupCommands#addCopyPasteCommands
@@ -97,7 +99,7 @@ const class ExplorerModule {
 	}
 	
 	@Contribute { serviceType=FolderPopupMenu# }
-	static Void contributeFolderPopupMenu(Configuration config) {
+	Void contributeFolderPopupMenu(Configuration config) {
 		config["afExplorer.launchers"]	= PopupCommands#addFolderLaunchers
 		config["afExplorer.copyPaste"]	= PopupCommands#addCopyPasteCommands
 		config["afExplorer.new"]		= PopupCommands#addFolderNewCommands
@@ -105,11 +107,17 @@ const class ExplorerModule {
 	}
 	
 	@Contribute { serviceType=IframeBlocker# }
-	static Void contributeIframeBlocker(Configuration config) {
+	Void contributeIframeBlocker(Configuration config) {
 		config.add("^https?://.*\\.addthis\\.com/.*\$")
 		config.add("^https?://.*\\.google(apis)?\\.com/[_o]/.*\$")
 		config.add("^https?://api\\.flattr\\.com/.*\$")
 	}
+	
+	@Contribute { serviceType=ActorPools# }
+	Void contributeActorPools(Configuration config) {
+		config["afExplorer.folderMonitor"]	= ActorPool { it.name = "afExplorer.folderMonitor" }
+	}
+	
 
 	Void defineRegistryStartup(RegistryBuilder bob) {
 		bob.onRegistryStartup |config| {
@@ -129,7 +137,7 @@ const class ExplorerModule {
 	// ---- Reflux Menu Bar -----------------------------------------------------------------------
 
 	@Contribute { serviceId="afReflux.fileMenu" }
-	static Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {
+	Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {
 		config.inOrder {
 			config.set("afExplorer.separator.01",	MenuItem { it.mode = MenuItemMode.sep })			
 			config.set("afExplorer.cmdRenameFile", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command))
@@ -138,7 +146,7 @@ const class ExplorerModule {
 	}
 
 	@Contribute { serviceId="afReflux.editMenu" }
-	static Void contributeEditMenu(Configuration config, GlobalCommands globalCmds) {
+	Void contributeEditMenu(Configuration config, GlobalCommands globalCmds) {
 		config.inOrder {
 			config.set("afExplorer.separator01",	MenuItem { it.mode = MenuItemMode.sep })
 			config.set("afExplorer.cmdFind",		MenuItem.makeCommand(globalCmds["afExplorer.cmdFind"].command))
@@ -154,7 +162,7 @@ const class ExplorerModule {
 	}
 
 	@Contribute { serviceId="afReflux.ViewMenu" }
-	static Void contributeViewMenu(Configuration config, GlobalCommands globalCmds) {
+	Void contributeViewMenu(Configuration config, GlobalCommands globalCmds) {
 		config.inOrder {
 			config["afExplorer.separator01"]		= MenuItem { it.mode = MenuItemMode.sep }
 			config["afExplorer.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
@@ -163,7 +171,7 @@ const class ExplorerModule {
 	}
 
 	@Contribute { serviceId="afReflux.PrefsMenu" }
-	static Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
+	Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
 		config.inOrder {
 			config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.build(EditPrefsCmd#, [RefluxPrefs#, `fan://afExplorer/res/fogs/afReflux.fog`]))
 			config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.build(EditPrefsCmd#, [ExplorerPrefs#, `fan://afExplorer/res/fogs/afExplorer.fog`]))
@@ -172,7 +180,7 @@ const class ExplorerModule {
 	}
 
 	@Contribute { serviceId="afReflux.helpMenu" }
-	static Void contributeAboutMenu(Configuration config, GlobalCommands globalCmds) {
+	Void contributeAboutMenu(Configuration config, GlobalCommands globalCmds) {
 		config.inOrder {
 			config["afExplorer.cmdFandocs"]			= MenuItem(globalCmds["afExplorer.cmdFandocIndex"].command)
 		}.after("afReflux.menuPlaceholder01").before("afReflux.menuPlaceholder02")
@@ -183,7 +191,7 @@ const class ExplorerModule {
 //		config["afExplorer.cmdFandocIndex"]		= toolBarCommand(globalCmds["afExplorer.cmdFandocIndex"].command)
 //	}
 
-    private static Button toolBarCommand(Command command) {
+    private Button toolBarCommand(Command command) {
         button  := Button.makeCommand(command)
         if (command.icon != null)
             button.text = ""

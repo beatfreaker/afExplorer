@@ -2,21 +2,24 @@ using afIoc
 using gfx
 using fwt
 using afReflux
+using afConcurrent
+using concurrent
 
 @NoDoc
 class FolderView : View, RefluxEvents, ExplorerEvents {
 	
 	static 	const private	|File,File->Int|	byName	 := |File f1, File f2 -> Int| { f1.name.compareIgnoreCase(f2.name) }
 
-	@Inject private Registry		registry
-	@Inject private Reflux			reflux
-	@Inject private RefluxIcons		icons
-	@Inject	private Explorer		explorer
-	@Inject private GlobalCommands	globalCommands
-	@Autobuild private FileResolver	fileResolver
-	@Autobuild private FolderViewModel model
-			private	Table			table
-			private FolderResource? fileResource
+	@Inject private Registry			registry
+	@Inject private Reflux				reflux
+	@Inject private RefluxIcons			icons
+	@Inject	private Explorer			explorer
+	@Inject private GlobalCommands		globalCommands
+	@Autobuild private FolderMonitor	monitorThread
+	@Autobuild private FileResolver		fileResolver
+	@Autobuild private FolderViewModel	model
+			private	Table				table
+			private FolderResource? 	fileResource
 
 	protected new make(|This| in) : super(in) {
 		this.content = table = Table {
@@ -33,6 +36,14 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	
 	override Bool reuseView(Resource resource) { true }
 
+	override Void onShow() {
+		monitorThread.start(this)
+	}
+
+	override Void onHide() {
+		monitorThread.stop
+	}
+
 	override Void onActivate() {
 		globalCommands["afExplorer.cmdShowHiddenFiles"	].addEnabler("afExplorer.folderView", |->Bool| { true } )
 	}
@@ -43,7 +54,9 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	}
 
 	override Void refresh(Resource? resource := null) {
-		if (resource == this.resource || ((resource as FileResource)?.file?.parent == this.fileResource?.file) ||  resource == null) {
+		if (resource == this.resource || ((resource as FileResource)?.file?.parent == this.fileResource?.file) || resource == null) {
+			monitorThread.refresh(resource)
+
 			super.load(this.resource)	// update tab details
 			model.fileRes = fileResource.file.listDirs.sort(byName).addAll(fileResource.file.listFiles.sort(byName)).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri.toStr) }
 			try table.refreshAll
@@ -53,6 +66,8 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 
 	override Void load(Resource resource) {
 		if (this.resource == resource) return
+		monitorThread.refresh(resource)
+
 		this.resource = resource
 		this.fileResource = resource
 		// revert sorting when showing new resources  
@@ -192,5 +207,100 @@ internal class FolderViewModel : TableModel {
 
 	override Image? image(Int col, Int row) {
 		return (col == 0) ? fileRes[row].icon : null
+	}
+}
+
+
+internal const class FolderMonitor {
+	@Inject { id="afExplorer.folderMonitor" }
+			private const Synchronized	monitorThread
+	@Inject	private const LocalRef		stateRef
+
+	new make(|This| f) { f(this) }
+
+	
+	Void start(FolderView view) {
+		viewRef := Unsafe(view)
+		monitorThread.async |->| {
+			if (stateRef.val == null)
+				stateRef.val = FolderMonitorState(viewRef, this)
+			state.start
+		}
+	}
+	
+	Void stop() {
+		monitorThread.async |->| {
+			state.stop			
+		}		
+	}
+	
+	Void refresh(FolderResource? fileResource) {
+		file := fileResource?.file
+		monitorThread.async |->| {
+			state.refresh(file)
+		}
+	}
+	
+	Void checkIn(Duration d) {
+		monitorThread.asyncLater(d) |->| {
+			state.check
+		}
+	}
+	
+	private FolderMonitorState state() {
+		stateRef.val
+	}
+}
+
+internal class FolderMonitorState {
+	Unsafe			viewRef
+	FolderMonitor	monitor
+	Bool			running
+	File?			folder
+	Int?			checksum
+	Duration		every		:= 5sec
+	
+	new make(Unsafe viewRef, FolderMonitor monitor) {
+		this.viewRef	= viewRef
+		this.monitor	= monitor
+	}
+
+	Void start() {
+		this.running = true
+		monitor.checkIn(every)
+	}
+	
+	Void stop() {
+		this.running = false
+	}
+	
+	Void refresh(File? folder) {
+		this.folder 	= folder ?: this.folder
+		this.checksum	= crc(this.folder)
+	}
+	
+	Void check() {
+		if (!running) return
+
+		crc := crc(folder)
+		if (checksum != crc) {
+			checksum  = crc
+			viewRef  := viewRef
+			Desktop.callAsync |->| {
+				((View) viewRef.val).refresh
+			}
+		}
+		monitor.checkIn(every)
+	}
+	
+	private Int? crc(File? folder) {
+		if (folder == null)
+			return null
+
+		buf := Buf()
+		folder.list.sort |f1, f2| { f1.name <=> f2.name  }.each |f| {
+			buf.printLine("${f.name}  ${f.modified?.toIso}")				
+		}
+		return buf.crc("CRC-32-Adler")
 	}
 }

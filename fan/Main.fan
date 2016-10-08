@@ -1,5 +1,6 @@
 using afIoc
 using afReflux
+using afConcurrent
 using util
 using fwt
 
@@ -35,7 +36,7 @@ class Main : AbstractMain {
 	Str[]? uri
 	
 	override Int run() {
-		moduleTypes := [ExplorerModule#]
+		moduleTypes := [ExplorerModule#, ConcurrentModule#]
 		
 		if (!noPlugins) {
 			moduleTypeNames := Env.cur.index("afExplorer.module")
