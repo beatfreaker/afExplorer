@@ -3,8 +3,9 @@ Versions
 v0.1.4
 ======
  - New: Added 'compress to .gz' file command.
- - Chg: Better rename dialogue.
+ - Chg: Better rename file dialogue.
  - Chg: Better handling (and err msg) of when a launcher cmd can not be found.
+ - Chg: Moved 'Show hidden files' to View menu.
  - Chg: Unique file names have a space before the index for better navigation when renaming.
 
 v0.1.2

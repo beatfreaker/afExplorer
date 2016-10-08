@@ -130,38 +130,52 @@ const class ExplorerModule {
 
 	@Contribute { serviceId="afReflux.fileMenu" }
 	static Void contributeFileMenu(Configuration config, GlobalCommands globalCmds) {
-		config.set("separator.03",				MenuItem { it.mode = MenuItemMode.sep }).after("afExplorer.cmdDeleteFile").before("afReflux.cmdExit")
-		config.set("afExplorer.cmdRenameFile", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command)).after("separator.02").before("afExplorer.cmdDeleteFile")
-		config.set("afExplorer.cmdDeleteFile",	MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command)).after("afExplorer.cmdRenameFile").before("separator.03")
+		config.inOrder {
+			config.set("afExplorer.separator.01",	MenuItem { it.mode = MenuItemMode.sep })			
+			config.set("afExplorer.cmdRenameFile", 	MenuItem.makeCommand(globalCmds["afExplorer.cmdRenameFile"].command))
+			config.set("afExplorer.cmdDeleteFile",	MenuItem.makeCommand(globalCmds["afExplorer.cmdDeleteFile"].command))
+		}.after("afReflux.menuPlaceholder01").before("afReflux.menuPlaceholder02")
 	}
 
 	@Contribute { serviceId="afReflux.editMenu" }
 	static Void contributeEditMenu(Configuration config, GlobalCommands globalCmds) {
-		config.set("afExplorer.cmdFind",		MenuItem.makeCommand(globalCmds["afExplorer.cmdFind"].command))		.after("separator.02")
-		config.set("afExplorer.cmdFindNext",	MenuItem.makeCommand(globalCmds["afExplorer.cmdFindNext"].command))	.after("afExplorer.cmdFind")
-		config.set("afExplorer.cmdFindPrev",	MenuItem.makeCommand(globalCmds["afExplorer.cmdFindPrev"].command))	.after("afExplorer.cmdFindNext")
-		config.set("separator.03",				MenuItem { it.mode = MenuItemMode.sep })							.after("afExplorer.cmdFindPrev")
-		config.set("afExplorer.cmdReplace",		MenuItem.makeCommand(globalCmds["afExplorer.cmdReplace"].command))	.after("separator.03")
-		config.set("separator.04",				MenuItem { it.mode = MenuItemMode.sep })							.after("afExplorer.cmdReplace")
-		config.set("afExplorer.cmdSelectAll",	MenuItem.makeCommand(globalCmds["afExplorer.cmdSelectAll"].command)).after("separator.04")
-		config.set("separator.05",				MenuItem { it.mode = MenuItemMode.sep })							.after("afExplorer.cmdSelectAll")
-		config.set("afExplorer.cmdGoto",		MenuItem.makeCommand(globalCmds["afExplorer.cmdGoto"].command))		.after("separator.05")
+		config.inOrder {
+			config.set("afExplorer.separator01",	MenuItem { it.mode = MenuItemMode.sep })
+			config.set("afExplorer.cmdFind",		MenuItem.makeCommand(globalCmds["afExplorer.cmdFind"].command))
+			config.set("afExplorer.cmdFindNext",	MenuItem.makeCommand(globalCmds["afExplorer.cmdFindNext"].command))
+			config.set("afExplorer.cmdFindPrev",	MenuItem.makeCommand(globalCmds["afExplorer.cmdFindPrev"].command))
+			config.set("afExplorer.separator02",	MenuItem { it.mode = MenuItemMode.sep })
+			config.set("afExplorer.cmdReplace",		MenuItem.makeCommand(globalCmds["afExplorer.cmdReplace"].command))
+			config.set("afExplorer.separator03",	MenuItem { it.mode = MenuItemMode.sep })
+			config.set("afExplorer.cmdSelectAll",	MenuItem.makeCommand(globalCmds["afExplorer.cmdSelectAll"].command))
+			config.set("afExplorer.separator04",	MenuItem { it.mode = MenuItemMode.sep })
+			config.set("afExplorer.cmdGoto",		MenuItem.makeCommand(globalCmds["afExplorer.cmdGoto"].command))
+		}.after("afReflux.menuPlaceholder01").before("afReflux.menuPlaceholder02")
+	}
+
+	@Contribute { serviceId="afReflux.ViewMenu" }
+	static Void contributeViewMenu(Configuration config, GlobalCommands globalCmds) {
+		config.inOrder {
+			config["afExplorer.separator01"]		= MenuItem { it.mode = MenuItemMode.sep }
+			config["afExplorer.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
+			config["afExplorer.cmdWordWrap"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdWordWrap"].command)
+		}.after("afReflux.menuPlaceholder01").before("afReflux.menuPlaceholder02")
 	}
 
 	@Contribute { serviceId="afReflux.PrefsMenu" }
 	static Void contributePrefsMenu(Configuration config, GlobalCommands globalCmds) {
-		config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.build(EditPrefsCmd#, [RefluxPrefs#, `fan://afExplorer/res/fogs/afReflux.fog`]))
-		config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.build(EditPrefsCmd#, [ExplorerPrefs#, `fan://afExplorer/res/fogs/afExplorer.fog`]))
-		config["afExplorer.cmdTextEditorPrefs"]	= MenuItem.makeCommand(config.build(EditPrefsCmd#, [TextEditorPrefs#, `fan://afExplorer/res/fogs/fluxText.fog`]))
-		config["separator.01"]					= MenuItem { it.mode = MenuItemMode.sep }
-		config["afExplorer.cmdShowHiddenFiles"]	= MenuItem.makeCommand(globalCmds["afExplorer.cmdShowHiddenFiles"].command)
-		config["afExplorer.cmdWordWrap"]		= MenuItem.makeCommand(globalCmds["afExplorer.cmdWordWrap"].command)
+		config.inOrder {
+			config["afExplorer.cmdRefluxPrefs"]		= MenuItem.makeCommand(config.build(EditPrefsCmd#, [RefluxPrefs#, `fan://afExplorer/res/fogs/afReflux.fog`]))
+			config["afExplorer.cmdExplorerPrefs"]	= MenuItem.makeCommand(config.build(EditPrefsCmd#, [ExplorerPrefs#, `fan://afExplorer/res/fogs/afExplorer.fog`]))
+			config["afExplorer.cmdTextEditorPrefs"]	= MenuItem.makeCommand(config.build(EditPrefsCmd#, [TextEditorPrefs#, `fan://afExplorer/res/fogs/fluxText.fog`]))
+		}.after("afReflux.menuPlaceholder01").before("afReflux.menuPlaceholder02")
 	}
 
 	@Contribute { serviceId="afReflux.helpMenu" }
 	static Void contributeAboutMenu(Configuration config, GlobalCommands globalCmds) {
-		config.set("afExplorer.cmdFandocs", MenuItem(globalCmds["afExplorer.cmdFandocIndex"].command))
-			.before("afReflux.cmdAbout")
+		config.inOrder {
+			config["afExplorer.cmdFandocs"]			= MenuItem(globalCmds["afExplorer.cmdFandocIndex"].command)
+		}.after("afReflux.menuPlaceholder01").before("afReflux.menuPlaceholder02")
 	}
 
 //	@Contribute { serviceId="afReflux.toolBar" }

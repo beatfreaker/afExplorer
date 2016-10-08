@@ -32,7 +32,7 @@ class Build : BuildPod {
 			"afConcurrent 1.0.14 - 1.0", 
 			"afBeanUtils  1.0.8  - 1.0", 
 			"afIoc        3.0.4  - 3.0", 
-			"afReflux     0.1.1  - 1.0"
+			"afReflux     0.1.3  - 1.0"
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/commands/`, `fan/internal/textEditor/`, `fan/public/`, `fan/public/advanced/`, `fan/todo/`, `test/`]
