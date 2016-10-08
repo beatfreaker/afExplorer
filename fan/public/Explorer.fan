@@ -70,7 +70,7 @@ internal class ExplorerImpl : Explorer {
 	}
 
 	override File rename(File file) {
-		newName := dialogues.openPromptStr("Rename", file.name)
+		newName := openRenameDialog(file)
 		if (newName != null && newName != file.name) {
 			
 			// can't rename a file to the same (case insensitive) name
@@ -89,6 +89,29 @@ internal class ExplorerImpl : Explorer {
 		}
 		return file
 	}
+	
+	private Str? openRenameDialog(File file) {
+		field := Text { it.text = file.name; it.prefCols = 20 }
+		pane  := GridPane {
+			numCols = 2
+			expandCol = 1
+			halignCells=Halign.fill
+			Label { text="Original name:" },
+			Text { it.text = file.name; it.prefCols = 20; it.editable = false; it.border = false },
+			Label { text="Rename to:" },
+			field,
+		}
+		field.onAction.add |Event e| { e.widget.window.close(dialogues.ok) }
+		r := dialogues.openMsgBox(Dialog#.pod, "question", pane, null, dialogues.okCancel) |Dialog diag| {
+			diag.title = file.isDir ? "Rename Folder" : "Rename File"
+			diag.image = images.get(`fan://afExplorer/res/icons/` + (file.isDir ? `folder-horizontal.png` : `document.png`), false)
+			diag.onOpen.add {
+				field.focus
+			}
+		}
+		if (r != dialogues.ok) return null
+		return field.text
+	}
 
 	override Void delete(File file) {
 		okay := dialogues.openQuestion("Delete ${file.name}?\n\n${file.osPath}", null, dialogues.yesNo)
@@ -104,7 +127,7 @@ internal class ExplorerImpl : Explorer {
 		copiedFile	= null
 		globalCommands()["afReflux.cmdPaste"].update
 	}
-	
+
 	override Void copy(File file) {
 		cutFile		= null
 		copiedFile	= file

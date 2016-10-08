@@ -9,11 +9,11 @@ class Build : BuildPod {
 		version = Version("0.1.3")
 
 		meta = [
-			"proj.name"		: "Explorer",
-			"afIoc.module"	: "afExplorer::ExplorerModule",
-			"repo.internal"	: "true",
-			"repo.tags"		: "app",
-			"repo.public"	: "false"
+			"pod.displayName"	: "Explorer",
+			"afIoc.module"		: "afExplorer::ExplorerModule",
+			"repo.internal"		: "true",
+			"repo.tags"			: "app",
+			"repo.public"		: "false"
 		]
 
 		depends = [	
@@ -36,6 +36,15 @@ class Build : BuildPod {
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/commands/`, `fan/internal/textEditor/`, `fan/public/`, `fan/public/advanced/`, `fan/todo/`, `test/`]
-		resDirs = [`doc/`, `locale/`, `res/css/`, `res/fogs/`, `res/icons-file/`, `res/images/`, `res/syntax/`]
+		resDirs = [
+			`doc/`,
+			`locale/`,
+			`res/css/`,
+			`res/fogs/`,
+			`res/icons/`,
+			`res/icons-file/`,
+			`res/images/`,
+			`res/syntax/`
+		]
 	}
 }
