@@ -36,6 +36,8 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 			it.onSelect.add	|e| { this->onSelect(e) }
 		}
 		
+		model.folderTree = tree
+		
 		favourites = explorer.preferences.favourites		
 		combo.items = favourites.keys
 
@@ -110,12 +112,12 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 	private Void onBlur() {
 		globalCommands["afExplorer.cmdRenameFile"].removeEnabler("afExplorer.folderPanel")
 		globalCommands["afExplorer.cmdDeleteFile"].removeEnabler("afExplorer.folderPanel")
-		globalCommands["afReflux.cmdCut"		].removeEnabler("afExplorer.folderPanel")
-		globalCommands["afReflux.cmdCopy"		].removeEnabler("afExplorer.folderPanel")
-		globalCommands["afReflux.cmdPaste"		].removeEnabler("afExplorer.folderPanel")
-		globalCommands["afReflux.cmdCut"		].removeInvoker("afExplorer.folderPanel")
-		globalCommands["afReflux.cmdCopy"		].removeInvoker("afExplorer.folderPanel")
-		globalCommands["afReflux.cmdPaste"		].removeInvoker("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdCut"		 ].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdCopy"		 ].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdPaste"		 ].removeEnabler("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdCut"		 ].removeInvoker("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdCopy"		 ].removeInvoker("afExplorer.folderPanel")
+		globalCommands["afReflux.cmdPaste"		 ].removeInvoker("afExplorer.folderPanel")
 	}
 
 	private Void onComboModify(Event event)	{
@@ -190,8 +192,10 @@ class FoldersPanel : Panel, RefluxEvents, ExplorerEvents {
 }
 
 internal class FoldersTreeModel : ResourceTreeModel {
-	@Inject	private  Explorer		explorer
-			private	 Color			hiddenColour
+	@Inject	private	Images			images
+	@Inject	private	Explorer		explorer
+			private	Color			hiddenColour
+					ResourceTree?	folderTree
 
 	new make(|This|in) {
 		in(this)
@@ -199,7 +203,13 @@ internal class FoldersTreeModel : ResourceTreeModel {
 	}
 	
 //	override Str text(Resource resource)		{ resource.name }
-//	override Image? image(Resource resource)	{ resource.icon }
+//	override Image? image(Resource resource)	{
+//		// this was a nice idea to show a different icon dependent on the folder expanded state - but tree.isExpanded() doesn't work :(
+//		if (resource is FolderResource) {
+//			return folderTree.isExpanded(resource) ? ResourceTreeModel.super.image(resource) : images.get(`fan://afExplorer/res/icons/fldr_closed.gif`)
+//		} else
+//			return ResourceTreeModel.super.image(resource)
+//	}
 //	override Font? font(Resource resource)		{ null }
 	override Color? fg(Resource resource)		{ explorer.preferences.isHidden(resource->file) ? hiddenColour : null }
 //	override Color? bg(Resource resource)		{ null }
