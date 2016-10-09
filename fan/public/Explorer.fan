@@ -104,7 +104,7 @@ internal class ExplorerImpl : Explorer {
 		field.onAction.add |Event e| { e.widget.window.close(dialogues.ok) }
 		r := dialogues.openMsgBox(Dialog#.pod, "question", pane, null, dialogues.okCancel) |Dialog diag| {
 			diag.title = file.isDir ? "Rename Folder" : "Rename File"
-			diag.image = images.get(`fan://afExplorer/res/icons/` + (file.isDir ? `folder-horizontal.png` : `document.png`), false)
+			diag.image = images.get(`fan://afExplorer/res/icons/` + (file.isDir ? `folder-horizontal-x32.png` : `document-x32.png`), false)
 			diag.onOpen.add {
 				field.focus
 			}
