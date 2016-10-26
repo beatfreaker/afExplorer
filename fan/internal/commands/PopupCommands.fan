@@ -46,8 +46,13 @@ internal class PopupCommands {
 
 	Void addStandardFileCommands(Menu menu, FileResource resource) {
 		menu.addSep
-		addCmd(menu, fileCmds.compressToZip(resource.file))
-		addCmd(menu, fileCmds.compressToGz(resource.file))
+
+		// TODO may need to introduce a .zip file extension service at some point
+		if (resource.file.ext.lower != "zip" && resource.file.ext.lower != "pod")
+			addCmd(menu, fileCmds.compressToZip(resource.file))
+		if (resource.file.ext.lower != "gz")
+			addCmd(menu, fileCmds.compressToGz(resource.file))
+
 		// let the user edit the file, wotever the extension
 		addCmd(menu, fileCmds.openInTextEditor(resource))
 	}
