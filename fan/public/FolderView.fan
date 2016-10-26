@@ -20,6 +20,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	@Autobuild private FolderViewModel	model
 			private	Table				table
 			private FolderResource? 	fileResource
+			private	Bool				refreshOnActivate
 
 	protected new make(|This| in) : super(in) {
 		this.content = table = Table {
@@ -46,6 +47,10 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 
 	override Void onActivate() {
 		globalCommands["afExplorer.cmdShowHiddenFiles"	].addEnabler("afExplorer.folderView", |->Bool| { true } )
+		if (refreshOnActivate) {
+			refreshOnActivate = false
+			refresh(resource)
+		}
 	}
 
 	override Void onDeactivate() {
@@ -57,10 +62,15 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 		if (resource == this.resource || ((resource as FileResource)?.file?.parent == this.fileResource?.file) || resource == null) {
 			monitorThread.refresh(resource)
 
+			if (!isActive) {
+				refreshOnActivate = true
+				return
+			}
+
 			super.load(this.resource)	// update tab details
 			model.fileRes = fileResource.file.listDirs.sort(byName).addAll(fileResource.file.listFiles.sort(byName)).exclude { explorer.preferences.shouldHide(it) }.map { fileResolver.resolve(it.uri.toStr) }
 			try table.refreshAll
-			catch {}	// supurius FWT errors - see http://fantom.org/forum/topic/2390
+			catch {}	// spurious FWT errors - see http://fantom.org/forum/topic/2390
 		}
 	}
 
