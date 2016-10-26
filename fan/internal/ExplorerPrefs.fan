@@ -65,7 +65,7 @@ const class FileAction {
 
 	new make(|This|? f := null) {
 		f?.call(this)
-		exts = ext.split
+		exts = ext.split(',').map { it.split }.flatten
 	}
 	
 	Bool matchesExt(Str? that) {
