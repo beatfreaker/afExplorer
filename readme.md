@@ -6,8 +6,6 @@
 
 ## Overview
 
-*Explorer is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
-
 `Explorer` is a file explorer application based on the [Reflux](http://pods.fantomfactory.org/pods/afReflux) framework. More than an application, Explorer also provides reusable Views and Editors. Explorer may also be enhanced through the use of Plugins.
 
 Features:

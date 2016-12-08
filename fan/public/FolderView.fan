@@ -105,6 +105,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 	}
 
 	private Void onFocus() {
+		// be aware that this can return null, should the view be auto-refreshed
 		fileFetcher := |->File?| { 
 			table.selected.isEmpty ? null : model.fileRes[table.selected.first].file 
 		}
@@ -114,8 +115,8 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 		globalCommands["afReflux.cmdCut"		].addEnabler("afExplorer.folderPanel", |->Bool| { !table.selected.isEmpty } )
 		globalCommands["afReflux.cmdCopy"		].addEnabler("afExplorer.folderPanel", |->Bool| { !table.selected.isEmpty } )
 		globalCommands["afReflux.cmdPaste"		].addEnabler("afExplorer.folderPanel", |->Bool| { explorer.pasteEnabled && (fileFetcher() != null || fileResource != null) } )
-		globalCommands["afReflux.cmdCut"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.cut(fileFetcher()) } )
-		globalCommands["afReflux.cmdCopy"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.copy(fileFetcher()) } )
+		globalCommands["afReflux.cmdCut"		].addInvoker("afExplorer.folderPanel", |->|		{ file := fileFetcher(); if (file != null) explorer.cut (file) } )
+		globalCommands["afReflux.cmdCopy"		].addInvoker("afExplorer.folderPanel", |->|		{ file := fileFetcher(); if (file != null) explorer.copy(file) } )
 		globalCommands["afReflux.cmdPaste"		].addInvoker("afExplorer.folderPanel", |->|		{ explorer.paste(fileFetcher() ?: fileResource.file) } )
 
 		cmdR := (RenameFileCommand) globalCommands["afExplorer.cmdRenameFile"]

@@ -1,5 +1,9 @@
 Versions
 ********
+v0.1.5
+======
+ - Bug: Fixed an occasional NPE when cutting or copying files after an auto-refresh.
+
 v0.1.4
 ======
  - New: Added 'compress to .gz' file command.
