@@ -60,7 +60,7 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 
 	override Void refresh(Resource? resource := null) {
 		if (resource == this.resource || ((resource as FileResource)?.file?.parent == this.fileResource?.file) || resource == null) {
-			monitorThread.refresh(resource)
+			monitorThread.refresh(this.resource)
 
 			if (!isActive) {
 				refreshOnActivate = true
