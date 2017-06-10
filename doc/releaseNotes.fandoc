@@ -3,6 +3,7 @@ Versions
 v0.1.5
 ======
  - Bug: Fixed an occasional NPE when cutting or copying files after an auto-refresh.
+ - Bug: Stopped 'HtmlViewer' from auto-refreshing when not-required.
 
 v0.1.4
 ======
