@@ -1,14 +1,15 @@
 Versions
 ********
-v0.1.5
+v0.1.6
 ======
+ - Bug: Fixed NPEs in FolderView on Linux.
  - Bug: Fixed an occasional NPE when cutting or copying files after an auto-refresh.
  - Bug: Stopped 'HtmlViewer' from auto-refreshing when not-required.
 
 v0.1.4
 ======
  - New: Added 'compress to .gz' file command.
- - New: 'FolderView' automatically refreshes itself should the folder contains change behind its back!
+ - New: 'FolderView' automatically refreshes itself should the folder contents change behind its back!
  - Chg: Better rename file dialogue.
  - Chg: Better handling (and err msg) of when a launcher cmd can not be found.
  - Chg: Moved 'Show hidden files' to View menu.

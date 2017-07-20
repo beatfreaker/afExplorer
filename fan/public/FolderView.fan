@@ -174,19 +174,19 @@ internal class FolderViewModel : TableModel {
 	@Inject	private Explorer		explorer
 			private	Color			hiddenColour
 	
-	FileResource[]? fileRes
-	Str[] headers := ["Name", "Size", "Modified"]
-	Int[] width	  := [280, 70, 110]
+	FileResource[]	fileRes	:= FileResource#.emptyList	// empty list to prevent NPEs on Linux
+	Str[] 			headers := ["Name", "Size", "Modified"]
+	Int[]			width	:= [280, 70, 110]
 
 	new make(|This| in) {
 		in(this)
 		this.hiddenColour = Desktop.sysListFg.lighter(0.5f)
 	}
 	
-	override Int numCols() { return 3 }
-	override Int numRows() { return fileRes?.size ?: 0 }
-	override Str header(Int col) { return headers[col] }
-	override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
+	override Int numCols() { 3 }
+	override Int numRows() { fileRes.size }
+	override Str header(Int col) { headers[col] }
+	override Halign halign(Int col) { col == 1 ? Halign.right : Halign.left }
 	override Int? prefWidth(Int col) { width[col] }
 	override Color? fg(Int col, Int row) { explorer.preferences.isHidden(fileRes[row].file) ? hiddenColour : null }
 
