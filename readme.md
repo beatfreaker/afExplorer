@@ -1,12 +1,13 @@
-#Explorer v0.1.4
+#Explorer v0.1.4.2
 ---
-[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.1.4](http://img.shields.io/badge/pod-v0.1.4-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
-![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
+
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
+[![pod: v0.1.4.2](http://img.shields.io/badge/pod-v0.1.4.2-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
+![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)
 
 ## Overview
 
-`Explorer` is a file explorer application based on the [Reflux](http://pods.fantomfactory.org/pods/afReflux) framework. More than an application, Explorer also provides reusable Views and Editors. Explorer may also be enhanced through the use of Plugins.
+`Explorer` is a file explorer application based on the [Reflux](http://eggbox.fantomfactory.org/pods/afReflux) framework. More than an application, Explorer also provides reusable Views and Editors. Explorer may also be enhanced through the use of Plugins.
 
 Features:
 
@@ -27,17 +28,21 @@ Small things that make me use it:
 
 ## Install
 
-Install `Explorer` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
+Install `Explorer` with the Fantom Pod Manager ( [FPM](http://eggbox.fantomfactory.org/pods/afFpm) ):
 
-    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afExplorer
+    C:\> fpm install afExplorer
 
-To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
+Or install `Explorer` with [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
+
+    C:\> fanr install -r http://eggbox.fantomfactory.org/fanr/ afExplorer
+
+To use in a [Fantom](http://fantom-lang.org/) project, add a dependency to `build.fan`:
 
     depends = ["sys 1.0", ..., "afExplorer 0.1"]
 
 ## Documentation
 
-Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afExplorer/).
+Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afExplorer/) - the Fantom Pod Repository.
 
 ## Quick Start
 
@@ -57,7 +62,7 @@ C:\> fan afExplorer
 IoC Registry built in 216ms and started up in 10ms
 ```
 
-![Example Screenshot](http://pods.fantomfactory.org/pods/afExplorer/doc/screenshot.png)
+![Example Screenshot](http://eggbox.fantomfactory.org/pods/afExplorer/doc/screenshot.png)
 
 Explorer may optionally be started with a list of URIs to be opened up in tabs:
 
@@ -75,7 +80,7 @@ Following Reflux browser behaviour, entering valid URIs in the address bar will 
 
 If there are multiple Views available for the resource, a drop down will appear in the address bar allowing you to toggle between them:
 
-![View Dropdowns](http://pods.fantomfactory.org/pods/afExplorer/doc/viewDropDown.png)
+![View Dropdowns](http://eggbox.fantomfactory.org/pods/afExplorer/doc/viewDropDown.png)
 
 You may also specify the view by adding a query parameter to the URI:
 
@@ -106,7 +111,7 @@ Files may be opened up in a:
 
 Explorer may also be used as a (basic) web browser by entering a `http:` scheme:
 
-![Web Browser](http://pods.fantomfactory.org/pods/afExplorer/doc/webBrowser.png)
+![Web Browser](http://eggbox.fantomfactory.org/pods/afExplorer/doc/webBrowser.png)
 
 ### Fandoc Viewer
 
@@ -122,7 +127,7 @@ The address bar also accepts simple fandoc notation (case insensitive):
     
     afReflux::View
 
-![Fandoc Viewer](http://pods.fantomfactory.org/pods/afExplorer/doc/fandocViewer.png)
+![Fandoc Viewer](http://eggbox.fantomfactory.org/pods/afExplorer/doc/fandocViewer.png)
 
 TIP: Press `F1` at anytime to being up the Fandoc index.
 
