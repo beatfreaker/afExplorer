@@ -153,7 +153,7 @@ class HtmlViewer : View {
 		statusBar.text = event.data
 	}
 
-	** Callback for when the Browser's status text changes.
+	** Callback for when the Browser's title text changes.
 	virtual Void onTitleText(Event event) {
 		// don't show useless titles!
 		if (event.data != "about:blank") {
@@ -210,6 +210,7 @@ class HtmlViewer : View {
 		// the URI in the history and give consistent navigation
 		url := (Uri) event.data
 
+		echo(url)
 		// if a shitty url, cancel the event
 		if (iframeBlocker.block(url)) {
 			event.data = null
@@ -226,6 +227,11 @@ class HtmlViewer : View {
 		if (url.scheme == "about" && url.name == "blank" && url.frag != null)
 			return
 
+		// actually, why would we want a blank page?
+		// fantom-lang.org seems to redirect to this (prob dodgy javascript!) so ignore it
+		if (url.scheme == "about" && url.name == "blank")
+			return
+
 		// normalise AFTER the above fudge
 		url = normaliseBrowserUrl(this.resource.uri, url)
 
@@ -234,6 +240,10 @@ class HtmlViewer : View {
 		event.data = null
 
 		// route the URI through reflux so it gets stored in the history
-		reflux.load(url.toStr)
+		// CTRL opens link in new tab
+		ctx := null as LoadCtx
+		if (event.key != null && event.key.isCtrl)
+			ctx = LoadCtx() { newTab = true}
+		reflux.load(url.toStr, ctx)
 	}
 }
