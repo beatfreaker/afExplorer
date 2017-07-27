@@ -96,6 +96,16 @@ class FolderView : View, RefluxEvents, ExplorerEvents {
 			table.selected = [idx]
 	}
 
+	override Bool onDrop(File[] droppedFiles) {
+		if (fileResource.file.exists && fileResource.file.isDir) {
+			// TODO handle overwrite policy - maybe wait for afDos to appear on the scene!
+			droppedFiles.each { it.copyInto(fileResource.file) }
+			reflux.refresh(fileResource)
+			return true
+		}
+		return false
+	}
+	
 	private Void onSelect() {
 		globalCommands["afExplorer.cmdRenameFile"].update
 		globalCommands["afExplorer.cmdDeleteFile"].update
