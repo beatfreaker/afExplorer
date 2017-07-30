@@ -16,7 +16,9 @@ internal class FileResolver : UriResolver {
 		str = str.replace("\${Env.cur.user}", 		Env.cur.user)
 
 		uri  := toFileUri(str)
-		file := uri?.toFile
+		file := null as File
+		try	file = uri?.toFile
+		catch { /* meh */ }	// "afIoc::Registry" throws ArgErr: Invalid Uri scheme for local file
 
 		if (file == null || !file.exists)
 			return null
