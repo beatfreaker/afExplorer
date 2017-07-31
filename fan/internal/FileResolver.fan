@@ -3,7 +3,6 @@ using afReflux
 
 internal class FileResolver : UriResolver {
 	@Inject private Scope		scope
-	@Inject private Explorer	explorer
 
 	new make(|This|in) { in(this) }	
 	
@@ -15,10 +14,7 @@ internal class FileResolver : UriResolver {
 		str = str.replace("\${Env.cur.tempDir}",	Env.cur.tempDir.normalize.osPath)
 		str = str.replace("\${Env.cur.user}", 		Env.cur.user)
 
-		uri  := toFileUri(str)
-		file := null as File
-		try	file = uri?.toFile
-		catch { /* meh */ }	// "afIoc::Registry" throws ArgErr: Invalid Uri scheme for local file
+		file := toFileUri(str)?.toFile
 
 		if (file == null || !file.exists)
 			return null
@@ -33,38 +29,34 @@ internal class FileResolver : UriResolver {
 			dot = true
 			path = path[0..<-2]
 		}
+		
+		uri := Uri.fromStr(path, false)
+		if (uri == null) return null
 
-		file := null as File
 		try
-			file = !path.startsWith("file:") && (path.containsChar('\\') || path.containsChar(':'))
-				? File.os(path)
-				: File(path.toUri, false)
+			if (!path.startsWith("file:") && (path.containsChar('\\') || path.containsChar(':')))
+				uri = File.os(path).uri
 		// sys::IOErr: Must use trailing slash for dir: ..
-		catch (IOErr err)
-			file = File(path.toUri, false)
+		catch (IOErr err) { /* meh */ }
 		// sys::ParseErr: Invalid Uri: '//:c'
-		catch (ParseErr err)
-			file = File(path.toUri, false)
+		catch (ParseErr err) { /* meh */ }
 
 		if (dot)
-			file = file.plus(``.plusName("."))
-		
-		// return null for nonsense filename, e.g. dd: throws
-		//   java.io.IOException: The filename, directory name, or volume label syntax is incorrect
-		try 	file.normalize
-		catch	return null
+			uri = uri.plus(``.plusName("."))
+	
+		if (uri.scheme != null && uri.scheme != "file")
+			return null
 
 		// paths such as `d:` or `/c:` aren't handled correctly, so do it manually
 		if (path.size == 2 && path[0].isAlpha && path[1] == ':')
-			file = File(`/${path}/`).normalize
+			uri = File(`/${path}/`).normalize.uri
 		else 
 		if (path.size == 3 && path[0] == '/' && path[1].isAlpha && path[2] == ':')
-			file = File(`${path}/`).normalize
+			uri = File(`${path}/`).normalize.uri
 
-		uri := file.uri
+		// Windows strips off trailing slashes for dirs
 		if (!uri.isDir && (path.getSafe(-1) == '/' || path.getSafe(-1) == '\\'))
 			uri = uri.plusSlash
 		return uri
 	}
-
 }
