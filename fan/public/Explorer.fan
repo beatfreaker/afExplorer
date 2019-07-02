@@ -275,7 +275,7 @@ internal class ExplorerImpl : Explorer {
 			// don't include the name of the containing folder in zip paths
 			parentUri := toCompress.isDir ? toCompress.uri : toCompress.parent.uri
 			try {
-				fileList	 := Str[,]
+//				fileList	 := Str[,]
 				bytesWritten := 0
 
 				worker.update(bytesWritten, noOfBytes, "Compressing files...")

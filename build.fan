@@ -27,6 +27,7 @@ class Build : BuildPod {
 			"compilerDoc 1.0.68 - 1.0",
 			"web         1.0.68 - 1.0",
 			
+//			"afButter     1.2.0  - 1.2", // uncomment to run Explorer Plugins from F4
 			// ---- Core ------------------------
 			"afConcurrent 1.0.14 - 1.0", 
 			"afBeanUtils  1.0.8  - 1.0", 
