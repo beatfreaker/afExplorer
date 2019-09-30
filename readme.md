@@ -1,9 +1,9 @@
-#Explorer v0.1.6
+# Explorer v0.1.8
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
-[![pod: v0.1.6](http://img.shields.io/badge/pod-v0.1.6-yellow.svg)](http://www.fantomfactory.org/pods/afExplorer)
-![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)
+[![pod: v0.1.8](http://img.shields.io/badge/pod-v0.1.8-yellow.svg)](http://eggbox.fantomfactory.org/pods/afExplorer)
+[![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
 
