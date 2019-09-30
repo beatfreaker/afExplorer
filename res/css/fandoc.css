@@ -1,7 +1,7 @@
 
 /* ------------ Full Fantom Fandoc Stylin' ------------ */
 /* ---------- For styling pod documentation ----------- */
-/* - http://www.fantomfactory.org/pods/afFandocViewer - */
+/* -- http://eggbox.fantomfactory.org/pods/afExplorer - */
 
 body {
 	font: 				10pt Arial,sans-serif;
@@ -77,6 +77,7 @@ div.header > div {
 }
 div.header img {
 	border: 0;
+	max-width : 100%;
 }
 
 /*************************************************************************

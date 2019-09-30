@@ -2,6 +2,7 @@ Versions
 ********
 v0.1.8
 ======
+ - Chg: Tweaked fandoc CSS to give images a max-width.
  - Bug: Fixed NPE when selecting files with no extension.
 
 v0.1.6
