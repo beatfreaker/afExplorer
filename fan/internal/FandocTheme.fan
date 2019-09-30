@@ -24,7 +24,7 @@ internal const class FandocTheme : DocTheme {
 			.printLine("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>")
 			.style
 				.print(cssAsStr(false))
-			.styleEnd		
+			.styleEnd
 		out.headEnd
 		out.body
 	}

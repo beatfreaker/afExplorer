@@ -21,24 +21,11 @@ internal class FandocWriter : HtmlDocWriter {
 		this.base 	= base
 	}
 
-	override Void docStart(Doc doc) {
-		super.docStart(doc)
-		
-		web.div("class='mainSidebar'")
-		web.div("class='main type'")
-	}
-	
-	override Void docEnd(Doc doc) {
-		web.divEnd
-		web.divEnd		
-	}
-
 	override Void docHead(Doc doc) {
 		super.docHead(doc)
 		
-		if (base.scheme == "file") {
-			web.tag("base", "href='${base.toFile.normalize.osPath}'")
-		}
+		if (base.scheme == "file")
+			web.tag("base", "href='${base.toFile.normalize.uri.encode.toXml}\'", true)
 		
 		// we can't link to anything (unless we start our own web server) so just embedd the css
 		web.style("type='text/css'")
