@@ -15,8 +15,12 @@ h2 { color				: #ad4e00; }
 h3 { color				: #25272a; }
 a  { color				: #185098; }
 
-h2, h3, h4 {
+h1, h2, h3, h4 {
 	margin-top			: 2em;
+}
+
+h1:first-child, h2:first-child, h3:first-child, h4:first-child {
+	margin-top			: 0;
 }
 
 img {
