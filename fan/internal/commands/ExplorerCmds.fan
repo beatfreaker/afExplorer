@@ -2,12 +2,14 @@ using afIoc
 using afReflux
 using gfx
 using fwt
+using fandoc
 
 internal class ExplorerCmds {
 	@Inject private Scope			scope
 	@Inject private Reflux			reflux
 	@Inject private RefluxIcons		refluxIcons
 	@Inject	private Explorer		explorer
+	@Inject private FandocParser fandocParser
 
 	new make(|This|in) { in(this) }
 
@@ -113,6 +115,18 @@ internal class ExplorerCmds {
 			}
 		}
 	}
+
+  Command generateMarkdown( File file ) {
+    name := file.basename + ".md"
+    return command( "Create Markdown '${name}'" ) {
+      it.onInvoke.add {
+        fandocDoc := fandocParser.parse( file.name, file.in )
+        out := File( file.uri.plusName( name ) ).out
+        fandocDoc.write( MarkdownDocWriter( out ) )
+        out.flush.close
+      }
+    }
+  }
 
 	Command showFileProperties(FileResource fileResource) {
 		command("Properties") {

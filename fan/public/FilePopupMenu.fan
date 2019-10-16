@@ -2,7 +2,7 @@ using afIoc
 using fwt
 
 ** (Service) -
-** Populates the content menu / popup menu for folder resources.
+** Populates the content menu / popup menu for file resources.
 mixin FilePopupMenu {
 
 	** Populates the given popup menu.
