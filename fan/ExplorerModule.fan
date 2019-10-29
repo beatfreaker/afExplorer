@@ -19,7 +19,7 @@ const class ExplorerModule {
 		defs.addService(ObjCache#)			.withScope("uiThread")
 		defs.addService(FilePopupMenu#)		.withScope("uiThread")
 		defs.addService(FolderPopupMenu#)	.withScope("uiThread")
-    defs.addService( FandocParser# )  .withScope( "uiThread" )
+		defs.addService( FandocParser# )  .withScope( "uiThread" )
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
@@ -194,12 +194,12 @@ const class ExplorerModule {
 //		config["afExplorer.cmdFandocIndex"]		= toolBarCommand(globalCmds["afExplorer.cmdFandocIndex"].command)
 //	}
 
-    private Button toolBarCommand(Command command) {
-        button  := Button.makeCommand(command)
-        if (command.icon != null)
-            button.text = ""
-        return button
-    }
+	private Button toolBarCommand(Command command) {
+		button  := Button.makeCommand(command)
+		if (command.icon != null)
+		button.text = ""
+		return button
+	}
 }
 
 

@@ -53,11 +53,10 @@ internal class PopupCommands {
 		if (resource.file.ext?.lower != "gz")
 			addCmd(menu, fileCmds.compressToGz(resource.file))
 
-    switch( resource.file.ext?.lower )
-    {
-      //TODO case "md" : addCmd( menu, fileCmds.generateFandoc( resource.file ) )
-      case "fandoc" : addCmd( menu, fileCmds.generateMarkdown( resource.file ) )
-    }
+		switch( resource.file.ext?.lower ) {
+			//TODO case "md" : addCmd( menu, fileCmds.generateFandoc( resource.file ) )
+			case "fandoc" : addCmd( menu, fileCmds.generateMarkdown( resource.file ) )
+		}
 
 		// let the user edit the file, wotever the extension
 		addCmd(menu, fileCmds.openInTextEditor(resource))

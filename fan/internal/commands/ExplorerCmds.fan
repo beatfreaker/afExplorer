@@ -116,17 +116,17 @@ internal class ExplorerCmds {
 		}
 	}
 
-  Command generateMarkdown( File file ) {
-    name := file.basename + ".md"
-    return command( "Create Markdown '${name}'" ) {
-      it.onInvoke.add {
-        fandocDoc := fandocParser.parse( file.name, file.in )
-        out := File( file.uri.plusName( name ) ).out
-        fandocDoc.write( MarkdownDocWriter( out ) )
-        out.flush.close
-      }
-    }
-  }
+	Command generateMarkdown( File file ) {
+		name := file.basename + ".md"
+		return command( "Create Markdown '${name}'" ) {
+			it.onInvoke.add {
+				fandocDoc := fandocParser.parse( file.name, file.in )
+				out := File( file.uri.plusName( name ) ).out
+				fandocDoc.write( MarkdownDocWriter( out ) )
+				out.flush.close
+			}
+		}
+	}
 
 	Command showFileProperties(FileResource fileResource) {
 		command("Properties") {
