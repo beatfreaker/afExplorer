@@ -4,6 +4,8 @@ using afConcurrent
 using concurrent
 using gfx
 using fwt
+using fandoc
+
 
 @NoDoc
 const class ExplorerModule {
@@ -17,6 +19,7 @@ const class ExplorerModule {
 		defs.addService(ObjCache#)			.withScope("uiThread")
 		defs.addService(FilePopupMenu#)		.withScope("uiThread")
 		defs.addService(FolderPopupMenu#)	.withScope("uiThread")
+    defs.addService( FandocParser# )  .withScope( "uiThread" )
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
