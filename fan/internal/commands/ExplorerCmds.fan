@@ -9,7 +9,8 @@ internal class ExplorerCmds {
 	@Inject private Reflux			reflux
 	@Inject private RefluxIcons		refluxIcons
 	@Inject	private Explorer		explorer
-	@Inject private FandocParser fandocParser
+	@Inject private FandocParser	fandocParser
+	@Inject private Images			images
 
 	new make(|This|in) { in(this) }
 
@@ -116,15 +117,16 @@ internal class ExplorerCmds {
 		}
 	}
 
-	Command generateMarkdown( File file ) {
+	Command generateMarkdown(File file) {
 		name := file.basename + ".md"
-		return command( "Create Markdown '${name}'" ) {
+		return command( "Convert to '${name}'" ) {
 			it.onInvoke.add {
 				fandocDoc := fandocParser.parse( file.name, file.in )
 				out := File( file.uri.plusName( name ) ).out
 				fandocDoc.write( MarkdownDocWriter( out ) )
 				out.flush.close
 			}
+			it.icon = images.get(`fan://afExplorer/res/icons/markdown-x16.png`)
 		}
 	}
 
