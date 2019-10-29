@@ -1,5 +1,10 @@
 Versions
 ********
+
+v0.1.10
+=======
+ - New: Convert Fandoc -> Markdown option in file context menu (Patch contributed by LightDye).
+
 v0.1.8
 ======
  - Chg: Tweaked fandoc CSS to give images a max-width.
