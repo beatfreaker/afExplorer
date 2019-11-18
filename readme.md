@@ -1,8 +1,8 @@
-# Explorer v0.1.8
+# Explorer v0.1.10
 ---
 
-[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
-[![pod: v0.1.8](http://img.shields.io/badge/pod-v0.1.8-yellow.svg)](http://eggbox.fantomfactory.org/pods/afExplorer)
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
+[![pod: v0.1.10](http://img.shields.io/badge/pod-v0.1.10-yellow.svg)](http://eggbox.fantomfactory.org/pods/afExplorer)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
@@ -11,36 +11,38 @@
 
 Features:
 
-- System file explorer
-- Fantom documentation viewer
-- A better web browser / html viewer
-- Fandoc file viewer
-- Resource Tree
-- Text editor (borrowed from [fluxText](http://fantom.org/doc/fluxText/index.html))
-- Syntax highlighting (uses [syntax](http://fantom.org/doc/syntax/index.html))
+* System file explorer
+* Fantom documentation viewer
+* A better web browser / html viewer
+* Fandoc file viewer
+* Resource Tree
+* Text editor (borrowed from [fluxText](https://fantom.org/doc/fluxText/index.html))
+* Syntax highlighting (uses [syntax](https://fantom.org/doc/syntax/index.html))
+
 
 Small things that make me use it:
 
-- Quick view / edit toggling with F12
-- Easily show / hide hidden files
-- Text editor word wrapping (configurable)
-- Address bar accepts pod names, e.g. `afIoc`
+* Quick view / edit toggling with F12
+* Easily show / hide hidden files
+* Text editor word wrapping (configurable)
+* Address bar accepts pod names, e.g. `afIoc`
 
-## Install
+
+## <a name="Install"></a>Install
 
 Install `Explorer` with the Fantom Pod Manager ( [FPM](http://eggbox.fantomfactory.org/pods/afFpm) ):
 
     C:\> fpm install afExplorer
 
-Or install `Explorer` with [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
+Or install `Explorer` with [fanr](https://fantom.org/doc/docFanr/Tool.html#install):
 
     C:\> fanr install -r http://eggbox.fantomfactory.org/fanr/ afExplorer
 
-To use in a [Fantom](http://fantom-lang.org/) project, add a dependency to `build.fan`:
+To use in a [Fantom](https://fantom-lang.org/) project, add a dependency to `build.fan`:
 
     depends = ["sys 1.0", ..., "afExplorer 0.1"]
 
-## Documentation
+## <a name="documentation"></a>Documentation
 
 Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afExplorer/) - the Fantom Pod Repository.
 
@@ -48,31 +50,29 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
 
 Simply start Explorer from the command line:
 
-```
-C:\> fan afExplorer
-
-[afIoc] Adding module definition for afReflux::RefluxModule
-[afIoc] Adding module definition for afExplorer::ExplorerModule
-   ___    __                 _____        _
-  / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
- / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
-/_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-                                     Explorer v0.0.4 /___/
-
-IoC Registry built in 216ms and started up in 10ms
-```
+    C:\> fan afExplorer
+    
+    [afIoc] Adding module definition for afReflux::RefluxModule
+    [afIoc] Adding module definition for afExplorer::ExplorerModule
+       ___    __                 _____        _
+      / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
+     / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
+    /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
+                                         Explorer v0.0.4 /___/
+    
+    IoC Registry built in 216ms and started up in 10ms
+    
 
 ![Example Screenshot](http://eggbox.fantomfactory.org/pods/afExplorer/doc/screenshot.png)
 
 Explorer may optionally be started with a list of URIs to be opened up in tabs:
 
-```
-C:\> fan afExplorer C:\Temp
-
-C:\> fan afExplorer http://www.fantomfactory.org/
-
-C:\> fan afExplorer afIoc::Registry
-```
+    C:\> fan afExplorer C:\Temp
+    
+    C:\> fan afExplorer http://www.fantomfactory.org/
+    
+    C:\> fan afExplorer afIoc::Registry
+    
 
 ## Usage
 
@@ -102,10 +102,11 @@ You may also enter an OS specific path:
 
 Files may be opened up in a:
 
-- Text Editor
-- HTML Viewer
-- Fandoc Viewer
-- Image Viewer
+* Text Editor
+* HTML Viewer
+* Fandoc Viewer
+* Image Viewer
+
 
 ### Web Browser
 
@@ -113,7 +114,7 @@ Explorer may also be used as a (basic) web browser by entering a `http:` scheme:
 
 ![Web Browser](http://eggbox.fantomfactory.org/pods/afExplorer/doc/webBrowser.png)
 
-### Fandoc Viewer
+### <a name="fandocViewer"></a>Fandoc Viewer
 
 Explorer can view all the Fantom documentation held in the current Fantom installation. This includes all the API docs for all the installed pods. It uses a `fandoc:` scheme with the following format:
 
@@ -129,9 +130,9 @@ The address bar also accepts simple fandoc notation (case insensitive):
 
 ![Fandoc Viewer](http://eggbox.fantomfactory.org/pods/afExplorer/doc/fandocViewer.png)
 
-TIP: Press `F1` at anytime to being up the Fandoc index.
+Press `F1` at anytime to being up the Fandoc index.
 
-## Plugins
+## <a name="plugins"></a>Plugins
 
 Exoplorer may be customised though *Plugins*.
 

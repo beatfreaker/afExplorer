@@ -10,7 +10,7 @@ using fandoc
 @NoDoc
 const class ExplorerModule {
 
-	Void defineServices(RegistryBuilder defs) {		
+	Void defineServices(RegistryBuilder defs) {
 		defs.addService(Explorer#)			.withScope("uiThread")
 		defs.addService(ExplorerCmds#)		.withScope("uiThread")
 		defs.addService(FileViewers#)		.withScope("uiThread")
@@ -19,7 +19,7 @@ const class ExplorerModule {
 		defs.addService(ObjCache#)			.withScope("uiThread")
 		defs.addService(FilePopupMenu#)		.withScope("uiThread")
 		defs.addService(FolderPopupMenu#)	.withScope("uiThread")
-		defs.addService( FandocParser# )  .withScope( "uiThread" )
+		defs.addService(FandocParser#)		.withScope("uiThread")
 	}
 
 	@Contribute { serviceType=RefluxIcons# }
@@ -33,7 +33,7 @@ const class ExplorerModule {
 	internal Void contributeUriResolvers(Configuration config) {
 		config["file"]		= config.build(FileResolver#)
 		config["http"]		= config.build(HttpResolver#)
-		config["fandoc"]	= config.build(FandocResolver#)		
+		config["fandoc"]	= config.build(FandocResolver#)
 	}
 
 	@Contribute { serviceType=Panels# }
