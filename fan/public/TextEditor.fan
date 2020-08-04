@@ -3,6 +3,7 @@ using afReflux
 using syntax
 using gfx
 using fwt
+using fandoc::FandocParser
 
 ** (View) - 
 ** A text editor with syntax highlighting. Borrowed from [fluxtext]`pod:fluxText`.
@@ -15,6 +16,8 @@ class TextEditor : View {
 	@Inject private Dialogues		dialogues
 	@Inject private Preferences		preferences
 			private	EdgePane		edgePane
+			private Browser			browser
+			private Uri?             resourceURI
 	
 	
 	** The 'File' being edited.
@@ -45,6 +48,9 @@ class TextEditor : View {
 		content = edgePane = EdgePane {
 			it.top = buildToolBar
 			it.bottom = buildStatusBar
+			it.right = browser = Browser() {
+				it.width = 0
+			}
 		}
 		&wordWrap = globCmds["afExplorer.cmdWordWrap"].command.selected
 	}
@@ -102,9 +108,31 @@ class TextEditor : View {
 		
 		loadDoc
 		charsetField.text = charset.toStr
-
+		populateHTML(resource)
 		newWidgets
 		restorePrefs
+	}
+	
+	private Void populateHTML(Resource resource) {
+		if (resource is FileResource) {
+			file	:= (resource as FileResource).file
+			if(file.ext.equals("fandoc")) {
+				fandoc 	:= file.readAllStr
+				html	:= fandocToHtml(fandoc, resource.uri)
+				Desktop.callLater(50ms) |->| {
+					browser.html = html
+				}
+				resourceURI = resource.uri
+				browser.width = 700
+			}
+		}
+	}
+	
+	private static Str fandocToHtml(Str fandoc, Uri? base := null) {
+		writer	:= FandocWriter(base)
+		doc 	:= FandocParser().parseStr(fandoc)
+		doc.write(writer)
+		return writer.toHtml
 	}
 	
 	private Void newWidgets() {
@@ -184,6 +212,12 @@ class TextEditor : View {
 		out := file.out { it.charset = this.charset }
 		try		doc.save(out)
 		finally	out.close
+		if(resourceURI != null) {
+			html	:= fandocToHtml(file.readAllStr, resourceURI)
+			Desktop.callLater(50ms) |->| {
+				browser.html = html
+			}
+		}
 	}
 	
 	@NoDoc
