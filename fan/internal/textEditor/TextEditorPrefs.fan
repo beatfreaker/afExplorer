@@ -35,6 +35,10 @@ const class TextEditorPrefs {
 	** text files.	Defaults to utf8.
 	const Charset charset := Charset.utf8
 
+	** Default width of browser preview view displayed in right side
+	** when opened fandoc in Text Editor mode
+	const Int previewViewWidth := 700
+
 	const Font font						:= Desktop.sysFontMonospace
 	const Color highlightCurLine		:= Color(0xf0_f0_f0)
 	const RichTextStyle text			:= RichTextStyle { fg = Color(0x00_00_00) }

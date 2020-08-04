@@ -123,7 +123,7 @@ class TextEditor : View {
 					browser.html = html
 				}
 				resourceURI = resource.uri
-				browser.width = 700
+				browser.width = options.previewViewWidth
 			}
 		}
 	}

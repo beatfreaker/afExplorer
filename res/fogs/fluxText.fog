@@ -36,6 +36,10 @@ TextEditorPrefs {
 	** text files.	Defaults to UTF-8.
 	charset = Charset("UTF-8")
 
+	** Default width of browser preview view displayed in right side
+	** when opened fandoc in Text Editor mode
+	previewViewWidth = 700
+
 //////////////////////////////////////////////////////////////////////////
 // Styling
 //////////////////////////////////////////////////////////////////////////
